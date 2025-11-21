@@ -1,98 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Eventos Académicos')</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    
-    <!-- Stack para CSS adicional de páginas específicas -->
-    @stack('styles')
+
+    <title>{{ config('app.name', 'Eventos Académicos') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <!-- Encabezado -->
-    <header class="encabezado">
-        @if(Route::currentRouteName() !== 'home')
-        <a href="{{ route('home') }}" class="boton-regresar">
-            <svg class="flechita-izquierda" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Volver
-        </a>
-        @endif
-        
-        <div class="titulo-principal">
-            <div class="copita-trofeo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                    <path d="M4 22h16" />
-                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-                </svg>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Navbar -->
+        <nav class="bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <!-- Logo y Título -->
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center gap-3">
+                            <div class="bg-indigo-600 p-2 rounded-lg">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/>
+                                </svg>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900">Eventos Académicos</span>
+                        </div>
+                    </div>
+
+                    <!-- Acciones de Usuario -->
+                    @auth
+                        <div class="flex items-center gap-4">
+                            <!-- Tema Oscuro -->
+                            <button class="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                                </svg>
+                            </button>
+
+                            <!-- Notificaciones -->
+                            <button class="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 relative">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                                </svg>
+                                @if(auth()->check() && auth()->user()->cantidadNotificacionesNoLeidas() > 0)
+                                    <span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                                @endif
+                            </button>
+
+                            <!-- Perfil -->
+                            <div class="flex items-center gap-2">
+                                <button class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100">
+                                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</span>
+                                </button>
+                            </div>
+
+                            <!-- Salir -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm11 4.414l-4.293 4.293a1 1 0 01-1.414 0L4 7.414V13h10V7.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Salir
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="flex items-center gap-4">
+                            <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-gray-900">
+                                Iniciar Sesión
+                            </a>
+                            <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
+                                Registrarse
+                            </a>
+                        </div>
+                    @endauth
+                </div>
             </div>
-            <h1>@yield('header-title', 'Eventos Académicos')</h1>
-        </div>
-
-        <!-- Menú de navegación (opcional) -->
-        <nav class="navegacion" style="margin-left: auto;">
-            @auth
-                <span style="margin-right: 1rem; color: var(--color-texto-secundario);">
-                    Hola, {{ Auth::user()->name }}
-                </span>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="boton-secundario">Cerrar Sesión</button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="boton-secundario">Iniciar Sesión</a>
-            @endauth
         </nav>
-    </header>
 
-    <!-- Mensajes Flash -->
-    @if(session('success'))
-        <div class="alerta alerta-exito" style="padding: 1rem; margin: 1rem; background: #d4edda; color: #155724; border-radius: 8px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alerta alerta-error" style="padding: 1rem; margin: 1rem; background: #f8d7da; color: #721c24; border-radius: 8px;">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alerta alerta-error" style="padding: 1rem; margin: 1rem; background: #f8d7da; color: #721c24; border-radius: 8px;">
-            <ul style="margin: 0; padding-left: 1.5rem;">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <!-- Contenido Principal -->
-    <main>
-        @yield('content')
-    </main>
-
-    <!-- Footer (opcional) -->
-    <footer style="background: var(--color-fondo-tarjeta); padding: 2rem; text-align: center; margin-top: 3rem;">
-        <p style="color: var(--color-texto-secundario);">
-            &copy; {{ date('Y') }} Eventos Académicos. Todos los derechos reservados.
-        </p>
-    </footer>
-
-    <!-- JavaScript -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    
-    <!-- Stack para JavaScript adicional de páginas específicas -->
-    @stack('scripts')
+        <!-- Page Content -->
+        <main>
+            {{ $slot }}
+        </main>
+    </div>
 </body>
 </html>
