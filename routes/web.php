@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TareaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,9 @@ Route::prefix('eventos')->name('eventos.')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'profile.complete'])->prefix('equipos')->name('equipos.')->group(function () {
+    // Mis equipos
+    Route::get('/mis-equipos', [EquipoController::class, 'misEquipos'])->name('mis-equipos');
+    
     // Seleccionar evento para crear equipo (desde dashboard)
     Route::get('/seleccionar-evento', [EquipoController::class, 'seleccionarEvento'])->name('seleccionar-evento');
     
@@ -79,6 +83,11 @@ Route::middleware(['auth', 'profile.complete'])->prefix('equipos')->name('equipo
     
     // Chat del equipo
     Route::post('/{equipo}/mensaje', [EquipoController::class, 'enviarMensaje'])->name('enviar-mensaje');
+    // Tareas del proyecto
+    Route::post('/{equipo}/tareas', [TareaController::class, 'store'])->name('tareas.store');
+    Route::put('/{equipo}/tareas/{tarea}', [TareaController::class, 'update'])->name('tareas.update');
+    Route::delete('/{equipo}/tareas/{tarea}', [TareaController::class, 'destroy'])->name('tareas.destroy');
+    Route::post('/{equipo}/tareas/{tarea}/toggle', [TareaController::class, 'toggleEstado'])->name('tareas.toggle');
     
     // Actualizar/eliminar equipo (solo líder)
     Route::put('/{equipo}', [EquipoController::class, 'update'])->name('update');

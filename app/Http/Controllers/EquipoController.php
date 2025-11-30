@@ -345,33 +345,48 @@ class EquipoController extends Controller
      * Abandonar equipo
      */
     public function abandonar(Equipo $equipo)
-    {
-        $participante = auth()->user()->participante;
+{
+    $participante = auth()->user()->participante;
 
-        // Verificar que sea miembro del equipo
-        if (!$equipo->participantes->contains('id', $participante->id)) {
-            return back()->with('error', 'No eres miembro de este equipo.');
-        }
-
-        // Verificar que no sea el líder
-        if ($equipo->lider_id == $participante->id) {
-            return back()->with('error', 'El líder no puede abandonar el equipo. Transfiere el liderazgo o elimina el equipo.');
-        }
-
-        try {
-            // Remover del equipo
-            $equipo->participantes()->detach($participante->id);
-
-            // TODO: Crear notificación al líder
-
-            return redirect()->route('eventos.show', $equipo->evento)
-                ->with('success', 'Has abandonado el equipo.');
-
-        } catch (\Exception $e) {
-            Log::error('Error al abandonar equipo:', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Error al abandonar el equipo.');
-        }
+    // Verificar que sea miembro del equipo
+    if (!$equipo->participantes->contains('id', $participante->id)) {
+        return back()->with('error', 'No eres miembro de este equipo.');
     }
+
+    // Verificar que no sea el líder
+    if ($equipo->lider_id == $participante->id) {
+        return back()->with('error', 'El líder no puede abandonar el equipo. Transfiere el liderazgo o elimina el equipo.');
+    }
+
+    try {
+        // Limpiar tareas asignadas antes de abandonar
+        if ($equipo->proyecto) {
+            // Obtener todas las tareas del proyecto
+            $tareas = $equipo->proyecto->tareas;
+            
+            // Remover al participante de todas las tareas donde está asignado
+            foreach ($tareas as $tarea) {
+                $tarea->participantes()->detach($participante->id);
+            }
+            
+            Log::info('Tareas limpiadas al abandonar equipo', [
+                'participante_id' => $participante->id,
+                'equipo_id' => $equipo->id,
+                'tareas_limpiadas' => $tareas->count()
+            ]);
+        }
+        
+        // Remover del equipo
+        $equipo->participantes()->detach($participante->id);
+
+        return redirect()->route('eventos.show', $equipo->evento)
+            ->with('success', 'Has abandonado el equipo. Tus asignaciones de tareas han sido removidas.');
+
+    } catch (\Exception $e) {
+        Log::error('Error al abandonar equipo:', ['error' => $e->getMessage()]);
+        return back()->with('error', 'Error al abandonar el equipo.');
+    }
+}
 
     /**
      * Actualizar equipo (solo líder)
@@ -444,5 +459,30 @@ class EquipoController extends Controller
         ]);
 
         return back()->with('success', 'Mensaje enviado.');
+    }
+
+    /**
+     * Mostrar equipos del usuario autenticado
+     */
+    public function misEquipos()
+    {
+        $participante = auth()->user()->participante;
+        
+        if (!$participante) {
+            return redirect()->route('profile.complete')
+                ->with('error', 'Debes completar tu perfil primero.');
+        }
+
+        // Obtener equipos donde el usuario es miembro activo
+        $misEquipos = $participante->equiposActivos()
+            ->with([
+                'evento',
+                'lider.user',
+                'proyecto.tareas',
+                'participantes'
+            ])
+            ->get();
+
+        return view('equipos.mis-equipos', compact('misEquipos'));
     }
 }

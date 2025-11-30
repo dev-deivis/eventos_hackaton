@@ -2,27 +2,100 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
+            <!-- Mensajes de éxito/error -->
+            @if(session('success'))
+                <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                    {{ session('error') }}
+                </div>
+            @endif
+            
             <!-- Header -->
             <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $equipo->nombre }}</h1>
-                        <p class="text-gray-600 mb-2">{{ $equipo->evento->nombre }}</p>
-                        <p class="text-sm text-gray-500">Líder: {{ $equipo->lider->user->name }} • {{ $equipo->totalMiembros() }} miembros</p>
+                        <p class="text-gray-600 mb-2">
+                            <a href="{{ route('eventos.show', $equipo->evento) }}" class="hover:text-indigo-600">
+                                {{ $equipo->evento->nombre }}
+                            </a>
+                        </p>
+                        <p class="text-sm text-gray-500">Líder: {{ $equipo->lider->user->name }} • {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }} miembros</p>
+                        
+                        @if($equipo->descripcion)
+                            <p class="text-gray-600 mt-3">{{ $equipo->descripcion }}</p>
+                        @endif
+
+                        <!-- Enlaces del Proyecto (Solo para miembros, jueces y admin) -->
+                        @if($equipo->proyecto && ($esMiembro || auth()->user()->tieneRol('juez') || auth()->user()->tieneRol('admin')))
+                            <div class="mt-4 flex flex-wrap gap-3">
+                                @if($equipo->proyecto->link_repositorio)
+                                    <a href="{{ $equipo->proyecto->link_repositorio }}" 
+                                       target="_blank"
+                                       class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                        </svg>
+                                        Ver Repositorio
+                                    </a>
+                                @endif
+
+                                @if($equipo->proyecto->link_demo)
+                                    <a href="{{ $equipo->proyecto->link_demo }}" 
+                                       target="_blank"
+                                       class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Ver Demo
+                                    </a>
+                                @endif
+
+                                @if($equipo->proyecto->link_presentacion)
+                                    <a href="{{ $equipo->proyecto->link_presentacion }}" 
+                                       target="_blank"
+                                       class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm11-1a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1h-2z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Ver Presentación
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
                     </div>
+                    
+                    <!-- Acciones según rol del usuario -->
                     <div class="flex gap-2">
-                        <button class="px-4 py-2 border rounded-lg hover:bg-gray-50">
-                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            Configurar
-                        </button>
-                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            Invitar
-                        </button>
+                        @if($esMiembro && !$esLider)
+                            <!-- Abandonar equipo (solo miembros no líderes) -->
+                            <form method="POST" action="{{ route('equipos.abandonar', $equipo) }}" 
+                                  onsubmit="return confirm('¿Estás seguro de abandonar este equipo?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm11 4a1 1 0 10-2 0v6a1 1 0 102 0V7zm-3 0a1 1 0 10-2 0v6a1 1 0 102 0V7zm-3 0a1 1 0 10-2 0v6a1 1 0 102 0V7z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Abandonar Equipo
+                                </button>
+                            </form>
+                        @elseif(!$esMiembro && $equipo->puedeAceptarMiembros() && $equipo->evento->estaAbierto())
+                            <!-- Solicitar unirse (solo si NO es miembro y hay cupo) -->
+                            <button onclick="toggleModalUnirse()" 
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+                                </svg>
+                                Solicitar Unirse
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -72,13 +145,17 @@
                             <div class="mt-4 pt-4 border-t">
                                 <h4 class="text-sm font-semibold text-gray-700 mb-2">Roles Disponibles</h4>
                                 <div class="text-sm text-gray-600">
-                                    Analista de Negocios
+                                    Quedan {{ $equipo->max_miembros - $equipo->totalMiembros() }} espacios disponibles
                                 </div>
+                            </div>
+                        @else
+                            <div class="mt-4 pt-4 border-t">
+                                <p class="text-sm text-gray-500">✅ Equipo completo</p>
                             </div>
                         @endif
                     </div>
 
-                    <!-- Progreso del Proyecto -->
+                    <!-- Tareas del Proyecto -->
                     @if($equipo->proyecto)
                         <div class="bg-white rounded-xl shadow-sm p-6">
                             <div class="flex items-center justify-between mb-4">
@@ -86,58 +163,168 @@
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
                                     </svg>
-                                    Progreso del Proyecto
+                                    Tareas del Proyecto
                                 </h3>
-                                <a href="{{ route('proyectos.edit', $equipo) }}" class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Ver Detalles
-                                </a>
+                                @if($esLider)
+                                    <button onclick="toggleModalCrearTarea()" 
+                                            class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1 font-medium">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Nueva Tarea
+                                    </button>
+                                @endif
                             </div>
 
                             @php
-                                $tareas = $equipo->proyecto->tareas ?? collect([
-                                    (object)['nombre' => 'Definición de requisitos', 'asignado' => 'Ana García', 'estado' => 'completada'],
-                                    (object)['nombre' => 'Diseño de interfaz', 'asignado' => 'Luis Martín', 'estado' => 'en_progreso'],
-                                    (object)['nombre' => 'Desarrollo backend', 'asignado' => 'Ana García', 'estado' => 'en_progreso'],
-                                    (object)['nombre' => 'Análisis de datos', 'asignado' => 'María López', 'estado' => 'pendiente'],
-                                    (object)['nombre' => 'Presentación final', 'asignado' => 'Equipo', 'estado' => 'pendiente'],
-                                ]);
+                                $tareas = $equipo->proyecto->tareas()->with('participantes.user')->orderBy('orden')->get();
+                                $totalTareas = $tareas->count();
+                                $tareasCompletadas = $tareas->where('estado', 'completada')->count();
+                                $progreso = $totalTareas > 0 ? round(($tareasCompletadas / $totalTareas) * 100) : 0;
                             @endphp
 
-                            <div class="space-y-3">
-                                @foreach($tareas as $tarea)
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-3 flex-1">
-                                            <div class="w-8 h-8 rounded flex items-center justify-center
-                                                @if($tarea->estado == 'completada') bg-green-100 text-green-600
-                                                @elseif($tarea->estado == 'en_progreso') bg-purple-100 text-purple-600
-                                                @else bg-gray-100 text-gray-400 @endif">
-                                                @if($tarea->estado == 'completada')
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                @else
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"/>
-                                                    </svg>
+                            @if($tareas->count() > 0)
+                                <div class="space-y-3">
+                                    @foreach($tareas as $tarea)
+                                        <div class="border rounded-lg p-4 @if($tarea->estaCompletada()) bg-green-50 border-green-200 @else bg-white @endif">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex items-start gap-3 flex-1">
+                                                    <!-- Checkbox para marcar como completada -->
+                                                    @if($esMiembro)
+                                                        <form method="POST" action="{{ route('equipos.tareas.toggle', [$equipo, $tarea]) }}">
+                                                            @csrf
+                                                            <button type="submit" 
+                                                                    class="mt-1 w-6 h-6 rounded flex items-center justify-center border-2 transition
+                                                                    @if($tarea->estaCompletada()) 
+                                                                        bg-green-500 border-green-500 text-white 
+                                                                    @else 
+                                                                        bg-white border-gray-300 hover:border-indigo-500
+                                                                    @endif">
+                                                                @if($tarea->estaCompletada())
+                                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                                    </svg>
+                                                                @endif
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <div class="mt-1 w-6 h-6 rounded flex items-center justify-center border-2
+                                                            @if($tarea->estaCompletada()) 
+                                                                bg-green-500 border-green-500 text-white 
+                                                            @else 
+                                                                bg-white border-gray-300
+                                                            @endif">
+                                                            @if($tarea->estaCompletada())
+                                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                                </svg>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+
+                                                    <div class="flex-1">
+                                                        <div class="flex items-start justify-between">
+                                                            <div class="flex-1">
+                                                                <h4 class="font-semibold text-gray-900 @if($tarea->estaCompletada()) line-through @endif">
+                                                                    {{ $tarea->nombre }}
+                                                                </h4>
+                                                                @if($tarea->descripcion)
+                                                                    <p class="text-sm text-gray-600 mt-1">{{ $tarea->descripcion }}</p>
+                                                                @endif
+                                                                
+                                                                <!-- Asignados -->
+                                                                <div class="flex items-center gap-2 mt-2">
+                                                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                                                                    </svg>
+                                                                    @if($tarea->participantes->count() > 0)
+                                                                        <div class="flex gap-1">
+                                                                            @foreach($tarea->participantes as $asignado)
+                                                                                <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">
+                                                                                    {{ explode(' ', $asignado->user->name)[0] }}
+                                                                                </span>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @else
+                                                                        <span class="text-xs text-gray-400">Sin asignar</span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Valor de la tarea -->
+                                                            <div class="text-right ml-4">
+                                                                <span class="text-sm font-semibold text-indigo-600">
+                                                                    {{ $tarea->valorPorcentual() }}%
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Acciones del líder -->
+                                                @if($esLider)
+                                                    <div class="flex gap-2 ml-4">
+                                                        <button onclick="abrirModalEditarTarea({{ json_encode($tarea) }})" 
+                                                                class="text-indigo-600 hover:text-indigo-700">
+                                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/>
+                                                            </svg>
+                                                        </button>
+                                                        <form method="POST" action="{{ route('equipos.tareas.destroy', [$equipo, $tarea]) }}" 
+                                                              onsubmit="return confirm('¿Eliminar esta tarea?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="text-red-600 hover:text-red-700">
+                                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 @endif
                                             </div>
-                                            <div class="flex-1">
-                                                <div class="font-medium text-gray-900">{{ is_object($tarea) ? $tarea->nombre : $tarea['nombre'] }}</div>
-                                                <div class="text-sm text-gray-500">Asignado a: {{ is_object($tarea) ? ($tarea->asignado ?? 'No asignado') : $tarea['asignado'] }}</div>
-                                            </div>
                                         </div>
-                                        @if($tarea->estado == 'completada')
-                                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Completada</span>
-                                        @elseif($tarea->estado == 'en_progreso')
-                                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">En Progreso</span>
-                                        @else
-                                            <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium">Pendiente</span>
-                                        @endif
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
+                            @else
+                                <!-- Sin tareas -->
+                                <div class="text-center py-8 bg-gray-50 rounded-lg">
+                                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                    </svg>
+                                    <p class="text-gray-600 font-medium">No hay tareas registradas</p>
+                                    @if($esLider)
+                                        <p class="text-sm text-gray-500 mt-1">Crea la primera tarea para organizar el trabajo del equipo</p>
+                                        <button onclick="toggleModalCrearTarea()" 
+                                                class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 inline-flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Crear Primera Tarea
+                                        </button>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    @elseif($esMiembro)
+                        <!-- Si no hay proyecto y es miembro, mostrar botón para crear -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Proyecto</h3>
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <p class="text-gray-600 mb-4">Aún no han registrado su proyecto</p>
+                                <p class="text-sm text-gray-500 mb-4">Cualquier miembro del equipo puede registrarlo</p>
+                                <a href="{{ route('proyectos.create', $equipo) }}" 
+                                   class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Registrar Proyecto
+                                </a>
                             </div>
                         </div>
                     @endif
@@ -147,42 +334,82 @@
                 <!-- Columna Derecha (1/3) -->
                 <div class="space-y-6">
                     
-                    <!-- Chat del Equipo -->
-                    <div class="bg-white rounded-xl shadow-sm">
-                        <div class="p-4 border-b">
-                            <h3 class="font-bold flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
-                                </svg>
-                                Chat del Equipo
-                            </h3>
-                        </div>
-                        
-                        <div class="h-64 overflow-y-auto p-4 space-y-3" id="chat-messages">
+                    <!-- Estadísticas del Proyecto -->
+                    @if($equipo->proyecto)
+                        <div class="bg-white rounded-xl shadow-sm p-4">
+                            <h3 class="font-bold mb-3">Progreso del Proyecto</h3>
+                            
                             @php
-                                $mensajes = $equipo->mensajes()->with('participante.user')->latest()->take(20)->get()->reverse();
+                                $totalTareas = $equipo->proyecto->tareas()->count();
+                                $tareasCompletadas = $equipo->proyecto->tareas()->where('estado', 'completada')->count();
+                                $progreso = $totalTareas > 0 ? round(($tareasCompletadas / $totalTareas) * 100) : 0;
                             @endphp
 
-                            @forelse($mensajes as $mensaje)
-                                <div class="flex gap-2">
-                                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold">
-                                        {{ substr($mensaje->participante->user->name, 0, 1) }}
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Progreso General</span>
+                                        <span class="font-semibold text-indigo-600">{{ $progreso }}%</span>
                                     </div>
-                                    <div class="flex-1">
-                                        <div class="text-xs font-semibold">{{ explode(' ', $mensaje->participante->user->name)[0] }}</div>
-                                        <div class="text-sm text-gray-700">{{ $mensaje->mensaje }}</div>
-                                        <div class="text-xs text-gray-400">{{ $mensaje->created_at->format('g:i A') }}</div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div class="bg-indigo-600 h-3 rounded-full transition-all duration-500" 
+                                             style="width: {{ $progreso }}%"></div>
                                     </div>
                                 </div>
-                            @empty
-                                <div class="text-center text-gray-400 py-8">
-                                    <p class="text-sm">No hay mensajes aún</p>
-                                    <p class="text-xs">Sé el primero en enviar un mensaje</p>
-                                </div>
-                            @endforelse
-                        </div>
 
-                        @if($esMiembro)
+                                <div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Tareas Completadas</span>
+                                        <span class="font-semibold">{{ $tareasCompletadas }}/{{ $totalTareas }}</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">Tareas Pendientes</span>
+                                        <span class="font-semibold text-orange-600">{{ $totalTareas - $tareasCompletadas }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Chat del Equipo (SOLO PARA MIEMBROS) -->
+                    @if($esMiembro)
+                        <div class="bg-white rounded-xl shadow-sm">
+                            <div class="p-4 border-b">
+                                <h3 class="font-bold flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Chat del Equipo
+                                </h3>
+                            </div>
+                            
+                            <div class="h-64 overflow-y-auto p-4 space-y-3" id="chat-messages">
+                                @php
+                                    $mensajes = $equipo->mensajes()->with('participante.user')->latest()->take(20)->get()->reverse();
+                                @endphp
+
+                                @forelse($mensajes as $mensaje)
+                                    <div class="flex gap-2">
+                                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                            {{ substr($mensaje->participante->user->name, 0, 1) }}
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="text-xs font-semibold">{{ explode(' ', $mensaje->participante->user->name)[0] }}</div>
+                                            <div class="text-sm text-gray-700">{{ $mensaje->mensaje }}</div>
+                                            <div class="text-xs text-gray-400">{{ $mensaje->created_at->format('g:i A') }}</div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="text-center text-gray-400 py-8">
+                                        <p class="text-sm">No hay mensajes aún</p>
+                                        <p class="text-xs">Sé el primero en enviar un mensaje</p>
+                                    </div>
+                                @endforelse
+                            </div>
+
                             <form method="POST" action="{{ route('equipos.enviar-mensaje', $equipo) }}" class="p-4 border-t">
                                 @csrf
                                 <div class="flex gap-2">
@@ -199,10 +426,26 @@
                                     </button>
                                 </div>
                             </form>
-                        @endif
-                    </div>
+                        </div>
+                    @else
+                        <!-- Mensaje para no miembros -->
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <h3 class="font-bold mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                                </svg>
+                                Chat del Equipo
+                            </h3>
+                            <div class="text-center py-8 text-gray-400">
+                                <svg class="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                <p class="text-sm">Solo los miembros del equipo pueden ver el chat</p>
+                            </div>
+                        </div>
+                    @endif
 
-                    <!-- Invitaciones Pendientes -->
+                    <!-- Invitaciones Pendientes (SOLO PARA LÍDER) -->
                     @if($esLider)
                         @php
                             $pendientes = $equipo->participantes()->wherePivot('estado', 'pendiente')->get();
@@ -213,7 +456,7 @@
                                 <h3 class="font-bold mb-3">Invitaciones Pendientes</h3>
                                 <div class="space-y-3">
                                     @foreach($pendientes as $solicitante)
-                                        <div class="p-3 bg-yellow-50 rounded-lg">
+                                        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-100">
                                             <div class="flex items-center gap-2 mb-2">
                                                 <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
                                                     {{ substr($solicitante->user->name, 0, 1) }}
@@ -224,6 +467,20 @@
                                                 </div>
                                                 <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">Pendiente</span>
                                             </div>
+                                            <div class="flex gap-2 mt-2">
+                                                <form method="POST" action="{{ route('equipos.aceptar-miembro', [$equipo, $solicitante->id]) }}" class="flex-1">
+                                                    @csrf
+                                                    <button type="submit" class="w-full px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium hover:bg-green-700">
+                                                        Aceptar
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('equipos.rechazar-miembro', [$equipo, $solicitante->id]) }}" class="flex-1">
+                                                    @csrf
+                                                    <button type="submit" class="w-full px-3 py-1.5 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700">
+                                                        Rechazar
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -231,39 +488,259 @@
                         @endif
                     @endif
 
-                    <!-- Estadísticas del Equipo -->
-                    <div class="bg-white rounded-xl shadow-sm p-4">
-                        <h3 class="font-bold mb-3">Estadísticas del Equipo</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span class="text-gray-600">Progreso General</span>
-                                    <span class="font-semibold">60%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-indigo-600 h-2 rounded-full" style="width: 60%"></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Tareas Completadas</span>
-                                    <span class="font-semibold">1/5</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-gray-600">Días Restantes</span>
-                                    <span class="font-semibold">12</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
         </div>
     </div>
+
+    <!-- Modal Solicitar Unirse -->
+    <div id="modalUnirse" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Solicitar Unirse al Equipo</h3>
+            
+            <form method="POST" action="{{ route('equipos.solicitar', $equipo) }}">
+                @csrf
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona tu rol en el equipo</label>
+                    <select name="perfil_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        <option value="">-- Selecciona un rol --</option>
+                        @foreach(\App\Models\Perfil::all() as $perfil)
+                            <option value="{{ $perfil->id }}">{{ $perfil->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">¿Por qué quieres unirte?</label>
+                    <textarea rows="3" 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                              placeholder="Opcional: Cuéntale al líder por qué eres un buen candidato..."></textarea>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" 
+                            onclick="toggleModalUnirse()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Enviar Solicitud
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Crear Tarea -->
+    <div id="modalCrearTarea" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Crear Nueva Tarea</h3>
+            
+            <form method="POST" action="{{ route('equipos.tareas.store', $equipo) }}">
+                @csrf
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Tarea *</label>
+                    <input type="text" 
+                           name="nombre" 
+                           required 
+                           maxlength="200"
+                           placeholder="Ej: Diseñar interfaz de usuario"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <textarea name="descripcion" 
+                              rows="3" 
+                              maxlength="1000"
+                              placeholder="Detalles de la tarea..."
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Asignar a (máximo 2 personas)</label>
+                    <div class="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3">
+                        @foreach($equipo->participantes as $miembro)
+                            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                <input type="checkbox" 
+                                       name="participantes[]" 
+                                       value="{{ $miembro->id }}"
+                                       class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                        {{ substr($miembro->user->name, 0, 1) }}
+                                    </div>
+                                    <span class="text-sm">{{ $miembro->user->name }}</span>
+                                    @if($equipo->lider_id == $miembro->id)
+                                        <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs">Líder</span>
+                                    @endif
+                                </div>
+                            </label>
+                        @endforeach
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Puedes seleccionar hasta 2 participantes</p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" 
+                            onclick="toggleModalCrearTarea()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Crear Tarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Editar Tarea -->
+    <div id="modalEditarTarea" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Editar Tarea</h3>
+            
+            <form id="formEditarTarea" method="POST" action="">
+                @csrf
+                @method('PUT')
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Tarea *</label>
+                    <input type="text" 
+                           id="edit_nombre"
+                           name="nombre" 
+                           required 
+                           maxlength="200"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <textarea id="edit_descripcion"
+                              name="descripcion" 
+                              rows="3" 
+                              maxlength="1000"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Asignar a (máximo 2 personas)</label>
+                    <div class="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3">
+                        @foreach($equipo->participantes as $miembro)
+                            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                                <input type="checkbox" 
+                                       name="participantes[]" 
+                                       value="{{ $miembro->id }}"
+                                       class="edit-participante rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                        {{ substr($miembro->user->name, 0, 1) }}
+                                    </div>
+                                    <span class="text-sm">{{ $miembro->user->name }}</span>
+                                    @if($equipo->lider_id == $miembro->id)
+                                        <span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs">Líder</span>
+                                    @endif
+                                </div>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" 
+                            onclick="toggleModalEditarTarea()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        // Modal Unirse
+        function toggleModalUnirse() {
+            document.getElementById('modalUnirse').classList.toggle('hidden');
+        }
+
+        document.getElementById('modalUnirse')?.addEventListener('click', function(e) {
+            if (e.target === this) toggleModalUnirse();
+        });
+
+        // Modal Crear Tarea
+        function toggleModalCrearTarea() {
+            document.getElementById('modalCrearTarea').classList.toggle('hidden');
+        }
+
+        document.getElementById('modalCrearTarea')?.addEventListener('click', function(e) {
+            if (e.target === this) toggleModalCrearTarea();
+        });
+
+        // Limitar selección a 2 participantes
+        document.querySelectorAll('input[name="participantes[]"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checked = document.querySelectorAll('input[name="participantes[]"]:checked');
+                if (checked.length > 2) {
+                    this.checked = false;
+                    alert('Solo puedes asignar máximo 2 participantes por tarea');
+                }
+            });
+        });
+
+        // Modal Editar Tarea
+        function toggleModalEditarTarea() {
+            document.getElementById('modalEditarTarea').classList.toggle('hidden');
+        }
+
+        document.getElementById('modalEditarTarea')?.addEventListener('click', function(e) {
+            if (e.target === this) toggleModalEditarTarea();
+        });
+
+        function abrirModalEditarTarea(tarea) {
+            // Actualizar action del form
+            const form = document.getElementById('formEditarTarea');
+            form.action = `/equipos/{{ $equipo->id }}/tareas/${tarea.id}`;
+            
+            // Llenar datos
+            document.getElementById('edit_nombre').value = tarea.nombre;
+            document.getElementById('edit_descripcion').value = tarea.descripcion || '';
+            
+            // Marcar participantes asignados
+            document.querySelectorAll('.edit-participante').forEach(checkbox => {
+                checkbox.checked = false;
+                if (tarea.participantes) {
+                    tarea.participantes.forEach(p => {
+                        if (parseInt(checkbox.value) === p.id) {
+                            checkbox.checked = true;
+                        }
+                    });
+                }
+            });
+            
+            // Mostrar modal
+            toggleModalEditarTarea();
+        }
+
+        // Limitar selección en editar también
+        document.querySelectorAll('.edit-participante').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checked = document.querySelectorAll('.edit-participante:checked');
+                if (checked.length > 2) {
+                    this.checked = false;
+                    alert('Solo puedes asignar máximo 2 participantes por tarea');
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>
