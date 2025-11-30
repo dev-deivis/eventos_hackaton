@@ -1,16 +1,6 @@
 <x-app-layout>
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <!-- Botón Volver -->
-            <div class="mb-6">
-                <a href="{{ route('eventos.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                    Volver
-                </a>
-            </div>
 
             <!-- Header del Evento -->
             <div class="bg-white rounded-xl shadow-sm p-8 mb-6">

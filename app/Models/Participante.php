@@ -94,4 +94,21 @@ class Participante extends Model
     {
         return $this->hasMany(Habilidad::class)->orderBy('orden');
     }
+
+    /**
+     * Tareas asignadas al participante
+     */
+    public function tareas()
+    {
+        return $this->belongsToMany(TareaProyecto::class, 'participante_tarea', 'participante_id', 'tarea_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * Tareas pendientes del participante
+     */
+    public function tareasPendientes()
+    {
+        return $this->tareas()->where('estado', '!=', 'completada');
+    }
 }

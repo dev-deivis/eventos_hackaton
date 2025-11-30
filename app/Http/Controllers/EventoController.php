@@ -96,8 +96,12 @@ class EventoController extends Controller
 
             // Preparar datos del evento
             $validated['created_by'] = auth()->id();
-            $validated['estado'] = 'draft'; // Los eventos se crean como borrador
+            $validated['estado'] = 'abierto'; // Crear directamente como abierto
             $validated['es_virtual'] = $request->input('es_virtual', 0);
+            // Remover imagen_portada si no se subió archivo
+            if (!isset($validated['imagen_portada'])) {
+                unset($validated['imagen_portada']);
+            }
             
             // Crear evento
             $evento = Evento::create($validated);
@@ -128,7 +132,7 @@ class EventoController extends Controller
 
             return redirect()
                 ->route('eventos.show', $evento)
-                ->with('success', '¡Evento creado exitosamente! Recuerda activarlo para que los estudiantes puedan registrarse.');
+                ->with('success', '¡Evento creado exitosamente!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -141,7 +145,7 @@ class EventoController extends Controller
             
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Error al crear el evento. Por favor, verifica que todas las fechas sean correctas.']);
+                ->with('error', 'Error al crear el evento: ' . $e->getMessage());
         }
     }
 

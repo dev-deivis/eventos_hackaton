@@ -159,12 +159,12 @@
                                 <span class="font-medium text-gray-700">Unirse a Equipo</span>
                             </a>
 
-                            <a href="{{ route('profile.edit') }}" 
+                            <a href="{{ route('equipos.mis-equipos') }}" 
                                class="flex items-center gap-3 p-3 bg-pink-50 hover:bg-pink-100 rounded-lg transition">
                                 <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
                                 </svg>
-                                <span class="font-medium text-gray-700">Ver Progreso</span>
+                                <span class="font-medium text-gray-700">Mis Equipos</span>
                             </a>
                         </div>
                     </div>
