@@ -9,9 +9,9 @@
                         <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                         </svg>
-                        Crear Nuevo Evento
+                        Editar Evento: {{ $evento->nombre }}
                     </h1>
-                    <p class="text-gray-600 mt-1">Configura todos los detalles del evento de desarrollo de software</p>
+                    <p class="text-gray-600 mt-1">Modifica la información del evento</p>
                 </div>
                 <div class="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg">
                     <span class="font-medium">{{ auth()->user()->name }}</span>
@@ -20,8 +20,9 @@
             </div>
 
             <!-- Formulario -->
-            <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('eventos.update', $evento) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
+                @method('PUT')
 
                 
                 <!-- Información Básica -->
@@ -42,7 +43,7 @@
                             <input type="text" 
                                    id="nombre" 
                                    name="nombre" 
-                                   value="{{ old('nombre') }}"
+                                   value="{{ old('nombre', $evento->nombre) }}"
                                    placeholder="Ej: Hackathon 2025"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
@@ -61,10 +62,12 @@
                                     required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('tipo') border-red-500 @enderror">
                                 <option value="">Selecciona un tipo</option>
-                                <option value="hackathon" {{ old('tipo') == 'hackathon' ? 'selected' : '' }}>Hackathon</option>
-                                <option value="datathon" {{ old('tipo') == 'datathon' ? 'selected' : '' }}>Datathon</option>
-                                <option value="concurso" {{ old('tipo') == 'concurso' ? 'selected' : '' }}>Concurso</option>
-                                <option value="workshop" {{ old('tipo') == 'workshop' ? 'selected' : '' }}>Workshop</option>
+                                <option value="hackathon" {{ old('tipo', $evento->tipo) == 'hackathon' ? 'selected' : '' }}>Hackathon</option>
+                                <option value="datathon" {{ old('tipo', $evento->tipo) == 'datathon' ? 'selected' : '' }}>Datathon</option>
+                                <option value="concurso" {{ old('tipo', $evento->tipo) == 'concurso' ? 'selected' : '' }}>Concurso</option>
+                                <option value="workshop" {{ old('tipo', $evento->tipo) == 'workshop' ? 'selected' : '' }}>Workshop</option>
+
+
                             </select>
                             @error('tipo')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -79,7 +82,7 @@
                             <input type="number" 
                                    id="duracion_horas" 
                                    name="duracion_horas" 
-                                   value="{{ old('duracion_horas', 48) }}"
+                                   value="{{ old('duracion_horas', $evento->duracion_horas) }}"
                                    min="1"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -95,7 +98,7 @@
                                       rows="4" 
                                       required
                                       placeholder="Describe el evento, objetivos y qué pueden esperar los participantes..."
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('descripcion') border-red-500 @enderror">{{ old('descripcion', $evento->descripcion) }}</textarea>
                             @error('descripcion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -122,7 +125,7 @@
                             <input type="datetime-local" 
                                    id="fecha_limite_registro" 
                                    name="fecha_limite_registro" 
-                                   value="{{ old('fecha_limite_registro') }}"
+                                   value="{{ old('fecha_limite_registro', $evento->fecha_limite_registro?->format('Y-m-d\TH:i')) }}"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_limite_registro') border-red-500 @enderror">
                             <p class="mt-1 text-xs text-gray-500">Fecha límite para que los usuarios se registren</p>
@@ -137,7 +140,7 @@
                             <input type="datetime-local" 
                                    id="fecha_inicio" 
                                    name="fecha_inicio" 
-                                   value="{{ old('fecha_inicio') }}"
+                                   value="{{ old('fecha_inicio', $evento->fecha_inicio?->format('Y-m-d\TH:i')) }}"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_inicio') border-red-500 @enderror">
                         </div>
@@ -151,7 +154,7 @@
                             <input type="datetime-local" 
                                    id="fecha_fin" 
                                    name="fecha_fin" 
-                                   value="{{ old('fecha_fin') }}"
+                                   value="{{ old('fecha_fin', $evento->fecha_fin?->format('Y-m-d\TH:i')) }}"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_fin') border-red-500 @enderror">
                         </div>
@@ -165,7 +168,7 @@
                             <input type="datetime-local" 
                                    id="fecha_evaluacion" 
                                    name="fecha_evaluacion" 
-                                   value="{{ old('fecha_evaluacion') }}"
+                                   value="{{ old('fecha_evaluacion', $evento->fecha_evaluacion?->format('Y-m-d\TH:i')) }}"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                             <p class="mt-1 text-xs text-gray-500">Fecha en que los jueces evaluarán los proyectos</p>
                         </div>
@@ -178,8 +181,8 @@
                             </label>
                             <input type="datetime-local" 
                                    id="fecha_premiacion" 
-                                   name="fecha_premiacion" 
-                                   value="{{ old('fecha_premiacion') }}"
+                                   name="fecha_premiacion"
+                                   value="{{ old('fecha_premiacion', $evento->fecha_premiacion?->format('Y-m-d\TH:i')) }}"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                             <p class="mt-1 text-xs text-gray-500">Fecha de la ceremonia de premiación</p>
                         </div>
@@ -204,7 +207,7 @@
                             <input type="number" 
                                    id="max_participantes" 
                                    name="max_participantes" 
-                                   value="{{ old('max_participantes', 100) }}"
+                                   value="{{ old('max_participantes', $evento->max_participantes) }}"
                                    min="10"
                                    placeholder="100"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -218,7 +221,7 @@
                             <input type="number" 
                                    id="min_miembros_equipo" 
                                    name="min_miembros_equipo" 
-                                   value="{{ old('min_miembros_equipo', 3) }}"
+                                   value="{{ old('min_miembros_equipo', $evento->min_miembros_equipo) }}"
                                    min="1" 
                                    max="10"
                                    required
@@ -233,7 +236,7 @@
                             <input type="number" 
                                    id="max_miembros_equipo" 
                                    name="max_miembros_equipo" 
-                                   value="{{ old('max_miembros_equipo', 5) }}"
+                                   value="{{ old('max_miembros_equipo', $evento->max_miembros_equipo) }}"
                                    min="1" 
                                    max="10"
                                    required
@@ -265,7 +268,7 @@
                     <div id="roles-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @php
                             $rolesBase = ['Programador', 'Diseñador', 'Analista de Negocios', 'Analista de Datos'];
-                            $rolesSeleccionados = old('roles', []);
+                            $rolesGuardados = old('roles', $evento->roles_requeridos ?? []);
                         @endphp
                         
                         @foreach($rolesBase as $rol)
@@ -273,10 +276,33 @@
                                 <input type="checkbox" 
                                        name="roles[]" 
                                        value="{{ $rol }}" 
-                                       {{ in_array($rol, $rolesSeleccionados) ? 'checked' : '' }}
+                                       {{ in_array($rol, $rolesGuardados) ? 'checked' : '' }}
                                        class="w-5 h-5 text-indigo-600 rounded">
                                 <span class="font-medium">{{ $rol }}</span>
                             </label>
+                        @endforeach
+                        
+                        @foreach($rolesGuardados as $rol)
+                            @if(!in_array($rol, $rolesBase))
+                                <div class="flex items-center gap-2 p-4 border-2 border-gray-200 rounded-lg">
+                                    <input type="checkbox" 
+                                           name="roles[]" 
+                                           value="{{ $rol }}" 
+                                           checked
+                                           class="w-5 h-5 text-indigo-600 rounded">
+                                    <input type="text" 
+                                           value="{{ $rol }}" 
+                                           readonly
+                                           class="flex-1 font-medium bg-transparent border-0 p-0 focus:ring-0">
+                                    <button type="button" 
+                                            onclick="this.parentElement.remove()" 
+                                            class="text-red-500 hover:text-red-700">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -293,16 +319,16 @@
                     <div class="space-y-4">
                         <!-- Tipo de Evento -->
                         <div class="flex gap-4">
-                            <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer flex-1 transition">
-                                <input type="radio" name="es_virtual" value="1" class="w-5 h-5 text-indigo-600">
+                            <label class="flex items-center gap-3 p-4 border-2 {{ old('es_virtual', $evento->es_virtual) == 1 ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200' }} rounded-lg hover:border-indigo-300 cursor-pointer flex-1 transition">
+                                <input type="radio" name="es_virtual" value="1" {{ old('es_virtual', $evento->es_virtual) == 1 ? 'checked' : '' }} class="w-5 h-5 text-indigo-600">
                                 <div>
                                     <p class="font-medium">Evento Virtual</p>
                                     <p class="text-sm text-gray-600">Se llevará a cabo en línea</p>
                                 </div>
                             </label>
-
-                            <label class="flex items-center gap-3 p-4 border-2 border-indigo-500 rounded-lg cursor-pointer flex-1 bg-indigo-50">
-                                <input type="radio" name="es_virtual" value="0" checked class="w-5 h-5 text-indigo-600">
+                            
+                            <label class="flex items-center gap-3 p-4 border-2 {{ old('es_virtual', $evento->es_virtual) == 0 ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200' }} rounded-lg cursor-pointer flex-1 transition">
+                                <input type="radio" name="es_virtual" value="0" {{ old('es_virtual', $evento->es_virtual) == 0 ? 'checked' : '' }} class="w-5 h-5 text-indigo-600">
                                 <div>
                                     <p class="font-medium">Ubicación Física</p>
                                     <p class="text-sm text-gray-600">Lugar físico especificado</p>
@@ -318,7 +344,7 @@
                             <input type="text" 
                                    id="ubicacion" 
                                    name="ubicacion" 
-                                   value="{{ old('ubicacion') }}"
+                                   value="{{ old('ubicacion', $evento->ubicacion) }}"
                                    placeholder="Ej: Instituto Tecnológico de Oaxaca, Centro de Cómputo"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('ubicacion') border-red-500 @enderror">
@@ -349,17 +375,37 @@
                     </div>
 
                     <div id="premios-container" class="space-y-3">
-                        
+                        @foreach($evento->premios as $index => $premio)
+                            <div class="flex items-center gap-4">
+                                <input type="text" 
+                                       name="premios[{{ $index }}][lugar]" 
+                                       value="{{ old('premios.'.$index.'.lugar', $premio->lugar) }}" 
+                                       class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
+                                <input type="text" 
+                                       name="premios[{{ $index }}][descripcion]" 
+                                       value="{{ old('premios.'.$index.'.descripcion', $premio->descripcion) }}"
+                                       placeholder="Descripción del Premio"
+                                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                                @if($evento->premios->count() > 1 || $index > 0)
+                                    <button type="button" onclick="eliminarPremio(this)" class="text-red-500 hover:text-red-700">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 
                 <!-- Botones de Acción -->
                 <div class="flex gap-4">
                     <button type="submit" 
-                            class="flex-1 px-6 py-4 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-bold text-lg transition shadow-lg hover:shadow-xl">
-                        Crear Evento
-                    </button>
-                    <a href="{{ route('dashboard') }}" 
+                    class="flex-1 px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-lg transition shadow-lg hover:shadow-xl">
+                    Guardar Cambios
+                </button>
+        
+                    <a href="{{ route('eventos.show', $evento) }}" 
                        class="px-6 py-4 bg-white hover:bg-gray-50 border-2 border-gray-300 text-gray-700 rounded-lg font-medium transition">
                         Cancelar
                     </a>
@@ -371,8 +417,8 @@
     </div>
 
     <script>
-        let premioIndex = 0;
-        let contadorLugar = 1;
+        let premioIndex = {{ $evento->premios->count() }};
+        let contadorLugar = {{ $evento->premios->count() + 1 }};
 
         function agregarPremio() {
             const container = document.getElementById('premios-container');
@@ -393,7 +439,7 @@
                        class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
                 <input type="text" 
                        name="premios[${premioIndex}][descripcion]" 
-                       placeholder="Ej: $10,000 + Trofeo"
+                       placeholder="Descripción del Premio"
                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
                 <button type="button" onclick="eliminarPremio(this)" class="text-red-500 hover:text-red-700">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

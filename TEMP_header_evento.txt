@@ -1,0 +1,84 @@
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Header del Evento -->
+            <div class="bg-white rounded-xl shadow-sm p-8 mb-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <!-- NOMBRE DEL EVENTO -->
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $evento->nombre }}</h1>
+                        
+                        <!-- Tipo de Evento -->
+                        @php
+                            $tipoColors = [
+                                'hackathon' => 'bg-blue-100 text-blue-700',
+                                'datathon' => 'bg-purple-100 text-purple-700',
+                                'concurso' => 'bg-pink-100 text-pink-700',
+                                'workshop' => 'bg-green-100 text-green-700',
+                            ];
+                            $tipoColor = $tipoColors[$evento->tipo] ?? 'bg-gray-100 text-gray-700';
+                        @endphp
+                        <span class="inline-block px-3 py-1 {{ $tipoColor }} rounded-full text-sm font-semibold mb-4">
+                            {{ ucfirst($evento->tipo) }}
+                        </span>
+                        
+                        <!-- Información Básica -->
+                        <div class="flex items-center gap-4 text-sm text-gray-600">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                {{ $evento->fecha_inicio->format('d M Y') }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                                {{ $evento->ubicacion }}
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                </svg>
+                                {{ $evento->duracion_horas }} horas
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <!-- Badge de Estado -->
+                        @php
+                            $estadoColors = [
+                                'draft' => 'bg-gray-100 text-gray-700',
+                                'abierto' => 'bg-green-100 text-green-700',
+                                'en_progreso' => 'bg-blue-100 text-blue-700',
+                                'cerrado' => 'bg-red-100 text-red-700',
+                                'completado' => 'bg-purple-100 text-purple-700',
+                            ];
+                            $colorClass = $estadoColors[$evento->estado] ?? 'bg-gray-100 text-gray-700';
+                        @endphp
+                        <span class="px-4 py-2 {{ $colorClass }} rounded-lg font-medium">
+                            {{ $evento->estadoTexto }}
+                        </span>
+
+                        <!-- Botones de Admin -->
+                        @if(auth()->check() && auth()->user()->isAdmin())
+                            <!-- Botón Editar Evento -->
+                            <a href="{{ route('eventos.edit', $evento) }}" 
+                               class="px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg font-medium flex items-center gap-2 transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                </svg>
+                                Editar
+                            </a>
+                        
+                            <!-- Botón Cambiar Estado -->
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open" 
+                                        class="px-4 py-2 bg-pink-100 text-pink-700 hover:bg-pink-200 rounded-lg font-medium flex items-center gap-2 transition">
+                                    Cambiar Estado
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>

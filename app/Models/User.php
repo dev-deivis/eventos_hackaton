@@ -66,6 +66,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Equipos asignados al juez para evaluar
+     */
+    public function equiposAsignados(): BelongsToMany
+    {
+        return $this->belongsToMany(Equipo::class, 'juez_equipo', 'juez_id', 'equipo_id')
+                    ->withTimestamps();
+    }
+
+    /**
      * Eventos creados por este usuario
      */
     public function eventosCreados(): HasMany

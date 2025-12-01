@@ -81,6 +81,8 @@ class EventoController extends Controller
             'premios' => 'nullable|array',
             'premios.*.lugar' => 'nullable|string|max:100',
             'premios.*.descripcion' => 'nullable|string|max:500',
+            'roles' => 'nullable|array',
+            'roles.*' => 'string|max:100',
         ], [
             'fecha_fin.after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
             'max_miembros_equipo.gte' => 'El tamaño máximo del equipo debe ser mayor o igual al mínimo.',
@@ -98,6 +100,8 @@ class EventoController extends Controller
             $validated['created_by'] = auth()->id();
             $validated['estado'] = 'abierto'; // Crear directamente como abierto
             $validated['es_virtual'] = $request->input('es_virtual', 0);
+            $validated['roles_requeridos'] = $request->input('roles', []);
+            
             // Remover imagen_portada si no se subió archivo
             if (!isset($validated['imagen_portada'])) {
                 unset($validated['imagen_portada']);
@@ -215,27 +219,83 @@ class EventoController extends Controller
             'fecha_evaluacion' => 'nullable|date',
             'fecha_premiacion' => 'nullable|date',
             'ubicacion' => 'required|string|max:255',
+            'es_virtual' => 'nullable|boolean',
             'duracion_horas' => 'required|integer|min:1',
             'max_participantes' => 'nullable|integer|min:10',
             'min_miembros_equipo' => 'required|integer|min:1|max:10',
             'max_miembros_equipo' => 'required|integer|min:1|max:10',
             'imagen_portada' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'premios' => 'nullable|array',
+            'premios.*.lugar' => 'nullable|string|max:100',
+            'premios.*.descripcion' => 'nullable|string|max:500',
+        ], [
+            'fecha_fin.after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
+            'max_miembros_equipo.gte' => 'El tamaño máximo del equipo debe ser mayor o igual al mínimo.',
         ]);
 
-        // Manejar imagen de portada
-        if ($request->hasFile('imagen_portada')) {
-            // Eliminar imagen anterior si existe
-            if ($evento->imagen_portada) {
-                Storage::disk('public')->delete($evento->imagen_portada);
+        DB::beginTransaction();
+        
+        try {
+            // Manejar imagen de portada
+            if ($request->hasFile('imagen_portada')) {
+                // Eliminar imagen anterior si existe
+                if ($evento->imagen_portada) {
+                    Storage::disk('public')->delete($evento->imagen_portada);
+                }
+                $validated['imagen_portada'] = $request->file('imagen_portada')->store('eventos', 'public');
             }
-            $validated['imagen_portada'] = $request->file('imagen_portada')->store('eventos', 'public');
+
+            // Preparar datos del evento
+            $validated['es_virtual'] = $request->input('es_virtual', 0);
+            $validated['roles_requeridos'] = $request->input('roles', []);
+            
+            // Actualizar evento
+            $evento->update($validated);
+
+            // Actualizar premios
+            if ($request->has('premios')) {
+                // Eliminar premios antiguos
+                $evento->premios()->delete();
+                
+                // Crear nuevos premios
+                $orden = 1;
+                foreach ($request->premios as $premioData) {
+                    // Solo guardar si tiene lugar Y descripción
+                    if (
+                        isset($premioData['lugar']) && 
+                        isset($premioData['descripcion']) && 
+                        !empty(trim($premioData['lugar'])) && 
+                        !empty(trim($premioData['descripcion']))
+                    ) {
+                        EventPremio::create([
+                            'evento_id' => $evento->id,
+                            'lugar' => trim($premioData['lugar']),
+                            'descripcion' => trim($premioData['descripcion']),
+                            'orden' => $orden,
+                        ]);
+                        $orden++;
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('eventos.show', $evento)
+                ->with('success', 'Evento actualizado exitosamente.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Error al actualizar evento:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Error al actualizar el evento: ' . $e->getMessage());
         }
-
-        $evento->update($validated);
-
-        return redirect()
-            ->route('eventos.show', $evento)
-            ->with('success', 'Evento actualizado exitosamente.');
     }
 
     /**

@@ -63,93 +63,67 @@
                 </div>
             </div>
 
-            <!-- Contenido Principal -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Contenido Principal: Acciones y Estadísticas -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 
-                <!-- Columna Izquierda (2/3) -->
-                <div class="lg:col-span-2 space-y-6">
-                    
-                    <!-- Acciones Rápidas -->
+                <!-- Columna Izquierda (2/3) - Acciones Rápidas -->
+                <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">Acciones Rápidas</h3>
                         
-                        <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-3">
                             <a href="{{ route('eventos.create') }}" 
                                class="flex items-center gap-3 p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition group">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="font-semibold">Crear Nuevo Evento</span>
+                                <span class="font-semibold">Crear Evento</span>
                             </a>
 
-                            <a href="#" 
+                            <a href="{{ route('eventos.index') }}" 
+                               class="flex items-center gap-3 p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition group">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                                <span class="font-semibold">Ver Eventos</span>
+                            </a>
+
+                            <a href="{{ route('admin.usuarios.index') }}" 
+                               class="flex items-center gap-3 p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                                </svg>
+                                <span class="font-semibold">Usuarios</span>
+                            </a>
+
+                            <a href="{{ route('admin.rankings') }}" 
                                class="flex items-center gap-3 p-4 bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                                     <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="font-semibold">Ver Rankings</span>
+                                <span class="font-semibold">Rankings</span>
                             </a>
 
-                            <button class="w-full flex items-center gap-3 p-4 bg-white hover:bg-gray-50 border-2 border-gray-200 rounded-lg transition text-left">
+                            <button class="flex items-center gap-3 p-4 bg-white hover:bg-gray-50 border-2 border-gray-200 rounded-lg transition text-left">
                                 <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
                                 </svg>
-                                <span class="font-semibold text-gray-700">Reportes y Análisis</span>
+                                <span class="font-semibold text-gray-700">Reportes</span>
                             </button>
 
-                            <button class="w-full flex items-center gap-3 p-4 bg-white hover:bg-gray-50 border-2 border-gray-200 rounded-lg transition text-left">
+                            <button class="flex items-center gap-3 p-4 bg-white hover:bg-gray-50 border-2 border-gray-200 rounded-lg transition text-left">
                                 <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="font-semibold text-gray-700">Generar Constancias</span>
+                                <span class="font-semibold text-gray-700">Constancias</span>
                             </button>
                         </div>
                     </div>
-
-                    <!-- Eventos Recientes -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-bold text-gray-900">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                                </svg> Eventos Recientes</h3>
-                        </div>
-
-                        <div class="space-y-4">
-                            @forelse(\App\Models\Evento::latest()->take(3)->get() as $evento)
-                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                                    <div class="flex-1">
-                                        <h4 class="font-semibold text-gray-900">{{ $evento->nombre }}</h4>
-                                        <p class="text-sm text-gray-600">{{ $evento->totalEquipos() }} Equipos</p>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-medium">
-                                            {{ $evento->estadoTexto }}
-                                        </span>
-                                        <a href="{{ route('eventos.show', $evento) }}" 
-                                           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">
-                                            Ver Detalles
-                                        </a>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="text-center py-8 text-gray-500">
-                                    <p>No hay eventos recientes</p>
-                                    <a href="{{ route('eventos.create') }}" class="text-indigo-600 hover:underline mt-2 inline-block">
-                                        Crear el primer evento
-                                    </a>
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- Columna Derecha (1/3) -->
-                <div class="space-y-6">
-                    
-                    <!-- Actividad Reciente -->
+                <!-- Columna Derecha (1/3) - Estadísticas -->
+                <div>
                     <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">Estadísticas Rápidas</h3>
                         
@@ -181,26 +155,49 @@
                             </a>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Acceso Rápido -->
-                    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-sm p-6 text-white">
-                        <h3 class="text-lg font-bold mb-4"> Acceso Rápido</h3>
-                        
-                        <div class="space-y-3">
-                            <a href="{{ route('eventos.index') }}" class="block p-3 bg-white/10 hover:bg-white/20 rounded-lg transition">
-                                <p class="font-medium">Ver todos los eventos</p>
-                            </a>
-                            
-                            <a href="#" class="block p-3 bg-white/10 hover:bg-white/20 rounded-lg transition">
-                                <p class="font-medium">Gestionar usuarios</p>
-                            </a>
-                            
-                            <a href="#" class="block p-3 bg-white/10 hover:bg-white/20 rounded-lg transition">
-                                <p class="font-medium">Configuración</p>
+            </div>
+
+            <!-- Eventos Recientes (Ancho Completo) -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                        Eventos Recientes
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    @forelse(\App\Models\Evento::latest()->take(4)->get() as $evento)
+                        <div class="flex items-center justify-between p-5 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-gray-900 text-lg">{{ $evento->nombre }}</h4>
+                                <p class="text-sm text-gray-600 mt-1">{{ $evento->totalEquipos() }} Equipos registrados</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">
+                                    {{ $evento->estadoTexto }}
+                                </span>
+                                <a href="{{ route('eventos.show', $evento) }}" 
+                                   class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
+                                    Ver Detalles
+                                </a>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-12 text-gray-500">
+                            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                            </svg>
+                            <p class="text-lg font-medium">No hay eventos recientes</p>
+                            <a href="{{ route('eventos.create') }}" class="inline-block mt-3 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
+                                Crear el primer evento
                             </a>
                         </div>
-                    </div>
-
+                    @endforelse
                 </div>
             </div>
 

@@ -6,7 +6,20 @@
             <div class="bg-white rounded-xl shadow-sm p-8 mb-6">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $evento->titulo }}</h1>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $evento->nombre }}</h1>
+                        <!-- Tipo de Evento -->
+                        @php
+                            $tipoColors = [
+                                'hackathon' => 'bg-blue-100 text-blue-700',
+                                'datathon' => 'bg-purple-100 text-purple-700',
+                                'concurso' => 'bg-pink-100 text-pink-700',
+                                'workshop' => 'bg-green-100 text-green-700',
+                            ];
+                            $tipoColor = $tipoColors[$evento->tipo] ?? 'bg-gray-100 text-gray-700';
+                            @endphp
+                            <span class="inline-block px-3 py-1 {{ $tipoColor }} rounded-full text-sm font-semibold mb-4">
+                                {{ ucfirst($evento->tipo) }}
+                            </span>
                         <div class="flex items-center gap-4 text-sm text-gray-600">
                             <span class="flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -30,7 +43,7 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
                         <!-- Badge de Estado -->
                         @php
                             $estadoColors = [
@@ -46,11 +59,21 @@
                             {{ $evento->estadoTexto }}
                         </span>
 
-                        <!-- Botón Cambiar Estado (Solo Admin) -->
+                        <!-- Botones de Admin (Solo Admin) -->
                         @if(auth()->check() && auth()->user()->isAdmin())
+                            <!-- Botón Editar Evento -->
+                            <a href="{{ route('eventos.edit', $evento) }}" 
+                               class="px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg font-medium flex items-center gap-2 transition">
+                               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                               </svg>
+                            Editar
+                            </a>
+
+                            <!-- Botón Cambiar Estado con Dropdown -->
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open" 
-                                        class="px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg font-medium flex items-center gap-2">
+                                        class="px-4 py-2 bg-pink-100 text-pink-700 hover:bg-pink-200 rounded-lg font-medium flex items-center gap-2 transition">
                                     Cambiar Estado
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>

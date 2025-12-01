@@ -177,15 +177,14 @@ Route::middleware('auth')->prefix('notificaciones')->name('notificaciones.')->gr
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function() {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Rankings
+    Route::get('/rankings', [\App\Http\Controllers\AdminController::class, 'rankings'])->name('rankings');
     
     // Gestión de usuarios
-    Route::get('/usuarios', function() {
-        $usuarios = \App\Models\User::with(['roles', 'perfil'])->paginate(20);
-        return view('admin.usuarios.index', compact('usuarios'));
-    })->name('usuarios.index');
+    Route::resource('usuarios', \App\Http\Controllers\AdminUserController::class)->except(['show']);
+    Route::put('/usuarios/{usuario}/password', [\App\Http\Controllers\AdminUserController::class, 'updatePassword'])->name('usuarios.update-password');
     
     // Estadísticas
     Route::get('/estadisticas', function() {
@@ -197,4 +196,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ];
         return view('admin.estadisticas', compact('stats'));
     })->name('estadisticas');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Panel de Juez (Solo Jueces)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'juez'])->prefix('juez')->name('juez.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\JuezController::class, 'dashboard'])->name('dashboard');
+    
+    // Evaluaciones
+    Route::get('/evaluar/{equipo}', [\App\Http\Controllers\JuezController::class, 'evaluar'])->name('evaluar');
+    Route::post('/evaluar/{equipo}', [\App\Http\Controllers\JuezController::class, 'guardarEvaluacion'])->name('guardar-evaluacion');
+    
+    // Mis evaluaciones
+    Route::get('/mis-evaluaciones', [\App\Http\Controllers\JuezController::class, 'misEvaluaciones'])->name('mis-evaluaciones');
+    
+    // Rankings
+    Route::get('/rankings', [\App\Http\Controllers\JuezController::class, 'rankings'])->name('rankings');
 });
