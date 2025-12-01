@@ -244,34 +244,40 @@
 
                 <!-- Roles Requeridos -->
                 <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                    <div class="flex items-center gap-2 mb-6">
-                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                            <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"/>
-                        </svg>
-                        <h2 class="text-xl font-bold text-gray-900">Roles Requeridos</h2>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"/>
+                            </svg>
+                            <h2 class="text-xl font-bold text-gray-900">Roles Requeridos</h2>
+                        </div>
+                        <button type="button" 
+                                onclick="agregarRolPersonalizado()" 
+                                class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-200 transition flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                            </svg>
+                            Agregar Rol
+                        </button>
                     </div>
                     
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
-                            <input type="checkbox" name="roles[]" value="Programador" class="w-5 h-5 text-indigo-600 rounded">
-                            <span class="font-medium">Programador</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
-                            <input type="checkbox" name="roles[]" value="Diseñador" class="w-5 h-5 text-indigo-600 rounded">
-                            <span class="font-medium">Diseñador</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
-                            <input type="checkbox" name="roles[]" value="Analista de Negocios" class="w-5 h-5 text-indigo-600 rounded">
-                            <span class="font-medium">Analista de Negocios</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
-                            <input type="checkbox" name="roles[]" value="Analista de Datos" class="w-5 h-5 text-indigo-600 rounded">
-                            <span class="font-medium">Analista de Datos</span>
-                        </label>
+                    <div id="roles-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        @php
+                            $rolesBase = ['Programador', 'Diseñador', 'Analista de Negocios', 'Analista de Datos'];
+                            $rolesSeleccionados = old('roles', []);
+                        @endphp
+                        
+                        @foreach($rolesBase as $rol)
+                            <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
+                                <input type="checkbox" 
+                                       name="roles[]" 
+                                       value="{{ $rol }}" 
+                                       {{ in_array($rol, $rolesSeleccionados) ? 'checked' : '' }}
+                                       class="w-5 h-5 text-indigo-600 rounded">
+                                <span class="font-medium">{{ $rol }}</span>
+                            </label>
+                        @endforeach
                     </div>
                 </div>
 
@@ -343,39 +349,7 @@
                     </div>
 
                     <div id="premios-container" class="space-y-3">
-                        <div class="flex items-center gap-4">
-                            <input type="text" 
-                                   name="premios[0][lugar]" 
-                                   value="1er lugar" 
-                                   placeholder="Lugar"
-                                   class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
-                            <input type="text" 
-                                   name="premios[0][descripcion]" 
-                                   placeholder="Ej: $10,000 MXN + Trofeo"
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <input type="text" 
-                                   name="premios[1][lugar]" 
-                                   value="2do lugar" 
-                                   placeholder="Lugar"
-                                   class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
-                            <input type="text" 
-                                   name="premios[1][descripcion]" 
-                                   placeholder="Ej: $5,000 MXN + Medalla"
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <input type="text" 
-                                   name="premios[2][lugar]" 
-                                   value="3er lugar" 
-                                   placeholder="Lugar"
-                                   class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
-                            <input type="text" 
-                                   name="premios[2][descripcion]" 
-                                   placeholder="Ej: $2,500 MXN + Diploma"
-                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -397,22 +371,31 @@
     </div>
 
     <script>
-        let premioIndex = 3;
+        let premioIndex = 0;
+        let contadorLugar = 1;
 
         function agregarPremio() {
             const container = document.getElementById('premios-container');
             const div = document.createElement('div');
             div.className = 'flex items-center gap-4';
+            
+            // Determinar el texto del lugar según el número
+            let textoLugar = '';
+            if (contadorLugar === 1) textoLugar = '1er lugar';
+            else if (contadorLugar === 2) textoLugar = '2do lugar';
+            else if (contadorLugar === 3) textoLugar = '3er lugar';
+            else textoLugar = `${contadorLugar}to lugar`;
+            
             div.innerHTML = `
                 <input type="text" 
                        name="premios[${premioIndex}][lugar]" 
-                       placeholder="Ej: 4to lugar"
+                       value="${textoLugar}"
                        class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
                 <input type="text" 
                        name="premios[${premioIndex}][descripcion]" 
-                       placeholder="Descripción del Premio"
+                       placeholder="Ej: $10,000 + Trofeo"
                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+                <button type="button" onclick="eliminarPremio(this)" class="text-red-500 hover:text-red-700">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
                     </svg>
@@ -420,6 +403,62 @@
             `;
             container.appendChild(div);
             premioIndex++;
+            contadorLugar++;
+        }
+
+        function eliminarPremio(button) {
+            button.parentElement.remove();
+            contadorLugar--;
+            // Recalcular números de lugares después de eliminar
+            recalcularLugares();
+        }
+
+        function recalcularLugares() {
+            const container = document.getElementById('premios-container');
+            const premios = container.querySelectorAll('div.flex.items-center');
+            contadorLugar = 1;
+            
+            premios.forEach((premio) => {
+                const inputLugar = premio.querySelector('input[name*="[lugar]"]');
+                if (inputLugar) {
+                    let textoLugar = '';
+                    if (contadorLugar === 1) textoLugar = '1er lugar';
+                    else if (contadorLugar === 2) textoLugar = '2do lugar';
+                    else if (contadorLugar === 3) textoLugar = '3er lugar';
+                    else textoLugar = `${contadorLugar}to lugar`;
+                    
+                    inputLugar.value = textoLugar;
+                    contadorLugar++;
+                }
+            });
+        }
+
+        function agregarRolPersonalizado() {
+            const nombreRol = prompt('Ingrese el nombre del rol:');
+            if (!nombreRol || nombreRol.trim() === '') return;
+            
+            const container = document.getElementById('roles-container');
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2 p-4 border-2 border-gray-200 rounded-lg';
+            div.innerHTML = `
+                <input type="checkbox" 
+                       name="roles[]" 
+                       value="${nombreRol.trim()}" 
+                       checked
+                       class="w-5 h-5 text-indigo-600 rounded">
+                <input type="text" 
+                       value="${nombreRol.trim()}" 
+                       readonly
+                       class="flex-1 font-medium bg-transparent border-0 p-0 focus:ring-0">
+                <button type="button" 
+                        onclick="this.parentElement.remove()" 
+                        class="text-red-500 hover:text-red-700">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(div);
         }
     </script>
 </x-app-layout>

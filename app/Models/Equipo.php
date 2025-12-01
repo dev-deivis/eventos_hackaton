@@ -51,6 +51,11 @@ class Equipo extends Model
         return $this->hasMany(MensajeEquipo::class);
     }
 
+    public function evaluaciones(): HasMany
+    {
+        return $this->hasMany(Evaluacion::class);
+    }
+
     public function miembrosActivos()
     {
         return $this->participantes()

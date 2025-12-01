@@ -28,6 +28,7 @@ class Evento extends Model
         'max_participantes',
         'min_miembros_equipo',
         'max_miembros_equipo',
+        'roles_requeridos',
         'estado',
         'imagen_portada',
         'created_by',
@@ -40,6 +41,7 @@ class Evento extends Model
         'fecha_evaluacion' => 'datetime',
         'fecha_premiacion' => 'datetime',
         'es_virtual' => 'boolean',
+        'roles_requeridos' => 'array',
     ];
 
     /**
