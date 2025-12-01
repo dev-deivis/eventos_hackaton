@@ -14,10 +14,12 @@ class Constancia extends Model
     protected $fillable = [
         'participante_id',
         'evento_id',
-        'tipo',
+        'tipo_constancia',
+        'codigo_verificacion',
+        'fecha_emision',
+        'notas',
         'ruta_pdf',
         'codigo_qr',
-        'fecha_emision',
     ];
 
     protected $casts = [
@@ -49,6 +51,6 @@ class Constancia extends Model
             'mencion_honorifica' => 'Mención Honorífica',
         ];
 
-        return $tipos[$this->tipo] ?? $this->tipo;
+        return $tipos[$this->tipo_constancia] ?? $this->tipo_constancia;
     }
 }

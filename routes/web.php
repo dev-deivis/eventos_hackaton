@@ -4,6 +4,7 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ConstanciaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TareaController;
 
@@ -185,6 +186,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Gestión de usuarios
     Route::resource('usuarios', \App\Http\Controllers\AdminUserController::class)->except(['show']);
     Route::put('/usuarios/{usuario}/password', [\App\Http\Controllers\AdminUserController::class, 'updatePassword'])->name('usuarios.update-password');
+    
+    // Constancias
+    Route::prefix('constancias')->name('constancias.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ConstanciaController::class, 'index'])->name('index');
+        Route::get('/plantillas', [\App\Http\Controllers\ConstanciaController::class, 'plantillas'])->name('plantillas');
+        Route::get('/generar-nuevas', [\App\Http\Controllers\ConstanciaController::class, 'generarNuevas'])->name('generar-nuevas');
+        Route::post('/generar-lote', [\App\Http\Controllers\ConstanciaController::class, 'generarEnLote'])->name('generar-lote');
+        Route::post('/generar-individual', [\App\Http\Controllers\ConstanciaController::class, 'generarIndividual'])->name('generar-individual');
+        Route::get('/{constancia}/preview', [\App\Http\Controllers\ConstanciaController::class, 'vistaPrevia'])->name('preview');
+        Route::get('/{constancia}/descargar', [\App\Http\Controllers\ConstanciaController::class, 'descargar'])->name('descargar');
+        Route::delete('/{constancia}', [\App\Http\Controllers\ConstanciaController::class, 'destroy'])->name('destroy');
+    });
     
     // Estadísticas
     Route::get('/estadisticas', function() {
