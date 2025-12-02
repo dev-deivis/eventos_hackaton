@@ -189,6 +189,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Rankings
     Route::get('/rankings', [\App\Http\Controllers\AdminController::class, 'rankings'])->name('rankings');
     
+    // Reportes y Análisis
+    Route::get('/reportes', [\App\Http\Controllers\AdminController::class, 'reportes'])->name('reportes.index');
+    Route::get('/reportes/datos', [\App\Http\Controllers\AdminController::class, 'datosReportes'])->name('reportes.datos');
+    
     // Gestión de usuarios
     Route::resource('usuarios', \App\Http\Controllers\AdminUserController::class)->except(['show']);
     Route::put('/usuarios/{usuario}/password', [\App\Http\Controllers\AdminUserController::class, 'updatePassword'])->name('usuarios.update-password');
@@ -200,6 +204,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/generar-nuevas', [\App\Http\Controllers\ConstanciaController::class, 'generarNuevas'])->name('generar-nuevas');
         Route::post('/generar-lote', [\App\Http\Controllers\ConstanciaController::class, 'generarEnLote'])->name('generar-lote');
         Route::post('/generar-individual', [\App\Http\Controllers\ConstanciaController::class, 'generarIndividual'])->name('generar-individual');
+        Route::post('/generar-ganadores-automatico', [\App\Http\Controllers\ConstanciaController::class, 'generarGanadoresAutomatico'])->name('generar-ganadores-automatico');
         Route::get('/{constancia}/preview', [\App\Http\Controllers\ConstanciaController::class, 'vistaPrevia'])->name('preview');
         Route::get('/{constancia}/descargar', [\App\Http\Controllers\ConstanciaController::class, 'descargar'])->name('descargar');
         Route::delete('/{constancia}', [\App\Http\Controllers\ConstanciaController::class, 'destroy'])->name('destroy');
@@ -207,6 +212,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         // API endpoints
         Route::get('/participantes/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerParticipantes']);
         Route::get('/estadisticas/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerEstadisticas']);
+        Route::get('/equipos/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerEquipos']);
     });
     
     // Gestión de Proyectos

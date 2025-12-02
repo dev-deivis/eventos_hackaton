@@ -105,6 +105,14 @@
                                 <span class="font-semibold">Rankings</span>
                             </a>
 
+                            <a href="{{ route('admin.reportes.index') }}" 
+                               class="flex items-center gap-3 p-4 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white rounded-lg transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                                </svg>
+                                <span class="font-semibold">Reportes y Análisis</span>
+                            </a>
+
                             <a href="{{ route('admin.proyectos.pendientes') }}" 
                                class="relative flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg transition">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

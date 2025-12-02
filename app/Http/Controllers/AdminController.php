@@ -167,4 +167,112 @@ class AdminController extends Controller
                 ->with('error', 'Error al rechazar el proyecto: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Mostrar reportes y análisis
+     */
+    public function reportes()
+    {
+        return view('admin.reportes.index');
+    }
+
+    /**
+     * Obtener datos para reportes (API)
+     */
+    public function datosReportes(Request $request)
+    {
+        $eventoId = $request->get('evento_id');
+        
+        // Query base
+        $participantesQuery = \App\Models\Participante::query();
+        $equiposQuery = \App\Models\Equipo::query();
+        
+        if ($eventoId) {
+            $participantesQuery->whereHas('equipos', function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            });
+            $equiposQuery->where('evento_id', $eventoId);
+        }
+        
+        // KPIs
+        $totalParticipantes = $participantesQuery->count();
+        $totalEquipos = $equiposQuery->count();
+        
+        $equiposConProyecto = $equiposQuery->has('proyecto')->count();
+        $tasaFinalizacion = $totalEquipos > 0 ? round(($equiposConProyecto / $totalEquipos) * 100, 1) : 0;
+        
+        $evaluacionesQuery = \App\Models\Evaluacion::query();
+        if ($eventoId) {
+            $evaluacionesQuery->whereHas('equipo', function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            });
+        }
+        
+        $promedioCalificacion = round($evaluacionesQuery->avg('calificacion_total') ?? 0, 1);
+        $maximaCalificacion = round($evaluacionesQuery->max('calificacion_total') ?? 100, 1);
+        
+        // Promedio de miembros por equipo
+        $promedioMiembros = \DB::table('equipo_participante')
+            ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+            ->where('equipo_participante.estado', 'activo')
+            ->when($eventoId, function($q) use ($eventoId) {
+                $q->where('equipos.evento_id', $eventoId);
+            })
+            ->groupBy('equipo_participante.equipo_id')
+            ->selectRaw('COUNT(*) as total')
+            ->get()
+            ->avg('total');
+        
+        // Participantes por carrera
+        $participantesPorCarrera = \DB::table('participantes')
+            ->join('carreras', 'participantes.carrera_id', '=', 'carreras.id')
+            ->when($eventoId, function($q) use ($eventoId) {
+                $q->join('equipo_participante', 'participantes.id', '=', 'equipo_participante.participante_id')
+                  ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+                  ->where('equipos.evento_id', $eventoId);
+            })
+            ->select('carreras.nombre', \DB::raw('COUNT(DISTINCT participantes.id) as total'))
+            ->groupBy('carreras.nombre')
+            ->orderByDesc('total')
+            ->get();
+        
+        // Distribución de roles
+        $rolesPorParticipante = \DB::table('equipo_participante')
+            ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+            ->where('equipo_participante.estado', 'activo')
+            ->when($eventoId, function($q) use ($eventoId) {
+                $q->where('equipos.evento_id', $eventoId);
+            })
+            ->select('equipo_participante.rol_equipo as rol', \DB::raw('COUNT(*) as total'))
+            ->whereNotNull('equipo_participante.rol_equipo')
+            ->groupBy('equipo_participante.rol_equipo')
+            ->orderByDesc('total')
+            ->get();
+        
+        // Estadísticas de equipos
+        $equiposCompletos = $equiposQuery->clone()
+            ->whereRaw('(SELECT COUNT(*) FROM equipo_participante WHERE equipo_id = equipos.id AND estado = "activo") >= 3')
+            ->count();
+        
+        $equiposIncompletos = $totalEquipos - $equiposCompletos;
+        
+        return response()->json([
+            'kpis' => [
+                'participantes' => $totalParticipantes,
+                'equipos' => $totalEquipos,
+                'tasa_finalizacion' => $tasaFinalizacion,
+                'equipos_terminados' => $equiposConProyecto,
+                'puntuacion_promedio' => $promedioCalificacion,
+                'puntuacion_maxima' => $maximaCalificacion,
+                'promedio_miembros' => number_format($promedioMiembros ?? 0, 1)
+            ],
+            'carreras' => $participantesPorCarrera,
+            'roles' => $rolesPorParticipante,
+            'estadisticas_equipos' => [
+                'completos' => $equiposCompletos,
+                'incompletos' => $equiposIncompletos,
+                'promedio' => number_format($promedioMiembros ?? 0, 1)
+            ]
+        ]);
+    }
 }

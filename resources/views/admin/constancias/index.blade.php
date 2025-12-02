@@ -40,20 +40,113 @@
             </div>
 
             <!-- Buscador y Filtros -->
-            <div class="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
-                <div class="flex gap-4">
-                    <div class="flex-1">
+            <form method="GET" action="{{ route('admin.constancias.index') }}" class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Búsqueda -->
+                    <div class="lg:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                            <x-icons.search class="w-4 h-4 text-gray-500" />
+                            Buscar
+                        </label>
                         <input type="text" 
-                               placeholder="Buscar por nombre o evento"
+                               name="buscar"
+                               value="{{ request('buscar') }}"
+                               placeholder="Nombre, evento o código..."
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="">Todos los tipos</option>
-                        <option value="participacion">Participación</option>
-                        <option value="ganador">Ganador</option>
-                    </select>
+
+                    <!-- Filtro por Tipo -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+                        <select name="tipo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">Todos</option>
+                            <option value="participacion" {{ request('tipo') == 'participacion' ? 'selected' : '' }}>📜 Participación</option>
+                            <option value="primer_lugar" {{ request('tipo') == 'primer_lugar' ? 'selected' : '' }}>🥇 1er Lugar</option>
+                            <option value="segundo_lugar" {{ request('tipo') == 'segundo_lugar' ? 'selected' : '' }}>🥈 2do Lugar</option>
+                            <option value="tercer_lugar" {{ request('tipo') == 'tercer_lugar' ? 'selected' : '' }}>🥉 3er Lugar</option>
+                            <option value="mencion_honorifica" {{ request('tipo') == 'mencion_honorifica' ? 'selected' : '' }}>⭐ Mención</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por Evento -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Evento</label>
+                        <select name="evento_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">Todos</option>
+                            @foreach($eventos as $evento)
+                                <option value="{{ $evento->id }}" {{ request('evento_id') == $evento->id ? 'selected' : '' }}>
+                                    {{ $evento->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="flex items-end gap-2">
+                        <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
+                            Filtrar
+                        </button>
+                        @if(request()->hasAny(['buscar', 'tipo', 'evento_id', 'fecha_desde', 'fecha_hasta']))
+                            <a href="{{ route('admin.constancias.index') }}" 
+                               class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition"
+                               title="Limpiar filtros">
+                                ✕
+                            </a>
+                        @endif
+                    </div>
                 </div>
-            </div>
+
+                <!-- Filtros de Fecha (Expandibles) -->
+                <details class="mt-4">
+                    <summary class="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-2">
+                        <x-icons.calendar class="w-4 h-4" />
+                        Filtros de fecha
+                    </summary>
+                    <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Desde</label>
+                            <input type="date" 
+                                   name="fecha_desde"
+                                   value="{{ request('fecha_desde') }}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Hasta</label>
+                            <input type="date" 
+                                   name="fecha_hasta"
+                                   value="{{ request('fecha_hasta') }}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Resumen de filtros activos -->
+                @if(request()->hasAny(['buscar', 'tipo', 'evento_id', 'fecha_desde', 'fecha_hasta']))
+                    <div class="mt-4 pt-4 border-t flex items-center gap-2 text-sm">
+                        <span class="text-gray-600">Filtros activos:</span>
+                        @if(request('buscar'))
+                            <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">
+                                Búsqueda: "{{ request('buscar') }}"
+                            </span>
+                        @endif
+                        @if(request('tipo'))
+                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded">
+                                Tipo: {{ ucfirst(str_replace('_', ' ', request('tipo'))) }}
+                            </span>
+                        @endif
+                        @if(request('evento_id'))
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                                Evento: {{ $eventos->find(request('evento_id'))->nombre ?? 'Desconocido' }}
+                            </span>
+                        @endif
+                        @if(request('fecha_desde') || request('fecha_hasta'))
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded">
+                                Fechas: {{ request('fecha_desde') ?? '...' }} a {{ request('fecha_hasta') ?? '...' }}
+                            </span>
+                        @endif
+                    </div>
+                @endif
+            </form>
 
             <!-- Grid de Constancias -->
             @if($constancias->isEmpty())
