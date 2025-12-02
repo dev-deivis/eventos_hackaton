@@ -26,7 +26,7 @@
                             $badge = $badgeColors[$posicion] ?? null;
                         @endphp
 
-                        <!-- Card de Equipo ghjgjgjgjg -->
+                        <!-- Card de Equipo ghjgjgjgjg fghdfhfdffhfh -->
                         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                             <!-- Header -->
                             <div class="flex items-start justify-between mb-4">
@@ -69,7 +69,7 @@
 
                             <!-- Barras de Progreso de Criterios -->
                             <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
-                                <!-- Innovación -->
+                               
                                 <div>
                                     <div class="flex items-center justify-between text-xs mb-1">
                                         <span class="font-medium text-gray-700">Innovación</span>
