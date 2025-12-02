@@ -41,7 +41,99 @@ class ConstanciaController extends Controller
         // Obtener TODOS los eventos
         $eventos = Evento::orderBy('created_at', 'desc')->get();
 
-        return view('admin.constancias.generar', compact('eventos'));
+        return view('admin.constancias.generar-nuevas', compact('eventos'));
+    }
+
+    /**
+     * API: Obtener participantes de un evento (sin constancia del tipo especificado)
+     */
+    public function obtenerParticipantes($eventoId)
+    {
+        $participantes = Participante::with('user')
+            ->whereHas('equipos', function($query) use ($eventoId) {
+                $query->where('evento_id', $eventoId);
+            })
+            ->get();
+
+        return response()->json($participantes);
+    }
+
+    /**
+     * API: Obtener estadísticas de constancias de un evento
+     */
+    public function obtenerEstadisticas($eventoId)
+    {
+        $totalParticipantes = Participante::whereHas('equipos', function($query) use ($eventoId) {
+            $query->where('evento_id', $eventoId);
+        })->count();
+
+        $conConstancia = Constancia::where('evento_id', $eventoId)->count();
+        $sinConstancia = $totalParticipantes - $conConstancia;
+
+        return response()->json([
+            'total' => $totalParticipantes,
+            'conConstancia' => $conConstancia,
+            'sinConstancia' => max(0, $sinConstancia)
+        ]);
+    }
+
+    /**
+     * Generar constancia individual
+     */
+    public function generarIndividual(Request $request)
+    {
+        $validated = $request->validate([
+            'evento_id' => 'required|exists:eventos,id',
+            'participante_id' => 'required|exists:participantes,id',
+            'tipo' => 'required|in:participacion,ganador',
+            'posicion' => 'required_if:tipo,ganador|nullable|integer|between:1,3',
+        ]);
+
+        try {
+            // Determinar el tipo final según posición
+            $tipoFinal = $validated['tipo'];
+            if ($validated['tipo'] === 'ganador') {
+                $tipoFinal = match($validated['posicion']) {
+                    1 => 'primer_lugar',
+                    2 => 'segundo_lugar',
+                    3 => 'tercer_lugar',
+                    default => 'participacion'
+                };
+            }
+
+            // Verificar si ya existe constancia
+            $existe = Constancia::where('evento_id', $validated['evento_id'])
+                ->where('participante_id', $validated['participante_id'])
+                ->where('tipo', $tipoFinal)
+                ->exists();
+
+            if ($existe) {
+                return back()->with('error', 'Este participante ya tiene una constancia de este tipo para este evento.');
+            }
+
+            // Generar código único para QR
+            $codigo = 'CONST-' . strtoupper(Str::random(8));
+
+            // Crear constancia
+            $constancia = Constancia::create([
+                'participante_id' => $validated['participante_id'],
+                'evento_id' => $validated['evento_id'],
+                'tipo' => $tipoFinal,
+                'codigo_qr' => $codigo,
+                'fecha_emision' => now(),
+            ]);
+
+            // Generar PDF (si existe el método)
+            if (method_exists($this, 'generarPDF')) {
+                $this->generarPDF($constancia);
+            }
+
+            return redirect()->route('admin.constancias.index')
+                ->with('success', 'Constancia generada exitosamente.');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar constancia: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -51,13 +143,15 @@ class ConstanciaController extends Controller
     {
         $request->validate([
             'evento_id' => 'required|exists:eventos,id',
-            'tipo_constancia' => 'required|in:participacion,ganador',
+            'tipo' => 'required|in:participacion,ganador',
         ]);
 
         $evento = Evento::findOrFail($request->evento_id);
         
         // Obtener participantes del evento
-        $participantes = $evento->participantes;
+        $participantes = Participante::whereHas('equipos', function($query) use ($evento) {
+            $query->where('evento_id', $evento->id);
+        })->get();
 
         $constanciasGeneradas = 0;
 
@@ -65,61 +159,17 @@ class ConstanciaController extends Controller
             // Verificar si ya tiene constancia de este tipo para este evento
             $existe = Constancia::where('participante_id', $participante->id)
                 ->where('evento_id', $evento->id)
-                ->where('tipo_constancia', $request->tipo_constancia)
+                ->where('tipo', $request->tipo)
                 ->exists();
 
             if (!$existe) {
-                $this->crearConstancia($participante, $evento, $request->tipo_constancia);
+                $this->crearConstancia($participante, $evento, $request->tipo);
                 $constanciasGeneradas++;
             }
         }
 
         return redirect()->route('admin.constancias.index')
             ->with('success', "Se generaron {$constanciasGeneradas} constancias exitosamente.");
-    }
-
-    /**
-     * Generar constancia individual
-     */
-    public function generarIndividual(Request $request)
-    {
-        $request->validate([
-            'participante_nombre' => 'required|string',
-            'participante_email' => 'required|email',
-            'evento_id' => 'required|exists:eventos,id',
-            'tipo_constancia' => 'required|in:participacion,ganador',
-            'notas' => 'nullable|string',
-        ]);
-
-        $evento = Evento::findOrFail($request->evento_id);
-        
-        // Buscar participante por email
-        $participante = Participante::whereHas('user', function($query) use ($request) {
-            $query->where('email', $request->participante_email);
-        })->first();
-
-        if (!$participante) {
-            return redirect()->back()
-                ->withErrors(['participante_email' => 'No se encontró un participante con ese email.'])
-                ->withInput();
-        }
-
-        // Verificar si ya tiene constancia
-        $existe = Constancia::where('participante_id', $participante->id)
-            ->where('evento_id', $evento->id)
-            ->where('tipo_constancia', $request->tipo_constancia)
-            ->exists();
-
-        if ($existe) {
-            return redirect()->back()
-                ->withErrors(['participante_email' => 'Este participante ya tiene una constancia de este tipo para este evento.'])
-                ->withInput();
-        }
-
-        $constancia = $this->crearConstancia($participante, $evento, $request->tipo_constancia, $request->notas);
-
-        return redirect()->route('admin.constancias.index')
-            ->with('success', 'Constancia generada exitosamente.');
     }
 
     /**
@@ -132,10 +182,9 @@ class ConstanciaController extends Controller
         $constancia = Constancia::create([
             'participante_id' => $participante->id,
             'evento_id' => $evento->id,
-            'tipo_constancia' => $tipo,
-            'codigo_verificacion' => $codigo,
+            'tipo' => $tipo,
+            'codigo_qr' => $codigo,
             'fecha_emision' => now(),
-            'notas' => $notas,
         ]);
 
         return $constancia;
