@@ -14,12 +14,10 @@ class Constancia extends Model
     protected $fillable = [
         'participante_id',
         'evento_id',
-        'tipo_constancia',
-        'codigo_verificacion',
-        'fecha_emision',
-        'notas',
-        'ruta_pdf',
+        'tipo',
         'codigo_qr',
+        'fecha_emision',
+        'ruta_pdf',
     ];
 
     protected $casts = [

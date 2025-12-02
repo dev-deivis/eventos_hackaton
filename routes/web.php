@@ -72,6 +72,9 @@ Route::middleware(['auth', 'profile.complete'])->prefix('equipos')->name('equipo
     Route::get('/evento/{evento}/crear', [EquipoController::class, 'create'])->name('create');
     Route::post('/evento/{evento}', [EquipoController::class, 'store'])->name('store');
     
+    // Editar equipo (solo líder)
+    Route::put('/{equipo}', [EquipoController::class, 'update'])->name('update');
+    
     // Solicitar unirse a equipo
     Route::post('/{equipo}/solicitar', [EquipoController::class, 'solicitarUnirse'])->name('solicitar');
     
@@ -108,6 +111,9 @@ Route::middleware(['auth', 'profile.complete'])->prefix('proyectos')->name('proy
     // Editar/actualizar proyecto
     Route::get('/equipo/{equipo}/editar', [ProyectoController::class, 'edit'])->name('edit');
     Route::put('/equipo/{equipo}', [ProyectoController::class, 'update'])->name('update');
+    
+    // Entregar proyecto (NUEVO)
+    Route::post('/{proyecto}/entregar', [ProyectoController::class, 'entregar'])->name('entregar');
     
     // Eliminar proyecto (solo líder)
     Route::delete('/equipo/{equipo}', [ProyectoController::class, 'destroy'])->name('destroy');
@@ -197,6 +203,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{constancia}/preview', [\App\Http\Controllers\ConstanciaController::class, 'vistaPrevia'])->name('preview');
         Route::get('/{constancia}/descargar', [\App\Http\Controllers\ConstanciaController::class, 'descargar'])->name('descargar');
         Route::delete('/{constancia}', [\App\Http\Controllers\ConstanciaController::class, 'destroy'])->name('destroy');
+        
+        // API endpoints
+        Route::get('/participantes/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerParticipantes']);
+        Route::get('/estadisticas/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerEstadisticas']);
+    });
+    
+    // Gestión de Proyectos
+    Route::prefix('proyectos')->name('proyectos.')->group(function () {
+        Route::get('/pendientes', [\App\Http\Controllers\AdminController::class, 'proyectosPendientes'])->name('pendientes');
+        Route::get('/{proyecto}/revisar', [\App\Http\Controllers\AdminController::class, 'revisarProyecto'])->name('revisar');
+        Route::post('/{proyecto}/aprobar', [\App\Http\Controllers\AdminController::class, 'aprobarProyecto'])->name('aprobar');
+        Route::post('/{proyecto}/rechazar', [\App\Http\Controllers\AdminController::class, 'rechazarProyecto'])->name('rechazar');
     });
     
     // Estadísticas

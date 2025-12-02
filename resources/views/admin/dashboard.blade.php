@@ -105,12 +105,22 @@
                                 <span class="font-semibold">Rankings</span>
                             </a>
 
-                            <button class="flex items-center gap-3 p-4 bg-white hover:bg-gray-50 border-2 border-gray-200 rounded-lg transition text-left">
-                                <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                            <a href="{{ route('admin.proyectos.pendientes') }}" 
+                               class="relative flex items-center gap-3 p-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="font-semibold text-gray-700">Reportes</span>
-                            </button>
+                                <span class="font-semibold">Proyectos Pendientes</span>
+                                @php
+                                    $pendientes = \App\Models\Proyecto::where('estado', 'entregado')->count();
+                                @endphp
+                                @if($pendientes > 0)
+                                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+                                        {{ $pendientes }}
+                                    </span>
+                                @endif
+                            </a>
 
                             <a href="{{ route('admin.constancias.index') }}" class="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white rounded-lg transition">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

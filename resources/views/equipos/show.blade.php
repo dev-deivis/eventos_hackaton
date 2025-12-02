@@ -19,7 +19,22 @@
             <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $equipo->nombre }}</h1>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h1 class="text-3xl font-bold text-gray-900">{{ $equipo->nombre }}</h1>
+                            
+                            <!-- Botón Editar Equipo (Solo Líder) -->
+                            @if($esLider)
+                                <button onclick="toggleModalEditarEquipo()" 
+                                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition"
+                                        title="Editar equipo">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
+                                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Editar Equipo
+                                </button>
+                            @endif
+                        </div>
                         <p class="text-gray-600 mb-2">
                             <a href="{{ route('eventos.show', $equipo->evento) }}" class="hover:text-indigo-600">
                                 {{ $equipo->evento->nombre }}
@@ -100,6 +115,243 @@
                 </div>
             </div>
 
+            <!-- NUEVO: Progress Bar del Proyecto -->
+            @if($equipo->proyecto && $esMiembro)
+                @php
+                    $proyecto = $equipo->proyecto;
+                    $proyecto->actualizarPorcentaje(); // Actualizar porcentaje en tiempo real
+                @endphp
+
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border-l-4 border-{{ $proyecto->estadoColor }}-500">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h2 class="text-2xl font-bold text-gray-900">{{ $proyecto->nombre }}</h2>
+                                <span class="px-4 py-1.5 bg-{{ $proyecto->estadoColor }}-100 text-{{ $proyecto->estadoColor }}-700 rounded-full text-sm font-bold">
+                                    {{ $proyecto->estadoTexto }}
+                                </span>
+                                
+                                <!-- Botón Editar Proyecto (Solo Líder y si no está entregado) -->
+                                @if($esLider && !in_array($proyecto->estado, ['entregado', 'listo_para_evaluar', 'evaluado', 'finalizado']))
+                                    <a href="{{ route('proyectos.edit', $equipo) }}" 
+                                       class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition"
+                                       title="Editar proyecto">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/>
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Editar Proyecto
+                                    </a>
+                                @endif
+                            </div>
+                            <p class="text-gray-600">{{ $proyecto->descripcion }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Progreso Principal -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-bold text-gray-700">Completitud del Proyecto</span>
+                            <span class="text-3xl font-bold text-{{ $proyecto->porcentaje_completado == 100 ? 'green' : 'indigo' }}-600">
+                                {{ $proyecto->porcentaje_completado }}%
+                            </span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                            <div class="h-4 rounded-full transition-all duration-500 
+                                {{ $proyecto->porcentaje_completado == 100 ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600' }}" 
+                                style="width: {{ $proyecto->porcentaje_completado }}%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            {{ $proyecto->porcentaje_completado == 100 ? '¡Proyecto completo!' : 'Sigue trabajando para completar el proyecto' }}
+                        </p>
+                    </div>
+
+                    <!-- Checklist de Requisitos -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                            </svg>
+                            Requisitos para Entregar
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <!-- Nombre -->
+                            <div class="flex items-center gap-2">
+                                @if($proyecto->nombre && strlen($proyecto->nombre) >= 5)
+                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                                <span class="text-sm">Nombre del proyecto (5+ caracteres)</span>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="flex items-center gap-2">
+                                @if($proyecto->descripcion && strlen($proyecto->descripcion) >= 50)
+                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                                <span class="text-sm">Descripción (50+ caracteres)</span>
+                            </div>
+
+                            <!-- Repositorio -->
+                            @if($proyecto->evento->requiere_repositorio)
+                            <div class="flex items-center gap-2">
+                                @if($proyecto->link_repositorio)
+                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                                <span class="text-sm">Link del repositorio</span>
+                            </div>
+                            @endif
+
+                            <!-- Demo -->
+                            @if($proyecto->evento->requiere_demo)
+                            <div class="flex items-center gap-2">
+                                @if($proyecto->link_demo)
+                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                                <span class="text-sm">Link de la demo</span>
+                            </div>
+                            @endif
+
+                            <!-- Presentación -->
+                            @if($proyecto->evento->requiere_presentacion)
+                            <div class="flex items-center gap-2">
+                                @if($proyecto->link_presentacion)
+                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                                <span class="text-sm">Link de la presentación</span>
+                            </div>
+                            @endif
+
+                            <!-- Tareas -->
+                            @php
+                                $totalTareas = $proyecto->tareas()->count();
+                                $tareasCompletadas = $proyecto->tareas()->where('estado', 'completada')->count();
+                                $tareasOk = $totalTareas >= $proyecto->evento->min_tareas_proyecto && $totalTareas > 0 && $totalTareas === $tareasCompletadas;
+                            @endphp
+                            <div class="flex items-center gap-2 md:col-span-2">
+                                @if($tareasOk)
+                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                @endif
+                                <span class="text-sm">
+                                    Tareas: {{ $tareasCompletadas }}/{{ $totalTareas }} completadas 
+                                    (mínimo {{ $proyecto->evento->min_tareas_proyecto }})
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Entrega Final o Estado -->
+                    @if($proyecto->estado === 'entregado')
+                        <div class="bg-purple-50 border-2 border-purple-500 rounded-xl p-4 text-center">
+                            <div class="flex items-center justify-center gap-2 text-purple-700 font-bold mb-2">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Proyecto Entregado
+                            </div>
+                            <p class="text-sm text-purple-600">
+                                Entregado el {{ $proyecto->fecha_entrega->format('d/m/Y H:i') }}
+                            </p>
+                            <p class="text-sm text-purple-600 mt-1">
+                                Esperando aprobación del administrador para evaluación
+                            </p>
+                        </div>
+                    @elseif($proyecto->estado === 'listo_para_evaluar')
+                        <div class="bg-green-50 border-2 border-green-500 rounded-xl p-4 text-center">
+                            <div class="flex items-center justify-center gap-2 text-green-700 font-bold mb-2">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                Proyecto Aprobado - Listo para Evaluar
+                            </div>
+                            <p class="text-sm text-green-600">
+                                Tu proyecto fue aprobado y está listo para ser evaluado por los jueces
+                            </p>
+                        </div>
+                    @elseif($proyecto->estado === 'evaluado')
+                        <div class="bg-indigo-50 border-2 border-indigo-500 rounded-xl p-4 text-center">
+                            <div class="flex items-center justify-center gap-2 text-indigo-700 font-bold mb-2">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Proyecto Evaluado
+                            </div>
+                            <p class="text-sm text-indigo-600">
+                                Tu proyecto ya fue evaluado. Pronto conocerán los resultados
+                            </p>
+                        </div>
+                    @elseif($proyecto->cumpleRequisitosMinimos() && in_array($proyecto->estado, ['borrador', 'pendiente_revision', 'en_progreso']))
+                        <form action="{{ route('proyectos.entregar', $proyecto) }}" method="POST" 
+                              onsubmit="return confirm('¿Estás seguro de realizar la entrega final? Una vez entregado, no podrás hacer más cambios hasta que sea revisado.')">
+                            @csrf
+                            <button type="submit" 
+                                    class="w-full px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl flex items-center justify-center gap-3">
+                                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                Realizar Entrega Final
+                            </button>
+                        </form>
+                        <p class="text-center text-sm text-gray-600 mt-2">
+                            Al entregar, tu proyecto será revisado por el administrador antes de ser evaluado
+                        </p>
+                    @else
+                        <div class="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-4">
+                            <p class="text-yellow-800 font-bold mb-2 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                Faltan requisitos para entregar:
+                            </p>
+                            <ul class="text-sm text-yellow-700 space-y-1 ml-7">
+                                @foreach($proyecto->requisitosFaltantes() as $faltante)
+                                    <li>• {{ $faltante }}</li>
+                                @endforeach
+                            </ul>
+                            <p class="text-xs text-yellow-600 mt-3">
+                                Completa todos los requisitos para poder realizar la entrega final
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 <!-- Columna Izquierda (2/3) -->
@@ -150,7 +402,7 @@
                             </div>
                         @else
                             <div class="mt-4 pt-4 border-t">
-                                <p class="text-sm text-gray-500">✅ Equipo completo</p>
+                                <p class="text-sm text-gray-500">Equipo completo</p>
                             </div>
                         @endif
                     </div>
@@ -666,6 +918,49 @@
         </div>
     </div>
 
+    <!-- Modal Editar Equipo -->
+    <div id="modalEditarEquipo" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Editar Información del Equipo</h3>
+            
+            <form method="POST" action="{{ route('equipos.update', $equipo) }}">
+                @csrf
+                @method('PUT')
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Equipo *</label>
+                    <input type="text" 
+                           name="nombre" 
+                           value="{{ $equipo->nombre }}"
+                           required 
+                           maxlength="100"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción del Equipo</label>
+                    <textarea name="descripcion" 
+                              rows="3" 
+                              maxlength="500"
+                              placeholder="Describe tu equipo y sus objetivos..."
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">{{ $equipo->descripcion }}</textarea>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" 
+                            onclick="toggleModalEditarEquipo()"
+                            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     @push('scripts')
     <script>
         // Modal Unirse
@@ -740,6 +1035,15 @@
                     alert('Solo puedes asignar máximo 2 participantes por tarea');
                 }
             });
+        });
+
+        // Modal Editar Equipo
+        function toggleModalEditarEquipo() {
+            document.getElementById('modalEditarEquipo').classList.toggle('hidden');
+        }
+
+        document.getElementById('modalEditarEquipo')?.addEventListener('click', function(e) {
+            if (e.target === this) toggleModalEditarEquipo();
         });
     </script>
     @endpush
