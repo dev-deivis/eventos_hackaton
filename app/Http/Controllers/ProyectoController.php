@@ -70,7 +70,12 @@ class ProyectoController extends Controller
                 'link_demo' => $validated['link_demo'] ?? null,
                 'link_presentacion' => $validated['link_presentacion'] ?? null,
                 'tecnologias' => $validated['tecnologias'] ?? null,
+                'estado' => 'en_progreso', // Estado inicial
+                'porcentaje_completado' => 0,
             ]);
+
+            // Actualizar porcentaje inicial
+            $proyecto->actualizarPorcentaje();
 
             Log::info('Proyecto creado', [
                 'proyecto_id' => $proyecto->id,
@@ -143,6 +148,9 @@ class ProyectoController extends Controller
         try {
             $equipo->proyecto->update($validated);
 
+            // Actualizar porcentaje
+            $equipo->proyecto->actualizarPorcentaje();
+
             Log::info('Proyecto actualizado', [
                 'proyecto_id' => $equipo->proyecto->id,
                 'equipo_id' => $equipo->id,
@@ -188,6 +196,56 @@ class ProyectoController extends Controller
             ]);
 
             return back()->with('error', 'Error al eliminar el proyecto.');
+        }
+    }
+
+    /**
+     * Realizar entrega final del proyecto
+     */
+    public function entregar(Proyecto $proyecto)
+    {
+        // Verificar que el usuario sea miembro del equipo
+        $participante = auth()->user()->participante;
+        if (!$participante || !$proyecto->equipo->participantes->contains('id', $participante->id)) {
+            abort(403, 'No eres miembro de este equipo.');
+        }
+
+        // Verificar que el proyecto cumple con los requisitos mínimos
+        if (!$proyecto->cumpleRequisitosMinimos()) {
+            return redirect()->back()
+                ->with('error', 'El proyecto no cumple con todos los requisitos mínimos para ser entregado.');
+        }
+
+        // Verificar que no esté ya entregado
+        if (in_array($proyecto->estado, ['entregado', 'listo_para_evaluar', 'evaluado', 'finalizado'])) {
+            return redirect()->back()
+                ->with('info', 'Este proyecto ya fue entregado anteriormente.');
+        }
+
+        try {
+            // Realizar entrega
+            if ($proyecto->entregarProyecto()) {
+                Log::info('Proyecto entregado', [
+                    'proyecto_id' => $proyecto->id,
+                    'equipo_id' => $proyecto->equipo_id,
+                    'user_id' => auth()->id()
+                ]);
+
+                return redirect()->route('equipos.show', $proyecto->equipo)
+                    ->with('success', '¡Proyecto entregado exitosamente! Ahora esperará la aprobación del administrador para ser evaluado.');
+            } else {
+                return redirect()->back()
+                    ->with('error', 'No se pudo realizar la entrega. Verifica que todos los requisitos estén completos.');
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Error al entregar proyecto:', [
+                'error' => $e->getMessage(),
+                'proyecto_id' => $proyecto->id,
+                'user_id' => auth()->id()
+            ]);
+
+            return back()->with('error', 'Error al entregar el proyecto: ' . $e->getMessage());
         }
     }
 }

@@ -68,11 +68,20 @@ class JuezController extends Controller
         // Verificar que el equipo tiene proyecto
         if (!$equipo->proyecto) {
             return redirect()->route('juez.dashboard')
-                ->with('warning', 'Este equipo aún no ha presentado su proyecto. No se puede evaluar en este momento.');
+                ->with('warning', 'Este equipo aún no ha presentado su proyecto.');
+        }
+        
+        // 🆕 VALIDACIÓN CRÍTICA: Verificar que el proyecto está listo para evaluar
+        if (!$equipo->proyecto->estaListoParaEvaluar()) {
+            $estado = $equipo->proyecto->estadoTexto;
+            $porcentaje = $equipo->proyecto->porcentaje_completado;
+            
+            return redirect()->route('juez.dashboard')
+                ->with('warning', "Este proyecto no está listo para evaluar. Estado actual: {$estado} ({$porcentaje}% completo). Debe estar en estado 'Listo para Evaluar'.");
         }
         
         // Cargar relaciones necesarias
-        $equipo->load(['evento', 'participantes.user', 'proyecto']);
+        $equipo->load(['evento', 'participantes.user', 'proyecto.tareas']);
         
         return view('juez.evaluar', compact('equipo'));
     }
@@ -101,7 +110,7 @@ class JuezController extends Controller
         );
         
         // Crear evaluación
-        Evaluacion::create([
+        $evaluacion = Evaluacion::create([
             'equipo_id' => $equipo->id,
             'juez_id' => auth()->id(),
             'implementacion' => $validated['implementacion'],
@@ -113,6 +122,11 @@ class JuezController extends Controller
             'comentarios' => $validated['comentarios'],
             'fecha_evaluacion' => now(),
         ]);
+        
+        // 🆕 Marcar proyecto como evaluado si es la primera evaluación
+        if ($equipo->proyecto && $equipo->proyecto->estado === 'listo_para_evaluar') {
+            $equipo->proyecto->marcarComoEvaluado();
+        }
         
         return redirect()->route('juez.dashboard')
             ->with('success', 'Evaluación guardada exitosamente. Calificación final: ' . round($calificacionTotal, 2) . ' puntos.');

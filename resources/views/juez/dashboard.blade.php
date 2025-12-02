@@ -123,21 +123,87 @@
 
                         <div class="space-y-4">
                             @forelse($equiposPendientes as $equipo)
+                                @php
+                                    $proyecto = $equipo->proyecto;
+                                    $puedeEvaluar = $proyecto && $proyecto->estaListoParaEvaluar();
+                                @endphp
+                                
                                 <!-- Equipo {{ $loop->iteration }} -->
-                                <div class="flex items-center justify-between p-5 bg-gray-50 rounded-lg hover:bg-gray-100 transition border border-gray-200">
-                                    <div class="flex-1">
-                                        <h4 class="font-bold text-gray-900 text-lg">{{ $equipo->nombre }}</h4>
-                                        <p class="text-sm text-gray-600 mt-1">{{ $equipo->evento->nombre }}</p>
-                                        <p class="text-xs text-gray-500 mt-1">{{ $equipo->participantes->count() }} miembros</p>
-                                    </div>
-                                    <div class="flex items-center gap-4">
-                                        <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                                            Pendiente
-                                        </span>
-                                        <a href="{{ route('juez.evaluar', $equipo) }}" 
-                                           class="px-5 py-2.5 bg-pink-500 hover:bg-pink-600 text-white rounded-lg text-sm font-semibold transition">
-                                            Evaluar Siguiente
-                                        </a>
+                                <div class="border-l-4 border-{{ $proyecto && $proyecto->estadoColor ? $proyecto->estadoColor : 'gray' }}-500 bg-white rounded-lg p-5 hover:shadow-md transition">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-3 mb-2">
+                                                <h4 class="font-bold text-gray-900 text-lg">{{ $equipo->nombre }}</h4>
+                                                
+                                                @if($proyecto)
+                                                    <span class="px-3 py-1 bg-{{ $proyecto->estadoColor }}-100 text-{{ $proyecto->estadoColor }}-700 rounded-full text-xs font-bold">
+                                                        {{ $proyecto->estadoTexto }}
+                                                    </span>
+                                                @else
+                                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold">
+                                                        Sin Proyecto
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            
+                                            <p class="text-sm text-gray-600">{{ $equipo->evento->nombre }}</p>
+                                            <p class="text-xs text-gray-500 mt-1">{{ $equipo->participantes->count() }} miembros</p>
+                                            
+                                            @if($proyecto)
+                                                <!-- Barra de progreso -->
+                                                <div class="mt-3 flex items-center gap-3">
+                                                    <div class="flex-1">
+                                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                                            <div class="bg-{{ $proyecto->estadoColor }}-600 h-2 rounded-full transition-all duration-300" 
+                                                                 style="width: {{ $proyecto->porcentaje_completado }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-xs font-bold text-{{ $proyecto->estadoColor }}-600">
+                                                        {{ $proyecto->porcentaje_completado }}%
+                                                    </span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="ml-4">
+                                            @if($puedeEvaluar)
+                                                <a href="{{ route('juez.evaluar', $equipo) }}" 
+                                                   class="px-5 py-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg text-sm font-bold transition shadow-md hover:shadow-lg flex items-center gap-2">
+                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                    </svg>
+                                                    Evaluar Ahora
+                                                </a>
+                                            @else
+                                                <div class="text-center">
+                                                    <button disabled 
+                                                            class="px-5 py-2.5 bg-gray-300 text-gray-500 rounded-lg text-sm font-bold cursor-not-allowed flex items-center gap-2"
+                                                            title="{{ $proyecto ? 'Estado: ' . $proyecto->estadoTexto : 'Sin proyecto' }}">
+                                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        No Disponible
+                                                    </button>
+                                                    @if($proyecto)
+                                                        <p class="text-xs text-gray-500 mt-2 max-w-[200px]">
+                                                            @if($proyecto->estado === 'entregado')
+                                                                Esperando aprobación del admin
+                                                            @elseif($proyecto->estado === 'en_progreso' || $proyecto->estado === 'pendiente_revision')
+                                                                Proyecto en progreso ({{ $proyecto->porcentaje_completado }}%)
+                                                            @elseif($proyecto->estado === 'evaluado')
+                                                                Ya evaluado
+                                                            @else
+                                                                {{ $proyecto->estadoTexto }}
+                                                            @endif
+                                                        </p>
+                                                    @else
+                                                        <p class="text-xs text-gray-500 mt-2">
+                                                            Equipo sin proyecto
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             @empty

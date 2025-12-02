@@ -233,6 +233,48 @@ class EquipoController extends Controller
     }
 
     /**
+     * Actualizar información del equipo (solo líder)
+     */
+    public function update(Request $request, Equipo $equipo)
+    {
+        // Verificar que el usuario sea el líder del equipo
+        $participante = auth()->user()->participante;
+        if (!$participante || $equipo->lider_id !== $participante->id) {
+            abort(403, 'Solo el líder del equipo puede editar su información.');
+        }
+
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:100|unique:equipos,nombre,' . $equipo->id . ',id,evento_id,' . $equipo->evento_id,
+            'descripcion' => 'nullable|string|max:500',
+        ], [
+            'nombre.unique' => 'Ya existe un equipo con este nombre en el evento.',
+            'nombre.required' => 'El nombre del equipo es obligatorio.',
+        ]);
+
+        try {
+            $equipo->update($validated);
+
+            Log::info('Equipo actualizado', [
+                'equipo_id' => $equipo->id,
+                'user_id' => auth()->id()
+            ]);
+
+            return redirect()->route('equipos.show', $equipo)
+                ->with('success', 'Información del equipo actualizada exitosamente.');
+
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar equipo:', [
+                'error' => $e->getMessage(),
+                'equipo_id' => $equipo->id,
+                'user_id' => auth()->id()
+            ]);
+
+            return back()->withInput()
+                ->with('error', 'Error al actualizar el equipo: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Solicitar unirse a un equipo
      */
     public function solicitarUnirse(Request $request, Equipo $equipo)
@@ -387,32 +429,6 @@ class EquipoController extends Controller
         return back()->with('error', 'Error al abandonar el equipo.');
     }
 }
-
-    /**
-     * Actualizar equipo (solo líder)
-     */
-    public function update(Request $request, Equipo $equipo)
-    {
-        // Verificar que el usuario actual sea el líder
-        if ($equipo->lider_id != auth()->user()->participante?->id) {
-            abort(403, 'Solo el líder puede editar el equipo.');
-        }
-
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:100|unique:equipos,nombre,' . $equipo->id . ',id,evento_id,' . $equipo->evento_id,
-            'descripcion' => 'nullable|string|max:500',
-        ]);
-
-        try {
-            $equipo->update($validated);
-
-            return back()->with('success', 'Equipo actualizado exitosamente.');
-
-        } catch (\Exception $e) {
-            Log::error('Error al actualizar equipo:', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Error al actualizar el equipo.');
-        }
-    }
 
     /**
      * Eliminar equipo (solo líder)
