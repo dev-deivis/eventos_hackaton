@@ -26,7 +26,7 @@
                             $badge = $badgeColors[$posicion] ?? null;
                         @endphp
 
-                        <!-- Card de Equipo -->
+                        <!-- Card de Equipo ghjgjgjgjg -->
                         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                             <!-- Header -->
                             <div class="flex items-start justify-between mb-4">
