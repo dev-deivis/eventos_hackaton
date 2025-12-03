@@ -196,6 +196,9 @@ class Proyecto extends Model
         $this->update([
             'estado' => self::ESTADO_LISTO_EVALUAR,
         ]);
+        
+        // Notificar a los jueces que el proyecto está listo
+        \App\Services\NotificationService::proyectoListoParaEvaluar($this);
     }
 
     /**

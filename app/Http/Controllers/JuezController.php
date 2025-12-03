@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Equipo;
 use App\Models\Evaluacion;
 use App\Models\Evento;
+use App\Services\NotificationService;
 
 class JuezController extends Controller
 {
@@ -123,10 +124,18 @@ class JuezController extends Controller
             'fecha_evaluacion' => now(),
         ]);
         
-        // 🆕 Marcar proyecto como evaluado si es la primera evaluación
-        if ($equipo->proyecto && $equipo->proyecto->estado === 'listo_para_evaluar') {
+        // Marcar proyecto como evaluado y guardar calificación
+        if ($equipo->proyecto) {
             $equipo->proyecto->marcarComoEvaluado();
+            
+            // Actualizar calificación final en el proyecto
+            $equipo->proyecto->update([
+                'calificacion_final' => $calificacionTotal
+            ]);
         }
+        
+        // Notificar a todos los miembros del equipo
+        NotificationService::evaluacionRecibida($equipo, auth()->user(), round($calificacionTotal, 2));
         
         return redirect()->route('juez.dashboard')
             ->with('success', 'Evaluación guardada exitosamente. Calificación final: ' . round($calificacionTotal, 2) . ' puntos.');

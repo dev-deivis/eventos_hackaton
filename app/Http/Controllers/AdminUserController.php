@@ -16,8 +16,8 @@ class AdminUserController extends Controller
     public function index()
     {
         $usuarios = User::with(['roles', 'participante.carrera'])
-                        ->latest()
-                        ->paginate(15);
+            ->latest()
+            ->paginate(15);
 
         return view('admin.usuarios.index', compact('usuarios'));
     }
@@ -64,14 +64,14 @@ class AdminUserController extends Controller
     {
         $usuario->load('roles', 'participante', 'equiposAsignados');
         $roles = Rol::all();
-        
+
         // Obtener todos los equipos disponibles para asignar
         $equiposDisponibles = \App\Models\Equipo::with(['evento', 'participantes'])
-            ->whereHas('evento', function($query) {
+            ->whereHas('evento', function ($query) {
                 $query->where('estado', '!=', 'completado');
             })
             ->get();
-        
+
         return view('admin.usuarios.edit', compact('usuario', 'roles', 'equiposDisponibles'));
     }
 
@@ -99,8 +99,20 @@ class AdminUserController extends Controller
         // Si el rol es juez, asignar equipos
         $rolJuez = \App\Models\Rol::where('nombre', 'juez')->first();
         if ($validated['rol_id'] == $rolJuez->id) {
+            // Obtener equipos actuales antes de sincronizar
+            $equiposAnteriores = $usuario->equiposAsignados()->pluck('equipos.id')->toArray();
+            
             // Sincronizar equipos asignados
             $usuario->equiposAsignados()->sync($validated['equipos'] ?? []);
+            
+            // Notificar sobre nuevos equipos asignados
+            $equiposNuevos = array_diff($validated['equipos'] ?? [], $equiposAnteriores);
+            foreach ($equiposNuevos as $equipoId) {
+                $equipo = \App\Models\Equipo::find($equipoId);
+                if ($equipo) {
+                    \App\Services\NotificationService::equipoAsignadoAJuez($usuario, $equipo);
+                }
+            }
         } else {
             // Si no es juez, quitar todas las asignaciones
             $usuario->equiposAsignados()->detach();
@@ -139,7 +151,7 @@ class AdminUserController extends Controller
 
         // Eliminar relaciones
         $usuario->roles()->detach();
-        
+
         // Si tiene participante, eliminarlo también
         if ($usuario->participante) {
             $usuario->participante->delete();

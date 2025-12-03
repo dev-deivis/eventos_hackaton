@@ -85,7 +85,6 @@ class ProyectoController extends Controller
 
             return redirect()->route('equipos.show', $equipo)
                 ->with('success', '¡Proyecto registrado exitosamente!');
-
         } catch (\Exception $e) {
             Log::error('Error al crear proyecto:', [
                 'error' => $e->getMessage(),
@@ -109,6 +108,12 @@ class ProyectoController extends Controller
             abort(403, 'No eres miembro de este equipo.');
         }
 
+        // Verificar si el equipo fue evaluado
+        if ($equipo->fueEvaluado()) {
+            return redirect()->route('equipos.show', $equipo)
+                ->with('error', 'No puedes editar el proyecto porque el equipo ya fue evaluado.');
+        }
+
         // Verificar que tenga proyecto
         if (!$equipo->proyecto) {
             return redirect()->route('proyectos.create', $equipo)
@@ -128,6 +133,11 @@ class ProyectoController extends Controller
         $participante = auth()->user()->participante;
         if (!$participante || !$equipo->participantes->contains('id', $participante->id)) {
             abort(403, 'No eres miembro de este equipo.');
+        }
+
+        // Verificar si el equipo fue evaluado
+        if ($equipo->fueEvaluado()) {
+            return back()->with('error', 'No puedes editar el proyecto porque el equipo ya fue evaluado.');
         }
 
         // Verificar que tenga proyecto
@@ -159,7 +169,6 @@ class ProyectoController extends Controller
 
             return redirect()->route('equipos.show', $equipo)
                 ->with('success', 'Proyecto actualizado exitosamente.');
-
         } catch (\Exception $e) {
             Log::error('Error al actualizar proyecto:', [
                 'error' => $e->getMessage(),
@@ -187,7 +196,6 @@ class ProyectoController extends Controller
 
             return redirect()->route('equipos.show', $equipo)
                 ->with('success', 'Proyecto eliminado exitosamente.');
-
         } catch (\Exception $e) {
             Log::error('Error al eliminar proyecto:', [
                 'error' => $e->getMessage(),
@@ -231,13 +239,15 @@ class ProyectoController extends Controller
                     'user_id' => auth()->id()
                 ]);
 
+                // Notificar a administradores
+                \App\Services\NotificationService::proyectoEntregado($proyecto);
+
                 return redirect()->route('equipos.show', $proyecto->equipo)
                     ->with('success', '¡Proyecto entregado exitosamente! Ahora esperará la aprobación del administrador para ser evaluado.');
             } else {
                 return redirect()->back()
                     ->with('error', 'No se pudo realizar la entrega. Verifica que todos los requisitos estén completos.');
             }
-
         } catch (\Exception $e) {
             Log::error('Error al entregar proyecto:', [
                 'error' => $e->getMessage(),

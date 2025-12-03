@@ -56,6 +56,12 @@ class Equipo extends Model
         return $this->hasMany(Evaluacion::class);
     }
 
+    public function jueces(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'juez_equipo', 'equipo_id', 'juez_id')
+                    ->withTimestamps();
+    }
+
     public function miembrosActivos()
     {
         return $this->participantes()
@@ -75,6 +81,16 @@ class Equipo extends Model
 
     public function puedeAceptarMiembros(): bool
     {
+        // No puede aceptar miembros si fue evaluado
+        if ($this->fueEvaluado()) {
+            return false;
+        }
+        
+        // No puede aceptar si el proyecto ya finalizó
+        if ($this->proyecto && in_array($this->proyecto->estado, ['evaluado', 'finalizado'])) {
+            return false;
+        }
+        
         return $this->totalMiembros() < $this->max_miembros;
     }
 
@@ -89,5 +105,44 @@ class Equipo extends Model
         }
         
         return $this->lider_id === $user->participante->id;
+    }
+
+    /**
+     * Verificar si el equipo fue evaluado
+     */
+    public function fueEvaluado(): bool
+    {
+        return $this->evaluaciones()->exists();
+    }
+
+    /**
+     * Obtener calificación promedio de las evaluaciones
+     */
+    public function calificacionPromedio(): ?float
+    {
+        return $this->evaluaciones()->avg('calificacion_total');
+    }
+
+    /**
+     * Verificar si el equipo puede ser editado
+     */
+    public function puedeSerEditado(): bool
+    {
+        // No puede editarse si fue evaluado
+        if ($this->fueEvaluado()) {
+            return false;
+        }
+        
+        // No puede editarse si el proyecto ya está en estado final
+        if ($this->proyecto && in_array($this->proyecto->estado, ['evaluado', 'finalizado'])) {
+            return false;
+        }
+        
+        // No puede editarse si el evento finalizó
+        if ($this->evento && $this->evento->estado === 'finalizado') {
+            return false;
+        }
+        
+        return true;
     }
 }

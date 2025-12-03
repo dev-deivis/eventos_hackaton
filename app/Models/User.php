@@ -154,6 +154,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Marcar todas las notificaciones como leídas
+     */
+    public function marcarNotificacionesComoLeidas(): void
+    {
+        $this->notificaciones()
+            ->where('leida', false)
+            ->update([
+                'leida' => true,
+                'leida_en' => now(),
+            ]);
+    }
+
+    /**
      * Equipos activos del usuario (a través de su participante)
      */
     public function getEquiposActivosAttribute()

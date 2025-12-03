@@ -18,7 +18,7 @@ use App\Http\Controllers\TareaController;
 Route::get('/', [EventoController::class, 'index'])->name('home');
 
 // Autenticación (Laravel Breeze)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -58,41 +58,54 @@ Route::prefix('eventos')->name('eventos.')->group(function () {
 Route::middleware(['auth', 'profile.complete'])->prefix('equipos')->name('equipos.')->group(function () {
     // Mis equipos
     Route::get('/mis-equipos', [EquipoController::class, 'misEquipos'])->name('mis-equipos');
-    
+
     // Seleccionar evento para crear equipo (desde dashboard)
     Route::get('/seleccionar-evento', [EquipoController::class, 'seleccionarEvento'])->name('seleccionar-evento');
-    
+
     // Ver equipos de un evento
     Route::get('/evento/{evento}', [EquipoController::class, 'index'])->name('index');
-    
+
     // Ver detalle de un equipo
     Route::get('/{equipo}', [EquipoController::class, 'show'])->name('show');
-    
+
     // Crear equipo
     Route::get('/evento/{evento}/crear', [EquipoController::class, 'create'])->name('create');
     Route::post('/evento/{evento}', [EquipoController::class, 'store'])->name('store');
-    
+
     // Editar equipo (solo líder)
     Route::put('/{equipo}', [EquipoController::class, 'update'])->name('update');
-    
+
     // Solicitar unirse a equipo
     Route::post('/{equipo}/solicitar', [EquipoController::class, 'solicitarUnirse'])->name('solicitar');
-    
+
     // Gestión de miembros (solo líder)
     Route::post('/{equipo}/aceptar/{participanteId}', [EquipoController::class, 'aceptarMiembro'])->name('aceptar-miembro');
     Route::post('/{equipo}/rechazar/{participanteId}', [EquipoController::class, 'rechazarMiembro'])->name('rechazar-miembro');
-    
+
     // Abandonar equipo
     Route::delete('/{equipo}/abandonar', [EquipoController::class, 'abandonar'])->name('abandonar');
-    
+
     // Chat del equipo
     Route::post('/{equipo}/mensaje', [EquipoController::class, 'enviarMensaje'])->name('enviar-mensaje');
+    
+    // 🆕 API para mensajes en tiempo real
+    Route::post('/{equipo}/mensajes/api', [EquipoController::class, 'enviarMensajeApi'])->name('enviar-mensaje-api');
+    
     // Tareas del proyecto
     Route::post('/{equipo}/tareas', [TareaController::class, 'store'])->name('tareas.store');
     Route::put('/{equipo}/tareas/{tarea}', [TareaController::class, 'update'])->name('tareas.update');
     Route::delete('/{equipo}/tareas/{tarea}', [TareaController::class, 'destroy'])->name('tareas.destroy');
     Route::post('/{equipo}/tareas/{tarea}/toggle', [TareaController::class, 'toggleEstado'])->name('tareas.toggle');
     
+    // 🆕 API para tareas en tiempo real
+    Route::post('/{equipo}/tareas/api', [TareaController::class, 'storeApi'])->name('tareas.store-api');
+    Route::put('/{equipo}/tareas/{tarea}/api', [TareaController::class, 'updateApi'])->name('tareas.update-api');
+    Route::post('/{equipo}/tareas/{tarea}/toggle-api', [TareaController::class, 'toggleApi'])->name('tareas.toggle-api');
+    
+    // 🆕 API para solicitudes en tiempo real
+    Route::post('/{equipo}/solicitar/api', [EquipoController::class, 'solicitarApi'])->name('solicitar-api');
+    Route::get('/{equipo}/solicitudes/pendientes/api', [EquipoController::class, 'obtenerSolicitudesPendientesApi'])->name('solicitudes-pendientes-api');
+
     // Actualizar/eliminar equipo (solo líder)
     Route::put('/{equipo}', [EquipoController::class, 'update'])->name('update');
     Route::delete('/{equipo}', [EquipoController::class, 'destroy'])->name('destroy');
@@ -107,14 +120,14 @@ Route::middleware(['auth', 'profile.complete'])->prefix('proyectos')->name('proy
     // Crear proyecto para un equipo
     Route::get('/equipo/{equipo}/crear', [ProyectoController::class, 'create'])->name('create');
     Route::post('/equipo/{equipo}', [ProyectoController::class, 'store'])->name('store');
-    
+
     // Editar/actualizar proyecto
     Route::get('/equipo/{equipo}/editar', [ProyectoController::class, 'edit'])->name('edit');
     Route::put('/equipo/{equipo}', [ProyectoController::class, 'update'])->name('update');
-    
+
     // Entregar proyecto (NUEVO)
     Route::post('/{proyecto}/entregar', [ProyectoController::class, 'entregar'])->name('entregar');
-    
+
     // Eliminar proyecto (solo líder)
     Route::delete('/equipo/{equipo}', [ProyectoController::class, 'destroy'])->name('destroy');
 });
@@ -146,7 +159,7 @@ Route::middleware(['auth', 'profile.complete'])->group(function () {
     Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/perfil', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Habilidades del perfil
     Route::post('/perfil/habilidades', [ProfileController::class, 'storeHabilidad'])->name('profile.habilidad.store');
     Route::put('/perfil/habilidades/{habilidad}', [ProfileController::class, 'updateHabilidad'])->name('profile.habilidad.update');
@@ -158,24 +171,22 @@ Route::middleware(['auth', 'profile.complete'])->group(function () {
 | Rutas de Notificaciones (Requieren Autenticación)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->prefix('notificaciones')->name('notificaciones.')->group(function () {
-    Route::get('/', function() {
-        $notificaciones = auth()->user()->notificaciones()
-                                ->recientes()
-                                ->paginate(20);
-        return view('notificaciones.index', compact('notificaciones'));
-    })->name('index');
-    
-    Route::post('/{notificacion}/marcar-leida', function($id) {
-        $notificacion = auth()->user()->notificaciones()->findOrFail($id);
-        $notificacion->marcarComoLeida();
-        return redirect($notificacion->url_accion ?? route('dashboard'));
-    })->name('marcar-leida');
-    
-    Route::post('/marcar-todas-leidas', function() {
-        auth()->user()->marcarNotificacionesComoLeidas();
-        return redirect()->back()->with('success', 'Todas las notificaciones marcadas como leídas');
-    })->name('marcar-todas-leidas');
+Route::middleware(['auth'])->prefix('notificaciones')->name('notificaciones.')->group(function () {
+    // Vista de todas las notificaciones
+    Route::get('/', [\App\Http\Controllers\NotificacionController::class, 'index'])
+        ->name('index');
+
+    // API para obtener notificaciones no leídas (polling)
+    Route::get('/obtener-no-leidas', [\App\Http\Controllers\NotificacionController::class, 'obtenerNoLeidas'])
+        ->name('obtener-no-leidas');
+
+    // Marcar notificación como leída y redirigir
+    Route::get('/{notificacion}/marcar-leida', [\App\Http\Controllers\NotificacionController::class, 'marcarLeida'])
+        ->name('marcar-leida');
+
+    // Marcar todas como leídas
+    Route::post('/marcar-todas-leidas', [\App\Http\Controllers\NotificacionController::class, 'marcarTodasLeidas'])
+        ->name('marcar-todas-leidas');
 });
 
 /*
@@ -185,18 +196,18 @@ Route::middleware('auth')->prefix('notificaciones')->name('notificaciones.')->gr
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
-    
+
     // Rankings
     Route::get('/rankings', [\App\Http\Controllers\AdminController::class, 'rankings'])->name('rankings');
-    
+
     // Reportes y Análisis
     Route::get('/reportes', [\App\Http\Controllers\AdminController::class, 'reportes'])->name('reportes.index');
     Route::get('/reportes/datos', [\App\Http\Controllers\AdminController::class, 'datosReportes'])->name('reportes.datos');
-    
+
     // Gestión de usuarios
     Route::resource('usuarios', \App\Http\Controllers\AdminUserController::class)->except(['show']);
     Route::put('/usuarios/{usuario}/password', [\App\Http\Controllers\AdminUserController::class, 'updatePassword'])->name('usuarios.update-password');
-    
+
     // Constancias
     Route::prefix('constancias')->name('constancias.')->group(function () {
         Route::get('/', [\App\Http\Controllers\ConstanciaController::class, 'index'])->name('index');
@@ -208,13 +219,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{constancia}/preview', [\App\Http\Controllers\ConstanciaController::class, 'vistaPrevia'])->name('preview');
         Route::get('/{constancia}/descargar', [\App\Http\Controllers\ConstanciaController::class, 'descargar'])->name('descargar');
         Route::delete('/{constancia}', [\App\Http\Controllers\ConstanciaController::class, 'destroy'])->name('destroy');
-        
+
         // API endpoints
         Route::get('/participantes/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerParticipantes']);
         Route::get('/estadisticas/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerEstadisticas']);
         Route::get('/equipos/{evento}', [\App\Http\Controllers\ConstanciaController::class, 'obtenerEquipos']);
     });
-    
+
     // Gestión de Proyectos
     Route::prefix('proyectos')->name('proyectos.')->group(function () {
         Route::get('/pendientes', [\App\Http\Controllers\AdminController::class, 'proyectosPendientes'])->name('pendientes');
@@ -222,9 +233,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/{proyecto}/aprobar', [\App\Http\Controllers\AdminController::class, 'aprobarProyecto'])->name('aprobar');
         Route::post('/{proyecto}/rechazar', [\App\Http\Controllers\AdminController::class, 'rechazarProyecto'])->name('rechazar');
     });
-    
+
     // Estadísticas
-    Route::get('/estadisticas', function() {
+    Route::get('/estadisticas', function () {
         $stats = [
             'total_usuarios' => \App\Models\User::count(),
             'total_eventos' => \App\Models\Evento::count(),
@@ -243,14 +254,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::middleware(['auth', 'juez'])->prefix('juez')->name('juez.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\JuezController::class, 'dashboard'])->name('dashboard');
-    
+
     // Evaluaciones
     Route::get('/evaluar/{equipo}', [\App\Http\Controllers\JuezController::class, 'evaluar'])->name('evaluar');
     Route::post('/evaluar/{equipo}', [\App\Http\Controllers\JuezController::class, 'guardarEvaluacion'])->name('guardar-evaluacion');
-    
+
     // Mis evaluaciones
     Route::get('/mis-evaluaciones', [\App\Http\Controllers\JuezController::class, 'misEvaluaciones'])->name('mis-evaluaciones');
-    
+
     // Rankings
     Route::get('/rankings', [\App\Http\Controllers\JuezController::class, 'rankings'])->name('rankings');
 });

@@ -204,32 +204,23 @@
                                     <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
                                 </svg>
                                 Notificaciones
+                                <span id="notif-badge" class="hidden px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full"></span>
                             </h3>
+                            <button onclick="marcarTodasLeidas()" class="text-xs text-indigo-600 hover:text-indigo-700 font-medium hidden" id="btn-marcar-todas">
+                                Marcar todas como leídas
+                            </button>
                         </div>
 
-                        @php
-                            $notificaciones = auth()->user()->notificacionesNoLeidas()->take(3)->get();
-                        @endphp
+                        <div id="notificaciones-container" class="space-y-3">
+                            <!-- Las notificaciones se cargarán aquí dinámicamente -->
+                        </div>
 
-                        @forelse($notificaciones as $notif)
-                            <div class="p-3 bg-blue-50 rounded-lg mb-3 border-l-4 border-blue-500">
-                                <p class="text-sm font-medium text-gray-900">{{ $notif->titulo }}</p>
-                                <p class="text-xs text-gray-600 mt-1">{{ $notif->mensaje }}</p>
-                            </div>
-                        @empty
-                            <div class="text-center py-6 text-gray-500">
-                                <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                                </svg>
-                                <p class="text-sm">No tienes notificaciones</p>
-                            </div>
-                        @endforelse
-
-                        @if($notificaciones->count() > 0)
-                            <a href="{{ route('notificaciones.index') }}" class="block text-center text-sm text-indigo-600 hover:text-indigo-700 font-medium mt-4">
-                                Ver todas →
-                            </a>
-                        @endif
+                        <div id="no-notificaciones" class="text-center py-6 text-gray-500">
+                            <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            <p class="text-sm">No tienes notificaciones</p>
+                        </div>
                     </div>
 
                 </div>
@@ -237,4 +228,133 @@
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        let notificacionesActuales = [];
+
+        // Función para cargar notificaciones
+        async function cargarNotificaciones() {
+            try {
+                const response = await fetch('{{ route('notificaciones.obtener-no-leidas') }}');
+                const data = await response.json();
+                
+                notificacionesActuales = data.notificaciones;
+                actualizarUI(data.notificaciones, data.count);
+            } catch (error) {
+                console.error('Error al cargar notificaciones:', error);
+            }
+        }
+
+        // Función para actualizar la UI
+        function actualizarUI(notificaciones, count) {
+            const container = document.getElementById('notificaciones-container');
+            const noNotif = document.getElementById('no-notificaciones');
+            const badge = document.getElementById('notif-badge');
+            const btnMarcarTodas = document.getElementById('btn-marcar-todas');
+
+            // Actualizar badge
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+                btnMarcarTodas.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+                btnMarcarTodas.classList.add('hidden');
+            }
+
+            // Actualizar contenedor
+            if (notificaciones.length === 0) {
+                container.innerHTML = '';
+                noNotif.classList.remove('hidden');
+            } else {
+                noNotif.classList.add('hidden');
+                container.innerHTML = notificaciones.map(notif => crearNotificacionHTML(notif)).join('');
+            }
+        }
+
+        // Función para crear HTML de una notificación
+        function crearNotificacionHTML(notif) {
+            const colorClasses = {
+                'solicitud_equipo': 'bg-blue-50 border-blue-500',
+                'solicitud_aceptada': 'bg-green-50 border-green-500',
+                'solicitud_rechazada': 'bg-red-50 border-red-500',
+                'nuevo_miembro_equipo': 'bg-indigo-50 border-indigo-500',
+                'mensaje_equipo': 'bg-purple-50 border-purple-500',
+                'tarea_asignada': 'bg-yellow-50 border-yellow-500',
+                'tarea_completada': 'bg-emerald-50 border-emerald-500',
+                'evaluacion_recibida': 'bg-orange-50 border-orange-500',
+                'nuevo_evento': 'bg-pink-50 border-pink-500',
+                'constancia_generada': 'bg-amber-50 border-amber-500',
+            };
+
+            const colorClass = colorClasses[notif.tipo] || 'bg-blue-50 border-blue-500';
+            const url = notif.url_accion || '#';
+
+            return `
+                <a href="${url}" onclick="marcarComoLeida(event, ${notif.id})" 
+                   class="block p-3 ${colorClass} rounded-lg border-l-4 hover:shadow-md transition cursor-pointer">
+                    <p class="text-sm font-medium text-gray-900">${notif.titulo}</p>
+                    <p class="text-xs text-gray-600 mt-1">${notif.mensaje}</p>
+                    <p class="text-xs text-gray-400 mt-2">${formatearFecha(notif.created_at)}</p>
+                </a>
+            `;
+        }
+
+        // Función para marcar como leída
+        function marcarComoLeida(event, notifId) {
+            event.preventDefault();
+            window.location.href = `{{ url('/notificaciones') }}/${notifId}/marcar-leida`;
+        }
+
+        // Función para marcar todas como leídas
+        async function marcarTodasLeidas() {
+            try {
+                const response = await fetch('{{ route('notificaciones.marcar-todas-leidas') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                });
+
+                if (response.ok) {
+                    await cargarNotificaciones();
+                }
+            } catch (error) {
+                console.error('Error al marcar todas como leídas:', error);
+            }
+        }
+
+        // Función para formatear fecha
+        function formatearFecha(fecha) {
+            const date = new Date(fecha);
+            const ahora = new Date();
+            const diff = Math.floor((ahora - date) / 1000); // diferencia en segundos
+
+            if (diff < 60) return 'Justo ahora';
+            if (diff < 3600) return `Hace ${Math.floor(diff / 60)} min`;
+            if (diff < 86400) return `Hace ${Math.floor(diff / 3600)} h`;
+            if (diff < 604800) return `Hace ${Math.floor(diff / 86400)} días`;
+            
+            return date.toLocaleDateString('es-ES', { 
+                day: 'numeric', 
+                month: 'short' 
+            });
+        }
+
+        // Cargar notificaciones al inicio
+        cargarNotificaciones();
+
+        // Polling cada 10 segundos
+        setInterval(cargarNotificaciones, 10000);
+
+        // También recargar cuando la pestaña vuelve a estar visible
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                cargarNotificaciones();
+            }
+        });
+    </script>
+    @endpush
 </x-app-layout>

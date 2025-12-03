@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Evento;
 use App\Models\EventPremio;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -133,6 +134,9 @@ class EventoController extends Controller
             }
 
             DB::commit();
+
+            // Notificar a todos los participantes sobre el nuevo evento
+            NotificationService::nuevoEvento($evento);
 
             return redirect()
                 ->route('eventos.show', $evento)
