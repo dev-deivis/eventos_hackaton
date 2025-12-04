@@ -13,5 +13,9 @@ cmds = [
     'composer dump-autoload --optimize',
 ]
 
+[staticAssets]
+# Asegurar que los assets compilados se sirvan
+'/app/public' = '/'
+
 [start]
 cmd = 'php artisan migrate --force && php artisan config:cache && php artisan serve --host=0.0.0.0 --port=$PORT'
