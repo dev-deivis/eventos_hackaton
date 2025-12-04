@@ -39,6 +39,12 @@ RUN npm ci --prefer-offline --no-audit
 # Copiar el resto del código
 COPY . .
 
+# Eliminar .env local si existe y crear uno de producción
+RUN rm -f .env && \
+    echo "APP_ENV=production" > .env && \
+    echo "APP_DEBUG=false" >> .env && \
+    echo "LOG_CHANNEL=stderr" >> .env
+
 # Completar instalación de Composer
 RUN composer dump-autoload --optimize --no-dev
 
@@ -59,8 +65,7 @@ RUN timeout 300 npm run build || echo "Build completed or timed out"
 EXPOSE 8080
 
 # Comando de inicio
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
     php artisan migrate --force && \
     php artisan serve --host=0.0.0.0 --port=8080
