@@ -21,15 +21,22 @@ services:
         value: database
       - key: CACHE_STORE
         value: database
-      - key: DB_CONNECTION
-        value: pgsql
       - key: APP_KEY
         generateValue: true
       - key: APP_URL
         sync: false
-
-databases:
-  - name: hackathon-events-db
-    plan: free
-    databaseName: hackathon_events
-    user: hackathon_user
+      # SUPABASE PostgreSQL - CONFIGURAR EN RENDER DASHBOARD
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        value: postgres
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        value: require
