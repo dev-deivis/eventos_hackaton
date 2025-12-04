@@ -1,9 +1,9 @@
 .git
 .env
 .env.*
-.env.backup
 node_modules
 vendor
+public/build
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
@@ -13,13 +13,6 @@ bootstrap/cache/*
 .vscode
 *.log
 .DS_Store
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-.editorconfig
-.gitattributes
-.gitignore
-README.md
 tests/
+.phpunit.result.cache
+README.md
