@@ -1,0 +1,18 @@
+[phases.setup]
+nixPkgs = ['nodejs-18_x', 'php82', 'php82Packages.composer', 'postgresql']
+
+[phases.install]
+cmds = [
+    'composer install --no-dev --optimize-autoloader --no-scripts',
+]
+
+[phases.build]
+cmds = [
+    'npm ci',
+    'npm run build',
+    'composer dump-autoload --optimize',
+    'php artisan key:generate --force',
+]
+
+[start]
+cmd = 'chmod +x railway-setup.sh && ./railway-setup.sh && php artisan serve --host=0.0.0.0 --port=$PORT'
