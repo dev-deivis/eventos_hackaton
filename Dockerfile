@@ -39,9 +39,6 @@ RUN npm ci --prefer-offline --no-audit
 # Copiar el resto del código
 COPY . .
 
-# ELIMINADO: No crear .env aquí, usar variables de entorno de Render
-# Las variables de entorno de Render estarán disponibles en runtime
-
 # Completar instalación de Composer
 RUN composer dump-autoload --optimize --no-dev
 
@@ -58,8 +55,7 @@ RUN chmod -R 775 storage bootstrap/cache
 # Compilar assets (con timeout)
 RUN timeout 300 npm run build || echo "Build completed or timed out"
 
-# NO ejecutar comandos de artisan que requieran BD durante el build
-# Solo hacer cache de configuración si no necesita BD
+# Cache de configuración durante el build (opcional, no requiere BD)
 RUN php artisan config:cache --no-interaction || true
 RUN php artisan route:cache --no-interaction || true
 RUN php artisan view:cache --no-interaction || true
@@ -67,8 +63,8 @@ RUN php artisan view:cache --no-interaction || true
 # Exponer puerto
 EXPOSE 8080
 
-# Comando de inicio - Ahora SÍ tendrá acceso a las variables de entorno
-CMD php artisan config:clear && \
+# Comando de inicio - PRIMERO migrar, LUEGO limpiar cache
+CMD php artisan migrate --force && \
+    php artisan config:clear && \
     php artisan cache:clear && \
-    php artisan migrate --force && \
     php artisan serve --host=0.0.0.0 --port=8080
