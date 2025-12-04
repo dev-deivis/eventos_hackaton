@@ -63,7 +63,8 @@ RUN php artisan view:cache --no-interaction || true
 # Exponer puerto
 EXPOSE 8080
 
-# Comando de inicio - PRIMERO migrar, LUEGO limpiar cache
+# Comando de inicio - PRIMERO migrar, LUEGO seeders, LUEGO limpiar cache
 CMD php artisan migrate --force && \
+    php artisan db:seed --force && \
     php artisan config:clear && \
     php artisan serve --host=0.0.0.0 --port=8080
