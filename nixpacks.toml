@@ -11,7 +11,6 @@ cmds = [
     'npm ci',
     'npm run build',
     'composer dump-autoload --optimize',
-    'php artisan key:generate --force',
 ]
 
 [start]
