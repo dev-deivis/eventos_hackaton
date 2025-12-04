@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: hackathon-events
+    runtime: php
+    plan: free
+    buildCommand: ./render-build.sh
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: debug
+      - key: SESSION_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false
+
+databases:
+  - name: hackathon-events-db
+    plan: free
+    databaseName: hackathon_events
+    user: hackathon_user
