@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta - Eventos Académicos</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        /* Indicador de fortaleza de contraseña */
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .password-strength.weak { background-color: #ef4444; width: 33%; }
+        .password-strength.medium { background-color: #f59e0b; width: 66%; }
+        .password-strength.strong { background-color: #10b981; width: 100%; }
+        
+        /* Botón de mostrar/ocultar contraseña */
+        .toggle-password {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .toggle-password:hover {
+            color: #4f46e5;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex">
     
@@ -122,7 +142,7 @@
                 </div>
 
                 <!-- Formulario -->
-                <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                <form method="POST" action="{{ route('register') }}" class="space-y-4" id="registerForm">
                     @csrf
 
                     <!-- Nombre y Apellidos en dos columnas -->
@@ -130,7 +150,7 @@
                         <!-- Nombre -->
                         <div>
                             <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">
-                                Nombre
+                                Nombre <span class="text-red-500">*</span>
                             </label>
                             <input id="nombre" 
                                    type="text" 
@@ -138,8 +158,11 @@
                                    value="{{ old('nombre') }}"
                                    required 
                                    autofocus
+                                   maxlength="20"
+                                   pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
                                    placeholder="Ángel"
                                    class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm @error('nombre') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-500"><span id="nombreCount">0</span>/20 caracteres</p>
                             @error('nombre')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
@@ -148,15 +171,18 @@
                         <!-- Apellidos -->
                         <div>
                             <label for="apellidos" class="block text-sm font-medium text-gray-700 mb-1">
-                                Apellidos
+                                Apellidos <span class="text-red-500">*</span>
                             </label>
                             <input id="apellidos" 
                                    type="text" 
                                    name="apellidos" 
                                    value="{{ old('apellidos') }}"
                                    required
-                                   placeholder="Matus"
+                                   maxlength="20"
+                                   pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+"
+                                   placeholder="Matus Cruz"
                                    class="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm @error('apellidos') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-500"><span id="apellidosCount">0</span>/20 caracteres</p>
                             @error('apellidos')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
@@ -166,7 +192,7 @@
                     <!-- Número de Control -->
                     <div>
                         <label for="no_control" class="block text-sm font-medium text-gray-700 mb-1">
-                            Número de control
+                            Número de control <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -179,9 +205,12 @@
                                    name="no_control" 
                                    value="{{ old('no_control') }}"
                                    required
+                                   maxlength="8"
+                                   pattern="[0-9]{8}"
                                    placeholder="22161154"
                                    class="block w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm @error('no_control') border-red-500 @enderror">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">8 dígitos numéricos</p>
                         @error('no_control')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -192,7 +221,7 @@
                         <!-- Carrera -->
                         <div>
                             <label for="carrera_id" class="block text-sm font-medium text-gray-700 mb-1">
-                                Carrera
+                                Carrera <span class="text-red-500">*</span>
                             </label>
                             <select id="carrera_id" 
                                     name="carrera_id" 
@@ -213,7 +242,7 @@
                         <!-- Semestre -->
                         <div>
                             <label for="semestre" class="block text-sm font-medium text-gray-700 mb-1">
-                                Semestre
+                                Semestre <span class="text-red-500">*</span>
                             </label>
                             <select id="semestre" 
                                     name="semestre" 
@@ -245,9 +274,12 @@
                                    type="tel" 
                                    name="telefono" 
                                    value="{{ old('telefono') }}"
-                                   placeholder="951 123 4567"
+                                   maxlength="10"
+                                   pattern="[0-9]{10}"
+                                   placeholder="9511234567"
                                    class="block w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm @error('telefono') border-red-500 @enderror">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">10 dígitos sin espacios</p>
                         @error('telefono')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -256,7 +288,7 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                            Correo electrónico
+                            Correo electrónico <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -282,7 +314,7 @@
                     <!-- Password -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-                            Contraseña
+                            Contraseña <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -294,9 +326,29 @@
                                    type="password" 
                                    name="password" 
                                    required
+                                   minlength="8"
                                    autocomplete="new-password"
-                                   placeholder="••••••••••••"
-                                   class="block w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm @error('password') border-red-500 @enderror">
+                                   placeholder="••••••••"
+                                   class="block w-full pl-9 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm @error('password') border-red-500 @enderror">
+                            <!-- Botón mostrar/ocultar contraseña -->
+                            <button type="button" 
+                                    onclick="togglePassword('password', 'eyeIcon')"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center toggle-password">
+                                <svg id="eyeIcon" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Indicador de fortaleza -->
+                        <div class="mt-2 bg-gray-200 rounded-full h-1 overflow-hidden">
+                            <div id="passwordStrength" class="password-strength"></div>
+                        </div>
+                        <div id="passwordMessage" class="mt-1 text-xs flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-500">Mínimo 8 caracteres, 1 letra y 1 número</span>
                         </div>
                         @error('password')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -306,7 +358,7 @@
                     <!-- Confirm Password -->
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
-                            Confirmar contraseña
+                            Confirmar contraseña <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -318,14 +370,26 @@
                                    type="password" 
                                    name="password_confirmation" 
                                    required
+                                   minlength="8"
                                    autocomplete="new-password"
-                                   placeholder="••••••••••••"
-                                   class="block w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm">
+                                   placeholder="••••••••"
+                                   class="block w-full pl-9 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm">
+                            <!-- Botón mostrar/ocultar contraseña -->
+                            <button type="button" 
+                                    onclick="togglePassword('password_confirmation', 'eyeIconConfirm')"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center toggle-password">
+                                <svg id="eyeIconConfirm" class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
                         </div>
+                        <p id="passwordMatch" class="mt-1 text-xs"></p>
                     </div>
 
                     <!-- Submit Button -->
                     <button type="submit" 
+                            id="submitBtn"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 shadow-lg hover:shadow-xl mt-6">
                         Crear cuenta
                     </button>
@@ -350,6 +414,209 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Función para mostrar/ocultar contraseña
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                // Cambiar a ícono de ojo cerrado
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                `;
+            } else {
+                input.type = 'password';
+                // Cambiar a ícono de ojo abierto
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                `;
+            }
+        }
+
+        // Validaciones en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const nombreInput = document.getElementById('nombre');
+            const apellidosInput = document.getElementById('apellidos');
+            const noControlInput = document.getElementById('no_control');
+            const telefonoInput = document.getElementById('telefono');
+            const passwordInput = document.getElementById('password');
+            const passwordConfirmInput = document.getElementById('password_confirmation');
+
+            // Contador de caracteres para nombre
+            nombreInput.addEventListener('input', function() {
+                const count = this.value.length;
+                document.getElementById('nombreCount').textContent = count;
+                
+                // Solo permitir letras y acentos
+                this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                
+                // Limitar a 20 caracteres
+                if (this.value.length > 20) {
+                    this.value = this.value.substring(0, 20);
+                }
+            });
+
+            // Contador de caracteres para apellidos
+            apellidosInput.addEventListener('input', function() {
+                const count = this.value.length;
+                document.getElementById('apellidosCount').textContent = count;
+                
+                // Solo permitir letras y acentos
+                this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                
+                // Limitar a 20 caracteres
+                if (this.value.length > 20) {
+                    this.value = this.value.substring(0, 20);
+                }
+            });
+
+            // Validación número de control (solo números, 8 dígitos)
+            noControlInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                if (this.value.length > 8) {
+                    this.value = this.value.substring(0, 8);
+                }
+            });
+
+            // Validación teléfono (solo números, 10 dígitos)
+            telefonoInput.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                if (this.value.length > 10) {
+                    this.value = this.value.substring(0, 10);
+                }
+            });
+
+            // Validación de fortaleza de contraseña
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                const strengthBar = document.getElementById('passwordStrength');
+                const messageDiv = document.getElementById('passwordMessage');
+                
+                // Criterios de validación
+                const minLength = password.length >= 8;
+                const hasLetter = /[a-zA-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                
+                let strength = 0;
+                let strengthText = '';
+                let strengthClass = '';
+                
+                if (minLength) strength++;
+                if (hasLetter) strength++;
+                if (hasNumber) strength++;
+                if (hasSpecial) strength++;
+                
+                if (password.length === 0) {
+                    strengthBar.className = 'password-strength';
+                    messageDiv.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-gray-500">Mínimo 8 caracteres, 1 letra y 1 número</span>
+                    `;
+                    messageDiv.className = 'mt-1 text-xs flex items-center gap-1';
+                } else if (strength <= 2) {
+                    strengthClass = 'weak';
+                    messageDiv.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-red-600">Contraseña débil</span>
+                    `;
+                    messageDiv.className = 'mt-1 text-xs flex items-center gap-1';
+                } else if (strength === 3) {
+                    strengthClass = 'medium';
+                    messageDiv.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-yellow-600">Contraseña media</span>
+                    `;
+                    messageDiv.className = 'mt-1 text-xs flex items-center gap-1';
+                } else {
+                    strengthClass = 'strong';
+                    messageDiv.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-green-600">Contraseña fuerte</span>
+                    `;
+                    messageDiv.className = 'mt-1 text-xs flex items-center gap-1';
+                }
+                
+                strengthBar.className = `password-strength ${strengthClass}`;
+                
+                // Validar si cumple requisitos mínimos
+                if (!minLength || !hasLetter || !hasNumber) {
+                    messageDiv.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-red-600">Mínimo 8 caracteres, 1 letra y 1 número</span>
+                    `;
+                    messageDiv.className = 'mt-1 text-xs flex items-center gap-1';
+                }
+            });
+
+            // Validar que las contraseñas coincidan
+            passwordConfirmInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+                const confirm = this.value;
+                const matchMessage = document.getElementById('passwordMatch');
+                
+                if (confirm.length === 0) {
+                    matchMessage.innerHTML = '';
+                } else if (password === confirm) {
+                    matchMessage.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-green-600">Las contraseñas coinciden</span>
+                    `;
+                    matchMessage.className = 'mt-1 text-xs flex items-center gap-1';
+                } else {
+                    matchMessage.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-red-600">Las contraseñas no coinciden</span>
+                    `;
+                    matchMessage.className = 'mt-1 text-xs flex items-center gap-1';
+                }
+            });
+
+            // Validación final antes de enviar
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                const password = passwordInput.value;
+                const confirm = passwordConfirmInput.value;
+                
+                // Validar contraseña
+                const minLength = password.length >= 8;
+                const hasLetter = /[a-zA-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                
+                if (!minLength || !hasLetter || !hasNumber) {
+                    e.preventDefault();
+                    alert('La contraseña debe tener al menos 8 caracteres, 1 letra y 1 número');
+                    return false;
+                }
+                
+                // Validar que coincidan
+                if (password !== confirm) {
+                    e.preventDefault();
+                    alert('Las contraseñas no coinciden');
+                    return false;
+                }
+                
+                return true;
+            });
+        });
+    </script>
 
 </body>
 </html>

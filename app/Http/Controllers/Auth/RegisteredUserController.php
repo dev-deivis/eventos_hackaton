@@ -31,15 +31,95 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validaciones mejoradas con mensajes personalizados
         $request->validate([
-            'nombre' => ['required', 'string', 'max:100'],
-            'apellidos' => ['required', 'string', 'max:100'],
-            'no_control' => ['required', 'string', 'max:20', 'unique:participantes,no_control'],
-            'carrera_id' => ['required', 'exists:carreras,id'],
-            'semestre' => ['required', 'integer', 'min:1', 'max:12'],
-            'telefono' => ['nullable', 'string', 'max:15'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'nombre' => [
+                'required', 
+                'string', 
+                'max:20',
+                'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/' // Solo letras y acentos
+            ],
+            'apellidos' => [
+                'required', 
+                'string', 
+                'max:20',
+                'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/' // Solo letras y acentos
+            ],
+            'no_control' => [
+                'required', 
+                'string', 
+                'size:8', // Exactamente 8 caracteres
+                'regex:/^[0-9]{8}$/', // Solo números
+                'unique:participantes,no_control'
+            ],
+            'carrera_id' => [
+                'required', 
+                'exists:carreras,id'
+            ],
+            'semestre' => [
+                'required', 
+                'integer', 
+                'min:1', 
+                'max:12'
+            ],
+            'telefono' => [
+                'nullable', 
+                'string', 
+                'size:10', // Exactamente 10 dígitos
+                'regex:/^[0-9]{10}$/' // Solo números
+            ],
+            'email' => [
+                'required', 
+                'string', 
+                'lowercase', 
+                'email', 
+                'max:255', 
+                'unique:'.User::class
+            ],
+            'password' => [
+                'required', 
+                'confirmed',
+                'min:8', // Mínimo 8 caracteres
+                'regex:/^(?=.*[A-Za-z])(?=.*\d).+$/' // Al menos 1 letra y 1 número
+            ],
+        ], [
+            // Mensajes personalizados para nombre
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 20 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras y acentos.',
+            
+            // Mensajes personalizados para apellidos
+            'apellidos.required' => 'Los apellidos son obligatorios.',
+            'apellidos.max' => 'Los apellidos no pueden tener más de 20 caracteres.',
+            'apellidos.regex' => 'Los apellidos solo pueden contener letras y acentos.',
+            
+            // Mensajes personalizados para número de control
+            'no_control.required' => 'El número de control es obligatorio.',
+            'no_control.size' => 'El número de control debe tener exactamente 8 dígitos.',
+            'no_control.regex' => 'El número de control solo puede contener números.',
+            'no_control.unique' => 'Este número de control ya está registrado.',
+            
+            // Mensajes personalizados para teléfono
+            'telefono.size' => 'El teléfono debe tener exactamente 10 dígitos.',
+            'telefono.regex' => 'El teléfono solo puede contener números.',
+            
+            // Mensajes personalizados para contraseña
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.regex' => 'La contraseña debe contener al menos 1 letra y 1 número.',
+            
+            // Mensajes personalizados para email
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección válida.',
+            'email.unique' => 'Este correo electrónico ya está registrado.',
+            
+            // Mensajes personalizados para carrera y semestre
+            'carrera_id.required' => 'Debes seleccionar una carrera.',
+            'carrera_id.exists' => 'La carrera seleccionada no es válida.',
+            'semestre.required' => 'Debes seleccionar un semestre.',
+            'semestre.min' => 'El semestre debe ser al menos 1.',
+            'semestre.max' => 'El semestre no puede ser mayor a 12.',
         ]);
 
         // Crear usuario

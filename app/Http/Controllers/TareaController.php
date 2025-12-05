@@ -33,10 +33,26 @@ class TareaController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:200',
-            'descripcion' => 'nullable|string|max:1000',
+            'nombre' => [
+                'required',
+                'string',
+                'max:40',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/'
+            ],
+            'descripcion' => [
+                'nullable',
+                'string',
+                'max:50',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]+$/'
+            ],
             'participantes' => 'nullable|array',
             'participantes.*' => 'exists:participantes,id',
+        ], [
+            'nombre.required' => 'El nombre de la tarea es obligatorio.',
+            'nombre.max' => 'El nombre de la tarea no puede tener más de 40 caracteres.',
+            'nombre.regex' => 'El nombre de la tarea solo puede contener letras y números.',
+            'descripcion.max' => 'La descripción no puede tener más de 50 caracteres.',
+            'descripcion.regex' => 'La descripción solo puede contener letras, números y signos de puntuación básicos.',
         ]);
 
         // Obtener el último orden
@@ -100,10 +116,26 @@ class TareaController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:200',
-            'descripcion' => 'nullable|string|max:1000',
+            'nombre' => [
+                'required',
+                'string',
+                'max:40',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/'
+            ],
+            'descripcion' => [
+                'nullable',
+                'string',
+                'max:50',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]+$/'
+            ],
             'participantes' => 'nullable|array',
             'participantes.*' => 'exists:participantes,id',
+        ], [
+            'nombre.required' => 'El nombre de la tarea es obligatorio.',
+            'nombre.max' => 'El nombre de la tarea no puede tener más de 40 caracteres.',
+            'nombre.regex' => 'El nombre de la tarea solo puede contener letras y números.',
+            'descripcion.max' => 'La descripción no puede tener más de 50 caracteres.',
+            'descripcion.regex' => 'La descripción solo puede contener letras, números y signos de puntuación básicos.',
         ]);
 
         // Actualizar la tarea

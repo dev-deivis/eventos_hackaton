@@ -18,7 +18,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     
-                    <form method="POST" action="{{ route('equipos.store', $evento) }}" class="space-y-6">
+                    <form method="POST" action="{{ route('equipos.store', $evento) }}" class="space-y-6" id="createTeamForm">
                         @csrf
 
                         <!-- Nombre del Equipo -->
@@ -31,14 +31,20 @@
                                    name="nombre" 
                                    value="{{ old('nombre') }}"
                                    required
+                                   maxlength="30"
                                    placeholder="Los Innovadores"
                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">
+                                    Elige un nombre único que identifique a tu equipo
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="nombreCount">0</span>/30
+                                </p>
+                            </div>
                             @error('nombre')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-sm text-gray-500">
-                                Elige un nombre único que identifique a tu equipo
-                            </p>
                         </div>
 
                         <!-- Descripción -->
@@ -49,8 +55,17 @@
                             <textarea id="descripcion" 
                                       name="descripcion" 
                                       rows="3"
+                                      maxlength="70"
                                       placeholder="Describe brevemente tu equipo y tu proyecto..."
-                                      class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                                      class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">
+                                    Opcional: describe brevemente tu equipo
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="descripcionCount">0</span>/70
+                                </p>
+                            </div>
                             @error('descripcion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -120,4 +135,105 @@
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nombreInput = document.getElementById('nombre');
+            const descripcionInput = document.getElementById('descripcion');
+            const nombreCount = document.getElementById('nombreCount');
+            const descripcionCount = document.getElementById('descripcionCount');
+
+            // Actualizar contador inicial si hay valor (por old())
+            if (nombreInput.value) {
+                nombreCount.textContent = nombreInput.value.length;
+            }
+            if (descripcionInput.value) {
+                descripcionCount.textContent = descripcionInput.value.length;
+            }
+
+            // Validación para nombre del equipo
+            nombreInput.addEventListener('input', function() {
+                let value = this.value;
+                
+                // Limitar a 30 caracteres
+                if (value.length > 30) {
+                    value = value.substring(0, 30);
+                    this.value = value;
+                }
+                
+                // Actualizar contador
+                nombreCount.textContent = value.length;
+                
+                // Cambiar color del contador según proximidad al límite
+                if (value.length >= 28) {
+                    nombreCount.parentElement.classList.add('text-red-500');
+                    nombreCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                } else if (value.length >= 25) {
+                    nombreCount.parentElement.classList.add('text-yellow-500');
+                    nombreCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                } else {
+                    nombreCount.parentElement.classList.add('text-gray-500');
+                    nombreCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                }
+            });
+
+            // Validación para descripción
+            descripcionInput.addEventListener('input', function() {
+                let value = this.value;
+                
+                // Limitar a 70 caracteres
+                if (value.length > 70) {
+                    value = value.substring(0, 70);
+                    this.value = value;
+                }
+                
+                // Actualizar contador
+                descripcionCount.textContent = value.length;
+                
+                // Cambiar color del contador según proximidad al límite
+                if (value.length >= 68) {
+                    descripcionCount.parentElement.classList.add('text-red-500');
+                    descripcionCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                } else if (value.length >= 60) {
+                    descripcionCount.parentElement.classList.add('text-yellow-500');
+                    descripcionCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                } else {
+                    descripcionCount.parentElement.classList.add('text-gray-500');
+                    descripcionCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                }
+            });
+
+            // Validación final antes de enviar
+            document.getElementById('createTeamForm').addEventListener('submit', function(e) {
+                const nombre = nombreInput.value.trim();
+                
+                // Validar que el nombre no esté vacío
+                if (nombre.length === 0) {
+                    e.preventDefault();
+                    alert('El nombre del equipo es obligatorio');
+                    nombreInput.focus();
+                    return false;
+                }
+                
+                // Validar longitud máxima
+                if (nombre.length > 30) {
+                    e.preventDefault();
+                    alert('El nombre del equipo no puede tener más de 30 caracteres');
+                    nombreInput.focus();
+                    return false;
+                }
+                
+                if (descripcionInput.value.length > 70) {
+                    e.preventDefault();
+                    alert('La descripción no puede tener más de 70 caracteres');
+                    descripcionInput.focus();
+                    return false;
+                }
+                
+                return true;
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

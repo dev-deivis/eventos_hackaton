@@ -170,6 +170,7 @@
                                    type="password" 
                                    name="password" 
                                    required
+                                   minlength="8"
                                    autocomplete="current-password"
                                    placeholder="••••••••••••••"
                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('password') border-red-500 @enderror">

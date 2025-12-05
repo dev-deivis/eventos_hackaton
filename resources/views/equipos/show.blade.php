@@ -886,19 +886,46 @@
                                 @endphp
 
                                 @forelse($mensajes as $mensaje)
-                                    <div class="flex gap-2">
-                                        <div
-                                            class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                                            {{ substr($mensaje->participante->user->name, 0, 1) }}
+                                    @php
+                                        // Verificar si el mensaje es del usuario actual
+                                        $esMiMensaje = $mensaje->participante->user_id === auth()->id();
+                                    @endphp
+                                    
+                                    @if($esMiMensaje)
+                                        <!-- Mensaje del usuario actual (derecha, azul) -->
+                                        <div class="flex gap-2 justify-end">
+                                            <div class="flex-1 flex flex-col items-end">
+                                                <div class="text-xs font-semibold text-right text-indigo-600">Tú</div>
+                                                <div class="bg-indigo-600 text-white px-4 py-2 rounded-lg max-w-xs break-words">
+                                                    {{ $mensaje->mensaje }}
+                                                </div>
+                                                <div class="text-xs text-gray-400 mt-1">
+                                                    {{ $mensaje->created_at->format('g:i A') }}
+                                                </div>
+                                            </div>
+                                            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                                                {{ substr($mensaje->participante->user->name, 0, 1) }}
+                                            </div>
                                         </div>
-                                        <div class="flex-1">
-                                            <div class="text-xs font-semibold">
-                                                {{ explode(' ', $mensaje->participante->user->name)[0] }}</div>
-                                            <div class="text-sm text-gray-700">{{ $mensaje->mensaje }}</div>
-                                            <div class="text-xs text-gray-400">
-                                                {{ $mensaje->created_at->format('g:i A') }}</div>
+                                    @else
+                                        <!-- Mensaje de otro usuario (izquierda, gris) -->
+                                        <div class="flex gap-2">
+                                            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                                                {{ substr($mensaje->participante->user->name, 0, 1) }}
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <div class="text-xs font-semibold">
+                                                    {{ explode(' ', $mensaje->participante->user->name)[0] }}
+                                                </div>
+                                                <div class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg max-w-xs break-words">
+                                                    {{ $mensaje->mensaje }}
+                                                </div>
+                                                <div class="text-xs text-gray-400 mt-1">
+                                                    {{ $mensaje->created_at->format('g:i A') }}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @empty
                                     <div class="text-center text-gray-400 py-8">
                                         <p class="text-sm">No hay mensajes aún</p>
@@ -1054,15 +1081,35 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Tarea *</label>
-                    <input type="text" name="nombre" required maxlength="200"
-                        placeholder="Ej: Diseñar interfaz de usuario"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" 
+                           id="crear_tarea_nombre"
+                           name="nombre" 
+                           required 
+                           maxlength="40"
+                           placeholder="Ej: Diseñar interfaz de usuario"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    <div class="flex items-center justify-between mt-1">
+                        <p class="text-xs text-gray-500">Solo letras y números</p>
+                        <p class="text-xs text-gray-500">
+                            <span id="crearTareaNombreCount">0</span>/40
+                        </p>
+                    </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
-                    <textarea name="descripcion" rows="3" maxlength="1000" placeholder="Detalles de la tarea..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <textarea id="crear_tarea_descripcion"
+                              name="descripcion" 
+                              rows="3" 
+                              maxlength="50" 
+                              placeholder="Detalles de la tarea..."
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+                    <div class="flex items-center justify-between mt-1">
+                        <p class="text-xs text-gray-500">Letras, números y signos de puntuación</p>
+                        <p class="text-xs text-gray-500">
+                            <span id="crearTareaDescripcionCount">0</span>/50
+                        </p>
+                    </div>
                 </div>
 
                 <div class="mb-4">
@@ -1168,20 +1215,39 @@
         <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4">
             <h3 class="text-lg font-bold text-gray-900 mb-4">Editar Información del Equipo</h3>
 
-            <form method="POST" action="{{ route('equipos.update', $equipo) }}">
+            <form method="POST" action="{{ route('equipos.update', $equipo) }}" id="formEditarEquipo">
                 @csrf
                 @method('PUT')
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Equipo *</label>
-                    <input type="text" name="nombre" value="{{ $equipo->nombre }}" required maxlength="100"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" 
+                           id="edit_equipo_nombre"
+                           name="nombre" 
+                           value="{{ $equipo->nombre }}" 
+                           required 
+                           maxlength="30"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    <div class="flex items-center justify-end mt-1">
+                        <p class="text-xs text-gray-500">
+                            <span id="editEquipoNombreCount">{{ strlen($equipo->nombre) }}</span>/30
+                        </p>
+                    </div>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Descripción del Equipo</label>
-                    <textarea name="descripcion" rows="3" maxlength="500" placeholder="Describe tu equipo y sus objetivos..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">{{ $equipo->descripcion }}</textarea>
+                    <textarea id="edit_equipo_descripcion"
+                              name="descripcion" 
+                              rows="3" 
+                              maxlength="70" 
+                              placeholder="Describe tu equipo y sus objetivos..."
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none">{{ $equipo->descripcion }}</textarea>
+                    <div class="flex items-center justify-end mt-1">
+                        <p class="text-xs text-gray-500">
+                            <span id="editEquipoDescripcionCount">{{ strlen($equipo->descripcion ?? '') }}</span>/70
+                        </p>
+                    </div>
                 </div>
 
                 <div class="flex gap-3">
@@ -1216,6 +1282,124 @@
 
             document.getElementById('modalCrearTarea')?.addEventListener('click', function(e) {
                 if (e.target === this) toggleModalCrearTarea();
+            });
+
+            // Validación para crear tarea
+            const crearTareaNombre = document.getElementById('crear_tarea_nombre');
+            const crearTareaDescripcion = document.getElementById('crear_tarea_descripcion');
+            const crearTareaNombreCount = document.getElementById('crearTareaNombreCount');
+            const crearTareaDescripcionCount = document.getElementById('crearTareaDescripcionCount');
+
+            if (crearTareaNombre) {
+                crearTareaNombre.addEventListener('input', function() {
+                    let value = this.value;
+                    
+                    // Solo permitir letras y números (y espacios)
+                    value = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '');
+                    this.value = value;
+                    
+                    // Limitar a 40 caracteres
+                    if (value.length > 40) {
+                        value = value.substring(0, 40);
+                        this.value = value;
+                    }
+                    
+                    // Actualizar contador
+                    crearTareaNombreCount.textContent = value.length;
+                    
+                    // Cambiar color del contador
+                    if (value.length >= 38) {
+                        crearTareaNombreCount.parentElement.classList.add('text-red-500');
+                        crearTareaNombreCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                    } else if (value.length >= 35) {
+                        crearTareaNombreCount.parentElement.classList.add('text-yellow-500');
+                        crearTareaNombreCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                    } else {
+                        crearTareaNombreCount.parentElement.classList.add('text-gray-500');
+                        crearTareaNombreCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                    }
+                });
+            }
+
+            if (crearTareaDescripcion) {
+                crearTareaDescripcion.addEventListener('input', function() {
+                    let value = this.value;
+                    
+                    // Permitir letras, números y signos de puntuación/ortografía
+                    value = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]/g, '');
+                    this.value = value;
+                    
+                    // Limitar a 50 caracteres
+                    if (value.length > 50) {
+                        value = value.substring(0, 50);
+                        this.value = value;
+                    }
+                    
+                    // Actualizar contador
+                    crearTareaDescripcionCount.textContent = value.length;
+                    
+                    // Cambiar color del contador
+                    if (value.length >= 48) {
+                        crearTareaDescripcionCount.parentElement.classList.add('text-red-500');
+                        crearTareaDescripcionCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                    } else if (value.length >= 45) {
+                        crearTareaDescripcionCount.parentElement.classList.add('text-yellow-500');
+                        crearTareaDescripcionCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                    } else {
+                        crearTareaDescripcionCount.parentElement.classList.add('text-gray-500');
+                        crearTareaDescripcionCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                    }
+                });
+            }
+
+            // Validación al enviar formulario de crear tarea
+            document.getElementById('formCrearTarea')?.addEventListener('submit', function(e) {
+                const nombre = crearTareaNombre.value.trim();
+                const descripcion = crearTareaDescripcion.value.trim();
+                
+                // Validar nombre
+                if (nombre.length === 0) {
+                    e.preventDefault();
+                    alert('El nombre de la tarea es obligatorio');
+                    crearTareaNombre.focus();
+                    return false;
+                }
+                
+                if (nombre.length > 40) {
+                    e.preventDefault();
+                    alert('El nombre de la tarea no puede tener más de 40 caracteres');
+                    crearTareaNombre.focus();
+                    return false;
+                }
+                
+                // Validar que solo tenga letras y números
+                const nombreRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/;
+                if (!nombreRegex.test(nombre)) {
+                    e.preventDefault();
+                    alert('El nombre de la tarea solo puede contener letras y números');
+                    crearTareaNombre.focus();
+                    return false;
+                }
+                
+                // Validar descripción (opcional pero con límite)
+                if (descripcion.length > 50) {
+                    e.preventDefault();
+                    alert('La descripción no puede tener más de 50 caracteres');
+                    crearTareaDescripcion.focus();
+                    return false;
+                }
+                
+                if (descripcion.length > 0) {
+                    const descripcionRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]+$/;
+                    if (!descripcionRegex.test(descripcion)) {
+                        e.preventDefault();
+                        alert('La descripción solo puede contener letras, números y signos de puntuación');
+                        crearTareaDescripcion.focus();
+                        return false;
+                    }
+                }
+                
+                return true;
             });
 
             // Limitar selección a 2 participantes
@@ -1281,6 +1465,94 @@
 
             document.getElementById('modalEditarEquipo')?.addEventListener('click', function(e) {
                 if (e.target === this) toggleModalEditarEquipo();
+            });
+
+            // Validación para editar equipo
+            const editEquipoNombre = document.getElementById('edit_equipo_nombre');
+            const editEquipoDescripcion = document.getElementById('edit_equipo_descripcion');
+            const editEquipoNombreCount = document.getElementById('editEquipoNombreCount');
+            const editEquipoDescripcionCount = document.getElementById('editEquipoDescripcionCount');
+
+            if (editEquipoNombre) {
+                editEquipoNombre.addEventListener('input', function() {
+                    let value = this.value;
+                    
+                    // Limitar a 30 caracteres
+                    if (value.length > 30) {
+                        value = value.substring(0, 30);
+                        this.value = value;
+                    }
+                    
+                    // Actualizar contador
+                    editEquipoNombreCount.textContent = value.length;
+                    
+                    // Cambiar color del contador
+                    if (value.length >= 28) {
+                        editEquipoNombreCount.parentElement.classList.add('text-red-500');
+                        editEquipoNombreCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                    } else if (value.length >= 25) {
+                        editEquipoNombreCount.parentElement.classList.add('text-yellow-500');
+                        editEquipoNombreCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                    } else {
+                        editEquipoNombreCount.parentElement.classList.add('text-gray-500');
+                        editEquipoNombreCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                    }
+                });
+            }
+
+            if (editEquipoDescripcion) {
+                editEquipoDescripcion.addEventListener('input', function() {
+                    let value = this.value;
+                    
+                    // Limitar a 70 caracteres
+                    if (value.length > 70) {
+                        value = value.substring(0, 70);
+                        this.value = value;
+                    }
+                    
+                    // Actualizar contador
+                    editEquipoDescripcionCount.textContent = value.length;
+                    
+                    // Cambiar color del contador
+                    if (value.length >= 68) {
+                        editEquipoDescripcionCount.parentElement.classList.add('text-red-500');
+                        editEquipoDescripcionCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                    } else if (value.length >= 60) {
+                        editEquipoDescripcionCount.parentElement.classList.add('text-yellow-500');
+                        editEquipoDescripcionCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                    } else {
+                        editEquipoDescripcionCount.parentElement.classList.add('text-gray-500');
+                        editEquipoDescripcionCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                    }
+                });
+            }
+
+            // Validación al enviar formulario de editar equipo
+            document.getElementById('formEditarEquipo')?.addEventListener('submit', function(e) {
+                const nombre = editEquipoNombre.value.trim();
+                
+                if (nombre.length === 0) {
+                    e.preventDefault();
+                    alert('El nombre del equipo es obligatorio');
+                    editEquipoNombre.focus();
+                    return false;
+                }
+                
+                if (nombre.length > 30) {
+                    e.preventDefault();
+                    alert('El nombre del equipo no puede tener más de 30 caracteres');
+                    editEquipoNombre.focus();
+                    return false;
+                }
+                
+                if (editEquipoDescripcion.value.length > 70) {
+                    e.preventDefault();
+                    alert('La descripción no puede tener más de 70 caracteres');
+                    editEquipoDescripcion.focus();
+                    return false;
+                }
+                
+                return true;
             });
         </script>
 

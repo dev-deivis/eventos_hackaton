@@ -160,11 +160,14 @@ class EquipoController extends Controller
 
             // Validación
             $validated = $request->validate([
-                'nombre' => 'required|string|max:100|unique:equipos,nombre,NULL,id,evento_id,' . $evento->id,
-                'descripcion' => 'nullable|string|max:500',
+                'nombre' => 'required|string|max:30|unique:equipos,nombre,NULL,id,evento_id,' . $evento->id,
+                'descripcion' => 'nullable|string|max:70',
                 'perfil_id' => 'required|exists:perfiles,id',
             ], [
+                'nombre.required' => 'El nombre del equipo es obligatorio.',
+                'nombre.max' => 'El nombre del equipo no puede tener más de 30 caracteres.',
                 'nombre.unique' => 'Ya existe un equipo con este nombre en el evento.',
+                'descripcion.max' => 'La descripción no puede tener más de 70 caracteres.',
                 'perfil_id.required' => 'Debes seleccionar tu rol en el equipo.',
                 'perfil_id.exists' => 'El rol seleccionado no es válido.',
             ]);
@@ -258,11 +261,13 @@ class EquipoController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100|unique:equipos,nombre,' . $equipo->id . ',id,evento_id,' . $equipo->evento_id,
-            'descripcion' => 'nullable|string|max:500',
+            'nombre' => 'required|string|max:30|unique:equipos,nombre,' . $equipo->id . ',id,evento_id,' . $equipo->evento_id,
+            'descripcion' => 'nullable|string|max:70',
         ], [
-            'nombre.unique' => 'Ya existe un equipo con este nombre en el evento.',
             'nombre.required' => 'El nombre del equipo es obligatorio.',
+            'nombre.max' => 'El nombre del equipo no puede tener más de 30 caracteres.',
+            'nombre.unique' => 'Ya existe un equipo con este nombre en el evento.',
+            'descripcion.max' => 'La descripción no puede tener más de 70 caracteres.',
         ]);
 
         try {

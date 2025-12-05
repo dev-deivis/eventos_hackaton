@@ -73,26 +73,44 @@ function agregarMensajeAlChat(mensaje, container) {
     
     // Crear elemento del mensaje
     const div = document.createElement('div');
-    div.className = `flex gap-3 ${mensaje.is_own ? 'justify-end' : ''}`;
-    div.innerHTML = `
-        ${!mensaje.is_own ? `
-        <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-            ${escapeHtml(mensaje.user_initial)}
-        </div>
-        ` : ''}
-        <div class="${mensaje.is_own ? 'bg-indigo-600 text-white' : 'bg-gray-100'} rounded-lg px-4 py-2 max-w-md">
-            ${!mensaje.is_own ? `<div class="text-xs font-semibold mb-1 ${mensaje.is_own ? 'text-indigo-200' : 'text-gray-600'}">${escapeHtml(mensaje.user_name)}</div>` : ''}
-            <p class="text-sm">${escapeHtml(mensaje.mensaje)}</p>
-            <span class="text-xs ${mensaje.is_own ? 'text-indigo-200' : 'text-gray-500'} mt-1 block">
-                ${mensaje.created_at}
-            </span>
-        </div>
-        ${mensaje.is_own ? `
-        <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-            ${escapeHtml(mensaje.user_initial)}
-        </div>
-        ` : ''}
-    `;
+    
+    if (mensaje.is_own) {
+        // Mensaje del usuario actual (derecha, azul)
+        div.className = 'flex gap-2 justify-end';
+        div.innerHTML = `
+            <div class="flex-1 flex flex-col items-end">
+                <div class="text-xs font-semibold text-right text-indigo-600">Tú</div>
+                <div class="bg-indigo-600 text-white px-4 py-2 rounded-lg max-w-xs break-words">
+                    ${escapeHtml(mensaje.mensaje)}
+                </div>
+                <div class="text-xs text-gray-400 mt-1">
+                    ${mensaje.created_at}
+                </div>
+            </div>
+            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                ${escapeHtml(mensaje.user_initial)}
+            </div>
+        `;
+    } else {
+        // Mensaje de otro usuario (izquierda, gris)
+        div.className = 'flex gap-2';
+        div.innerHTML = `
+            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                ${escapeHtml(mensaje.user_initial)}
+            </div>
+            <div class="flex flex-col">
+                <div class="text-xs font-semibold">
+                    ${escapeHtml(mensaje.user_name)}
+                </div>
+                <div class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg max-w-xs break-words">
+                    ${escapeHtml(mensaje.mensaje)}
+                </div>
+                <div class="text-xs text-gray-400 mt-1">
+                    ${mensaje.created_at}
+                </div>
+            </div>
+        `;
+    }
     
     container.appendChild(div);
 }

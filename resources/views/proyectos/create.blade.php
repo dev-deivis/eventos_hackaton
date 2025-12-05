@@ -28,7 +28,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     
-                    <form method="POST" action="{{ route('proyectos.store', $equipo) }}" class="space-y-6">
+                    <form method="POST" action="{{ route('proyectos.store', $equipo) }}" class="space-y-6" id="createProjectForm">
                         @csrf
 
                         <!-- Nombre del Proyecto -->
@@ -41,8 +41,14 @@
                                    name="nombre" 
                                    value="{{ old('nombre') }}"
                                    required
-                                   placeholder="EduAI - Tutor Virtual Inteligente"
+                                   maxlength="30"
+                                   placeholder="EduAI - Tutor Virtual"
                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
+                            <div class="flex items-center justify-end mt-1">
+                                <p class="text-xs text-gray-500">
+                                    <span id="nombreCount">0</span>/30
+                                </p>
+                            </div>
                             @error('nombre')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -57,14 +63,20 @@
                                       name="descripcion" 
                                       rows="6"
                                       required
+                                      maxlength="1000"
                                       placeholder="Describe tu proyecto: ¿Qué problema resuelve? ¿Qué tecnologías usa? ¿Qué lo hace innovador?"
-                                      class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                                      class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">
+                                    Solo letras y números permitidos
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="descripcionCount">0</span>/1000
+                                </p>
+                            </div>
                             @error('descripcion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-sm text-gray-500">
-                                Máximo 1000 caracteres
-                            </p>
                         </div>
 
                         <!-- Tecnologías -->
@@ -108,6 +120,9 @@
                                 @error('link_repositorio')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Debe comenzar con http:// o https://
+                                </p>
                             </div>
 
                             <!-- Demo -->
@@ -129,6 +144,9 @@
                                 @error('link_demo')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Debe comenzar con http:// o https://
+                                </p>
                             </div>
 
                             <!-- Presentación -->
@@ -150,6 +168,9 @@
                                 @error('link_presentacion')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Debe comenzar con http:// o https://
+                                </p>
                             </div>
                         </div>
 
@@ -191,4 +212,128 @@
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nombreInput = document.getElementById('nombre');
+            const descripcionInput = document.getElementById('descripcion');
+            const nombreCount = document.getElementById('nombreCount');
+            const descripcionCount = document.getElementById('descripcionCount');
+
+            // Actualizar contador inicial si hay valor (por old())
+            if (nombreInput.value) {
+                nombreCount.textContent = nombreInput.value.length;
+            }
+            if (descripcionInput.value) {
+                descripcionCount.textContent = descripcionInput.value.length;
+            }
+
+            // Validación para nombre del proyecto
+            nombreInput.addEventListener('input', function() {
+                let value = this.value;
+                
+                // Limitar a 30 caracteres
+                if (value.length > 30) {
+                    value = value.substring(0, 30);
+                    this.value = value;
+                }
+                
+                // Actualizar contador
+                nombreCount.textContent = value.length;
+                
+                // Cambiar color del contador según proximidad al límite
+                if (value.length >= 28) {
+                    nombreCount.parentElement.classList.add('text-red-500');
+                    nombreCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                } else if (value.length >= 25) {
+                    nombreCount.parentElement.classList.add('text-yellow-500');
+                    nombreCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                } else {
+                    nombreCount.parentElement.classList.add('text-gray-500');
+                    nombreCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                }
+            });
+
+            // Validación para descripción
+            descripcionInput.addEventListener('input', function() {
+                let value = this.value;
+                
+                // Solo permitir letras y números (y espacios, puntos, comas)
+                value = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]/g, '');
+                this.value = value;
+                
+                // Limitar a 1000 caracteres
+                if (value.length > 1000) {
+                    value = value.substring(0, 1000);
+                    this.value = value;
+                }
+                
+                // Actualizar contador
+                descripcionCount.textContent = value.length;
+                
+                // Cambiar color del contador según proximidad al límite
+                if (value.length >= 980) {
+                    descripcionCount.parentElement.classList.add('text-red-500');
+                    descripcionCount.parentElement.classList.remove('text-gray-500', 'text-yellow-500');
+                } else if (value.length >= 900) {
+                    descripcionCount.parentElement.classList.add('text-yellow-500');
+                    descripcionCount.parentElement.classList.remove('text-gray-500', 'text-red-500');
+                } else {
+                    descripcionCount.parentElement.classList.add('text-gray-500');
+                    descripcionCount.parentElement.classList.remove('text-yellow-500', 'text-red-500');
+                }
+            });
+
+            // Validación final antes de enviar
+            document.getElementById('createProjectForm').addEventListener('submit', function(e) {
+                const nombre = nombreInput.value.trim();
+                const descripcion = descripcionInput.value.trim();
+                
+                // Validar que el nombre no esté vacío
+                if (nombre.length === 0) {
+                    e.preventDefault();
+                    alert('El nombre del proyecto es obligatorio');
+                    nombreInput.focus();
+                    return false;
+                }
+                
+                // Validar longitud máxima del nombre
+                if (nombre.length > 30) {
+                    e.preventDefault();
+                    alert('El nombre del proyecto no puede tener más de 30 caracteres');
+                    nombreInput.focus();
+                    return false;
+                }
+                
+                // Validar que la descripción no esté vacía
+                if (descripcion.length === 0) {
+                    e.preventDefault();
+                    alert('La descripción del proyecto es obligatoria');
+                    descripcionInput.focus();
+                    return false;
+                }
+                
+                // Validar longitud máxima de descripción
+                if (descripcion.length > 1000) {
+                    e.preventDefault();
+                    alert('La descripción no puede tener más de 1000 caracteres');
+                    descripcionInput.focus();
+                    return false;
+                }
+                
+                // Validar que solo tenga letras y números (más signos de puntuación básicos)
+                const descripcionRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]+$/;
+                if (!descripcionRegex.test(descripcion)) {
+                    e.preventDefault();
+                    alert('La descripción solo puede contener letras, números y signos de puntuación básicos');
+                    descripcionInput.focus();
+                    return false;
+                }
+                
+                return true;
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

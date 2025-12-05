@@ -46,18 +46,26 @@ class ProyectoController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:200',
-            'descripcion' => 'required|string|max:1000',
+            'nombre' => 'required|string|max:30',
+            'descripcion' => [
+                'required',
+                'string',
+                'max:1000',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]+$/'
+            ],
             'link_repositorio' => 'nullable|url|max:500',
             'link_demo' => 'nullable|url|max:500',
             'link_presentacion' => 'nullable|url|max:500',
             'tecnologias' => 'nullable|string|max:500',
         ], [
             'nombre.required' => 'El nombre del proyecto es obligatorio.',
+            'nombre.max' => 'El nombre del proyecto no puede tener más de 30 caracteres.',
             'descripcion.required' => 'La descripción del proyecto es obligatoria.',
-            'link_repositorio.url' => 'El link del repositorio debe ser una URL válida.',
-            'link_demo.url' => 'El link de la demo debe ser una URL válida.',
-            'link_presentacion.url' => 'El link de la presentación debe ser una URL válida.',
+            'descripcion.max' => 'La descripción no puede tener más de 1000 caracteres.',
+            'descripcion.regex' => 'La descripción solo puede contener letras, números y signos de puntuación básicos.',
+            'link_repositorio.url' => 'El link del repositorio debe ser una URL válida (http:// o https://).',
+            'link_demo.url' => 'El link de la demo debe ser una URL válida (http:// o https://).',
+            'link_presentacion.url' => 'El link de la presentación debe ser una URL válida (http:// o https://).',
         ]);
 
         try {
@@ -147,12 +155,26 @@ class ProyectoController extends Controller
         }
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:200',
-            'descripcion' => 'required|string|max:1000',
+            'nombre' => 'required|string|max:30',
+            'descripcion' => [
+                'required',
+                'string',
+                'max:1000',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¿?¡!()\-]+$/'
+            ],
             'link_repositorio' => 'nullable|url|max:500',
             'link_demo' => 'nullable|url|max:500',
             'link_presentacion' => 'nullable|url|max:500',
             'tecnologias' => 'nullable|string|max:500',
+        ], [
+            'nombre.required' => 'El nombre del proyecto es obligatorio.',
+            'nombre.max' => 'El nombre del proyecto no puede tener más de 30 caracteres.',
+            'descripcion.required' => 'La descripción del proyecto es obligatoria.',
+            'descripcion.max' => 'La descripción no puede tener más de 1000 caracteres.',
+            'descripcion.regex' => 'La descripción solo puede contener letras, números y signos de puntuación básicos.',
+            'link_repositorio.url' => 'El link del repositorio debe ser una URL válida (http:// o https://).',
+            'link_demo.url' => 'El link de la demo debe ser una URL válida (http:// o https://).',
+            'link_presentacion.url' => 'El link de la presentación debe ser una URL válida (http:// o https://).',
         ]);
 
         try {
