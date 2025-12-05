@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['nodejs-18_x', 'php82', 'php82Packages.composer', 'php82Extensions.intl', 'postgresql']
+nixPkgs = ['nodejs-18_x', 'php82', 'php82Packages.composer', 'php82Extensions.intl', 'php82Extensions.opcache', 'postgresql']
 
 [phases.install]
 cmds = [
@@ -10,12 +10,11 @@ cmds = [
 [phases.build]
 cmds = [
     'npm run build',
-    'composer dump-autoload --optimize',
+    'composer dump-autoload --optimize --classmap-authoritative',
 ]
 
 [staticAssets]
-# Asegurar que los assets compilados se sirvan
 '/app/public' = '/'
 
 [start]
-cmd = 'php artisan migrate --force && php artisan config:cache && php artisan serve --host=0.0.0.0 --port=$PORT'
+cmd = 'php -d opcache.enable=1 -d opcache.enable_cli=1 -d opcache.memory_consumption=128 -d opcache.interned_strings_buffer=8 -d opcache.max_accelerated_files=10000 -d opcache.validate_timestamps=0 artisan config:cache && php -d opcache.enable=1 -d opcache.enable_cli=1 artisan route:cache && php -d opcache.enable=1 -d opcache.enable_cli=1 -d opcache.memory_consumption=128 -d opcache.interned_strings_buffer=8 -d opcache.max_accelerated_files=10000 -d opcache.validate_timestamps=0 artisan serve --host=0.0.0.0 --port=$PORT'
