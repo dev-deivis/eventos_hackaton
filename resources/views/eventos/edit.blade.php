@@ -19,6 +19,37 @@
                 </div>
             </div>
 
+            <!-- Mensaje de éxito -->
+            @if (session('success'))
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <p class="text-green-800 font-semibold">{{ session('success') }}</p>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Mostrar errores de validación -->
+            @if ($errors->any())
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
+                    <div class="flex items-start">
+                        <svg class="w-6 h-6 text-red-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <div class="flex-1">
+                            <h3 class="text-red-800 font-semibold mb-2">Hay errores en el formulario:</h3>
+                            <ul class="list-disc list-inside text-red-700 space-y-1">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- Formulario -->
             <form action="{{ route('eventos.update', $evento) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
@@ -44,9 +75,16 @@
                                    id="nombre" 
                                    name="nombre" 
                                    value="{{ old('nombre', $evento->nombre) }}"
+                                   maxlength="35"
                                    placeholder="Ej: Hackathon 2025"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">Solo letras, números y guiones (-)</p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="nombreCount">{{ strlen(old('nombre', $evento->nombre)) }}</span>/35
+                                </p>
+                            </div>
                             @error('nombre')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -95,10 +133,17 @@
                             </label>
                             <textarea id="descripcion" 
                                       name="descripcion" 
-                                      rows="4" 
+                                      rows="4"
+                                      maxlength="150" 
                                       required
                                       placeholder="Describe el evento, objetivos y qué pueden esperar los participantes..."
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('descripcion') border-red-500 @enderror">{{ old('descripcion', $evento->descripcion) }}</textarea>
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion', $evento->descripcion) }}</textarea>
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">Descripción del evento</p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="descripcionCount">{{ strlen(old('descripcion', $evento->descripcion)) }}</span>/150
+                                </p>
+                            </div>
                             @error('descripcion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -209,8 +254,10 @@
                                    name="max_participantes" 
                                    value="{{ old('max_participantes', $evento->max_participantes) }}"
                                    min="10"
+                                   max="1000"
                                    placeholder="100"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">Mínimo 10, máximo 1000</p>
                         </div>
 
                         <!-- Tamaño Mínimo de Equipo -->
@@ -222,10 +269,12 @@
                                    id="min_miembros_equipo" 
                                    name="min_miembros_equipo" 
                                    value="{{ old('min_miembros_equipo', $evento->min_miembros_equipo) }}"
-                                   min="1" 
-                                   max="10"
+                                   min="5" 
+                                   max="5"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                   readonly
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-500">Obligatorio: 5 miembros</p>
                         </div>
 
                         <!-- Tamaño Máximo de Equipo -->
@@ -237,10 +286,12 @@
                                    id="max_miembros_equipo" 
                                    name="max_miembros_equipo" 
                                    value="{{ old('max_miembros_equipo', $evento->max_miembros_equipo) }}"
-                                   min="1" 
-                                   max="10"
+                                   min="6" 
+                                   max="6"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                   readonly
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-500">Obligatorio: 6 miembros</p>
                         </div>
                     </div>
                 </div>
@@ -267,18 +318,35 @@
                     
                     <div id="roles-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @php
-                            $rolesBase = ['Programador', 'Diseñador', 'Analista de Negocios', 'Analista de Datos'];
-                            $rolesGuardados = old('roles', $evento->roles_requeridos ?? []);
+                            $rolesBase = ['Programador', 'Diseñador', 'Analista de Negocios', 'Analista de Datos', 'Asesor'];
+                            $rolesGuardados = old('roles', $evento->roles_requeridos ?? ['Asesor']);
+                            // Asegurar que Asesor siempre esté incluido
+                            if (!in_array('Asesor', $rolesGuardados)) {
+                                $rolesGuardados[] = 'Asesor';
+                            }
                         @endphp
                         
                         @foreach($rolesBase as $rol)
-                            <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
+                            @php
+                                $esAsesor = $rol === 'Asesor';
+                            @endphp
+                            <label class="flex items-center gap-3 p-4 border-2 {{ $esAsesor ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200' }} rounded-lg hover:border-indigo-300 cursor-pointer transition {{ $esAsesor ? 'ring-2 ring-indigo-200' : '' }}">
                                 <input type="checkbox" 
                                        name="roles[]" 
                                        value="{{ $rol }}" 
                                        {{ in_array($rol, $rolesGuardados) ? 'checked' : '' }}
-                                       class="w-5 h-5 text-indigo-600 rounded">
-                                <span class="font-medium">{{ $rol }}</span>
+                                       {{ $esAsesor ? 'disabled' : '' }}
+                                       class="w-5 h-5 text-indigo-600 rounded {{ $esAsesor ? 'cursor-not-allowed' : '' }}">
+                                <!-- Hidden input para Asesor siempre seleccionado -->
+                                @if($esAsesor)
+                                    <input type="hidden" name="roles[]" value="Asesor">
+                                @endif
+                                <span class="font-medium {{ $esAsesor ? 'text-indigo-700' : '' }}">
+                                    {{ $rol }}
+                                    @if($esAsesor)
+                                        <span class="ml-1 px-2 py-0.5 bg-indigo-200 text-indigo-800 rounded text-xs">Obligatorio</span>
+                                    @endif
+                                </span>
                             </label>
                         @endforeach
                         
@@ -345,9 +413,16 @@
                                    id="ubicacion" 
                                    name="ubicacion" 
                                    value="{{ old('ubicacion', $evento->ubicacion) }}"
+                                   maxlength="50"
                                    placeholder="Ej: Instituto Tecnológico de Oaxaca, Centro de Cómputo"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('ubicacion') border-red-500 @enderror">
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">Letras, números, comas y puntos</p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="ubicacionCount">{{ strlen(old('ubicacion', $evento->ubicacion)) }}</span>/50
+                                </p>
+                            </div>
                             @error('ubicacion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -506,5 +581,34 @@
             `;
             container.appendChild(div);
         }
+    </script>
+    
+    <!-- Script de validaciones -->
+    <script src="{{ asset('js/eventos-validaciones.js') }}"></script>
+    
+    <!-- Inicializar contadores con valores existentes -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar contador de nombre
+            const nombre = document.getElementById('nombre');
+            const nombreCount = document.getElementById('nombreCount');
+            if (nombre && nombreCount) {
+                nombreCount.textContent = nombre.value.length;
+            }
+            
+            // Inicializar contador de descripción
+            const descripcion = document.getElementById('descripcion');
+            const descripcionCount = document.getElementById('descripcionCount');
+            if (descripcion && descripcionCount) {
+                descripcionCount.textContent = descripcion.value.length;
+            }
+            
+            // Inicializar contador de ubicación
+            const ubicacion = document.getElementById('ubicacion');
+            const ubicacionCount = document.getElementById('ubicacionCount');
+            if (ubicacion && ubicacionCount) {
+                ubicacionCount.textContent = ubicacion.value.length;
+            }
+        });
     </script>
 </x-app-layout>

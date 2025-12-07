@@ -64,30 +64,79 @@ class EventoController extends Controller
         Log::info('Datos recibidos para crear evento:', $request->all());
 
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
+            'nombre' => [
+                'required',
+                'string',
+                'max:35',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-]+$/'
+            ],
+            'descripcion' => 'required|string|max:150',
             'tipo' => 'required|in:hackathon,datathon,concurso,workshop',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after:fecha_inicio',
-            'fecha_limite_registro' => 'required|date',
-            'fecha_evaluacion' => 'nullable|date',
-            'fecha_premiacion' => 'nullable|date',
-            'ubicacion' => 'required|string|max:255',
+            'fecha_limite_registro' => 'required|date|before:fecha_inicio|different:fecha_fin',
+            'fecha_evaluacion' => 'nullable|date|after_or_equal:fecha_fin',
+            'fecha_premiacion' => 'nullable|date|after_or_equal:fecha_fin',
+            'ubicacion' => [
+                'required',
+                'string',
+                'max:50',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s,\.]+$/'
+            ],
             'es_virtual' => 'nullable|boolean',
             'duracion_horas' => 'required|integer|min:1',
-            'max_participantes' => 'nullable|integer|min:10',
-            'min_miembros_equipo' => 'required|integer|min:1|max:10',
-            'max_miembros_equipo' => 'required|integer|min:1|max:10|gte:min_miembros_equipo',
+            'max_participantes' => 'nullable|integer|min:10|max:1000',
+            'min_miembros_equipo' => 'required|integer|in:5',
+            'max_miembros_equipo' => 'required|integer|in:6',
             'imagen_portada' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'premios' => 'nullable|array',
             'premios.*.lugar' => 'nullable|string|max:100',
-            'premios.*.descripcion' => 'nullable|string|max:500',
+            'premios.*.descripcion' => [
+                'nullable',
+                'string',
+                'max:40',
+                'regex:/^[$a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\+\.]+$/'
+            ],
             'roles' => 'nullable|array',
             'roles.*' => 'string|max:100',
         ], [
+            'nombre.required' => 'El nombre del evento es obligatorio.',
+            'nombre.max' => 'El nombre del evento no puede tener más de 35 caracteres.',
+            'nombre.regex' => 'El nombre del evento solo puede contener letras, números y guiones.',
+            'descripcion.required' => 'La descripción del evento es obligatoria.',
+            'descripcion.max' => 'La descripción no puede tener más de 150 caracteres.',
             'fecha_fin.after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
-            'max_miembros_equipo.gte' => 'El tamaño máximo del equipo debe ser mayor o igual al mínimo.',
+            'fecha_limite_registro.before' => 'La fecha límite de registro debe ser anterior a la fecha de inicio.',
+            'fecha_limite_registro.different' => 'La fecha de registro no puede ser igual a la fecha de finalización.',
+            'fecha_evaluacion.after_or_equal' => 'La fecha de evaluación debe ser posterior o igual a la fecha de finalización.',
+            'fecha_premiacion.after_or_equal' => 'La fecha de premiación debe ser posterior o igual a la fecha de finalización.',
+            'ubicacion.max' => 'La ubicación no puede tener más de 50 caracteres.',
+            'ubicacion.regex' => 'La ubicación solo puede contener letras, números, comas y puntos.',
+            'max_participantes.min' => 'El máximo de participantes debe ser al menos 10.',
+            'max_participantes.max' => 'El máximo de participantes no puede exceder 1000.',
+            'min_miembros_equipo.in' => 'El tamaño mínimo de equipo debe ser 5.',
+            'max_miembros_equipo.in' => 'El tamaño máximo de equipo debe ser 6.',
+            'premios.*.descripcion.max' => 'La descripción del premio no puede tener más de 40 caracteres.',
+            'premios.*.descripcion.regex' => 'La descripción del premio solo puede contener $, letras, números, + y puntos.',
         ]);
+        
+        // Validación adicional: Verificar que la duración coincida con las fechas
+        $fechaInicio = new \DateTime($request->fecha_inicio);
+        $fechaFin = new \DateTime($request->fecha_fin);
+        $diferenciaHoras = ($fechaFin->getTimestamp() - $fechaInicio->getTimestamp()) / 3600;
+        
+        if ($diferenciaHoras != $request->duracion_horas) {
+            return back()->withErrors([
+                'duracion_horas' => "La duración debe coincidir con la diferencia entre fecha de inicio y fin ({$diferenciaHoras} horas)."
+            ])->withInput();
+        }
+        
+        // Validación adicional: Verificar que el rol Asesor esté incluido
+        if (!$request->has('roles') || !in_array('Asesor', $request->roles)) {
+            return back()->withErrors([
+                'roles' => 'El rol de Asesor es obligatorio.'
+            ])->withInput();
+        }
 
         DB::beginTransaction();
         
@@ -214,28 +263,79 @@ class EventoController extends Controller
     public function update(Request $request, Evento $evento)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
+            'nombre' => [
+                'required',
+                'string',
+                'max:35',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-]+$/'
+            ],
+            'descripcion' => 'required|string|max:150',
             'tipo' => 'required|in:hackathon,datathon,concurso,workshop',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after:fecha_inicio',
-            'fecha_limite_registro' => 'required|date',
-            'fecha_evaluacion' => 'nullable|date',
-            'fecha_premiacion' => 'nullable|date',
-            'ubicacion' => 'required|string|max:255',
+            'fecha_limite_registro' => 'required|date|before:fecha_inicio|different:fecha_fin',
+            'fecha_evaluacion' => 'nullable|date|after_or_equal:fecha_fin',
+            'fecha_premiacion' => 'nullable|date|after_or_equal:fecha_fin',
+            'ubicacion' => [
+                'required',
+                'string',
+                'max:50',
+                'regex:/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s,\.]+$/'
+            ],
             'es_virtual' => 'nullable|boolean',
             'duracion_horas' => 'required|integer|min:1',
-            'max_participantes' => 'nullable|integer|min:10',
-            'min_miembros_equipo' => 'required|integer|min:1|max:10',
-            'max_miembros_equipo' => 'required|integer|min:1|max:10',
+            'max_participantes' => 'nullable|integer|min:10|max:1000',
+            'min_miembros_equipo' => 'required|integer|in:5',
+            'max_miembros_equipo' => 'required|integer|in:6',
             'imagen_portada' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'premios' => 'nullable|array',
             'premios.*.lugar' => 'nullable|string|max:100',
-            'premios.*.descripcion' => 'nullable|string|max:500',
+            'premios.*.descripcion' => [
+                'nullable',
+                'string',
+                'max:40',
+                'regex:/^[$a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\+\.]+$/'
+            ],
+            'roles' => 'nullable|array',
+            'roles.*' => 'string|max:100',
         ], [
+            'nombre.required' => 'El nombre del evento es obligatorio.',
+            'nombre.max' => 'El nombre del evento no puede tener más de 35 caracteres.',
+            'nombre.regex' => 'El nombre del evento solo puede contener letras, números y guiones.',
+            'descripcion.required' => 'La descripción del evento es obligatoria.',
+            'descripcion.max' => 'La descripción no puede tener más de 150 caracteres.',
             'fecha_fin.after' => 'La fecha de fin debe ser posterior a la fecha de inicio.',
-            'max_miembros_equipo.gte' => 'El tamaño máximo del equipo debe ser mayor o igual al mínimo.',
+            'fecha_limite_registro.before' => 'La fecha límite de registro debe ser anterior a la fecha de inicio.',
+            'fecha_limite_registro.different' => 'La fecha de registro no puede ser igual a la fecha de finalización.',
+            'fecha_evaluacion.after_or_equal' => 'La fecha de evaluación debe ser posterior o igual a la fecha de finalización.',
+            'fecha_premiacion.after_or_equal' => 'La fecha de premiación debe ser posterior o igual a la fecha de finalización.',
+            'ubicacion.max' => 'La ubicación no puede tener más de 50 caracteres.',
+            'ubicacion.regex' => 'La ubicación solo puede contener letras, números, comas y puntos.',
+            'max_participantes.min' => 'El máximo de participantes debe ser al menos 10.',
+            'max_participantes.max' => 'El máximo de participantes no puede exceder 1000.',
+            'min_miembros_equipo.in' => 'El tamaño mínimo de equipo debe ser 5.',
+            'max_miembros_equipo.in' => 'El tamaño máximo de equipo debe ser 6.',
+            'premios.*.descripcion.max' => 'La descripción del premio no puede tener más de 40 caracteres.',
+            'premios.*.descripcion.regex' => 'La descripción del premio solo puede contener $, letras, números, + y puntos.',
         ]);
+        
+        // Validación adicional: Verificar que la duración coincida con las fechas
+        $fechaInicio = new \DateTime($request->fecha_inicio);
+        $fechaFin = new \DateTime($request->fecha_fin);
+        $diferenciaHoras = ($fechaFin->getTimestamp() - $fechaInicio->getTimestamp()) / 3600;
+        
+        if ($diferenciaHoras != $request->duracion_horas) {
+            return back()->withErrors([
+                'duracion_horas' => "La duración debe coincidir con la diferencia entre fecha de inicio y fin ({$diferenciaHoras} horas)."
+            ])->withInput();
+        }
+        
+        // Validación adicional: Verificar que el rol Asesor esté incluido
+        if (!$request->has('roles') || !in_array('Asesor', $request->roles)) {
+            return back()->withErrors([
+                'roles' => 'El rol de Asesor es obligatorio.'
+            ])->withInput();
+        }
 
         DB::beginTransaction();
         
