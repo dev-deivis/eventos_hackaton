@@ -11,7 +11,14 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithCharts;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Chart\Chart;
+use PhpOffice\PhpSpreadsheet\Chart\DataSeries;
+use PhpOffice\PhpSpreadsheet\Chart\DataSeriesValues;
+use PhpOffice\PhpSpreadsheet\Chart\Legend;
+use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
+use PhpOffice\PhpSpreadsheet\Chart\Title;
 
 class ReportesExport implements WithMultipleSheets
 {
@@ -281,9 +288,10 @@ class EquiposSheet implements FromCollection, WithHeadings, WithStyles, WithTitl
 }
 
 // Hoja 4: Participación por Carrera
-class CarrerasSheet implements FromCollection, WithHeadings, WithStyles, WithTitle
+class CarrerasSheet implements FromCollection, WithHeadings, WithStyles, WithTitle, WithCharts
 {
     protected $eventoId;
+    protected $datos;
 
     public function __construct($eventoId = null)
     {
@@ -309,13 +317,15 @@ class CarrerasSheet implements FromCollection, WithHeadings, WithStyles, WithTit
 
         $total = $resultados->sum('total');
 
-        return $resultados->map(function($item) use ($total) {
+        $this->datos = $resultados->map(function($item) use ($total) {
             return [
                 'carrera' => $item->carrera,
                 'total' => $item->total,
                 'porcentaje' => $total > 0 ? round(($item->total / $total) * 100, 1) . '%' : '0%'
             ];
         });
+
+        return $this->datos;
     }
 
     public function headings(): array
@@ -326,7 +336,7 @@ class CarrerasSheet implements FromCollection, WithHeadings, WithStyles, WithTit
     public function styles(Worksheet $sheet)
     {
         return [
-            1 => ['font' => ['bold' => true]],
+            1 => ['font' => ['bold' => true, 'size' => 12]],
         ];
     }
 
@@ -334,12 +344,77 @@ class CarrerasSheet implements FromCollection, WithHeadings, WithStyles, WithTit
     {
         return 'Por Carrera';
     }
+
+    public function charts()
+    {
+        $dataCount = $this->datos ? $this->datos->count() : 0;
+        
+        if ($dataCount == 0) {
+            return [];
+        }
+
+        // Etiquetas (nombres de carreras)
+        $categories = new DataSeriesValues(
+            DataSeriesValues::DATASERIES_TYPE_STRING,
+            'Por Carrera!$A$2:$A$' . ($dataCount + 1),
+            null,
+            $dataCount
+        );
+
+        // Valores (totales)
+        $values = new DataSeriesValues(
+            DataSeriesValues::DATASERIES_TYPE_NUMBER,
+            'Por Carrera!$B$2:$B$' . ($dataCount + 1),
+            null,
+            $dataCount
+        );
+
+        // Serie de datos
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART,
+            DataSeries::GROUPING_CLUSTERED,
+            [0],
+            ['Total de Participantes'],
+            [$categories],
+            [$values]
+        );
+
+        $series->setPlotDirection(DataSeries::DIRECTION_BAR);
+
+        // Área del gráfico
+        $plotArea = new PlotArea(null, [$series]);
+
+        // Leyenda
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+
+        // Título del gráfico
+        $title = new Title('Participación por Carrera');
+
+        // Crear el gráfico
+        $chart = new Chart(
+            'carrerasChart',
+            $title,
+            $legend,
+            $plotArea,
+            true,
+            DataSeries::EMPTY_AS_GAP,
+            null,
+            null
+        );
+
+        // Posición del gráfico (columna E, fila 2)
+        $chart->setTopLeftPosition('E2');
+        $chart->setBottomRightPosition('M' . ($dataCount + 10));
+
+        return [$chart];
+    }
 }
 
 // Hoja 5: Distribución de Roles
-class RolesSheet implements FromCollection, WithHeadings, WithStyles, WithTitle
+class RolesSheet implements FromCollection, WithHeadings, WithStyles, WithTitle, WithCharts
 {
     protected $eventoId;
+    protected $datos;
 
     public function __construct($eventoId = null)
     {
@@ -364,13 +439,15 @@ class RolesSheet implements FromCollection, WithHeadings, WithStyles, WithTitle
 
         $total = $resultados->sum('total');
 
-        return $resultados->map(function($item) use ($total) {
+        $this->datos = $resultados->map(function($item) use ($total) {
             return [
                 'rol' => $item->rol,
                 'total' => $item->total,
                 'porcentaje' => $total > 0 ? round(($item->total / $total) * 100, 1) . '%' : '0%'
             ];
         });
+
+        return $this->datos;
     }
 
     public function headings(): array
@@ -381,12 +458,76 @@ class RolesSheet implements FromCollection, WithHeadings, WithStyles, WithTitle
     public function styles(Worksheet $sheet)
     {
         return [
-            1 => ['font' => ['bold' => true]],
+            1 => ['font' => ['bold' => true, 'size' => 12]],
         ];
     }
 
     public function title(): string
     {
         return 'Roles';
+    }
+
+    public function charts()
+    {
+        $dataCount = $this->datos ? $this->datos->count() : 0;
+        
+        if ($dataCount == 0) {
+            return [];
+        }
+
+        // Etiquetas (nombres de roles)
+        $categories = new DataSeriesValues(
+            DataSeriesValues::DATASERIES_TYPE_STRING,
+            'Roles!$A$2:$A$' . ($dataCount + 1),
+            null,
+            $dataCount
+        );
+
+        // Valores (totales)
+        $values = new DataSeriesValues(
+            DataSeriesValues::DATASERIES_TYPE_NUMBER,
+            'Roles!$B$2:$B$' . ($dataCount + 1),
+            null,
+            $dataCount
+        );
+
+        // Serie de datos
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART,
+            DataSeries::GROUPING_CLUSTERED,
+            [0],
+            ['Total de Asignaciones'],
+            [$categories],
+            [$values]
+        );
+
+        $series->setPlotDirection(DataSeries::DIRECTION_BAR);
+
+        // Área del gráfico
+        $plotArea = new PlotArea(null, [$series]);
+
+        // Leyenda
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+
+        // Título del gráfico
+        $title = new Title('Distribución de Roles');
+
+        // Crear el gráfico
+        $chart = new Chart(
+            'rolesChart',
+            $title,
+            $legend,
+            $plotArea,
+            true,
+            DataSeries::EMPTY_AS_GAP,
+            null,
+            null
+        );
+
+        // Posición del gráfico (columna E, fila 2)
+        $chart->setTopLeftPosition('E2');
+        $chart->setBottomRightPosition('M' . ($dataCount + 10));
+
+        return [$chart];
     }
 }

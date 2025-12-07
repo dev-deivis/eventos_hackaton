@@ -77,6 +77,50 @@
         tr:nth-child(even) {
             background-color: #F9FAFB;
         }
+        .chart-container {
+            margin: 20px 0;
+        }
+        .chart-bar {
+            margin-bottom: 12px;
+        }
+        .chart-label {
+            font-size: 11px;
+            color: #333;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .chart-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-bar-bg {
+            flex: 1;
+            height: 25px;
+            background-color: #E5E7EB;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .chart-value {
+            min-width: 80px;
+            text-align: right;
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+        }
         .footer {
             margin-top: 30px;
             padding-top: 10px;
@@ -129,55 +173,45 @@
     <!-- Participación por Carrera -->
     <div class="section">
         <div class="section-title">Participación por Carrera</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Carrera</th>
-                    <th style="text-align: center; width: 100px;">Total</th>
-                    <th style="text-align: center; width: 100px;">Porcentaje</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($participacion_carrera as $item)
-                    <tr>
-                        <td>{{ $item['carrera'] }}</td>
-                        <td style="text-align: center;">{{ $item['total'] }}</td>
-                        <td style="text-align: center;">{{ $item['porcentaje'] }}%</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: #999;">No hay datos disponibles</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="chart-container">
+            @forelse($participacion_carrera as $item)
+                <div class="chart-bar">
+                    <div class="chart-label">{{ $item['carrera'] }}</div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar-bg">
+                            <div class="chart-bar-fill" style="width: {{ $item['porcentaje'] }}%">
+                                {{ $item['porcentaje'] }}%
+                            </div>
+                        </div>
+                        <div class="chart-value">{{ $item['total'] }} estudiantes</div>
+                    </div>
+                </div>
+            @empty
+                <p style="text-align: center; color: #999; padding: 20px;">No hay datos disponibles</p>
+            @endforelse
+        </div>
     </div>
 
     <!-- Distribución de Roles -->
     <div class="section">
         <div class="section-title">Distribución de Roles</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Rol</th>
-                    <th style="text-align: center; width: 100px;">Total</th>
-                    <th style="text-align: center; width: 100px;">Porcentaje</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($distribucion_roles as $item)
-                    <tr>
-                        <td>{{ $item['rol'] }}</td>
-                        <td style="text-align: center;">{{ $item['total'] }}</td>
-                        <td style="text-align: center;">{{ $item['porcentaje'] }}%</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" style="text-align: center; color: #999;">No hay datos disponibles</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="chart-container">
+            @forelse($distribucion_roles as $item)
+                <div class="chart-bar">
+                    <div class="chart-label">{{ $item['rol'] }}</div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar-bg">
+                            <div class="chart-bar-fill" style="width: {{ $item['porcentaje'] }}%; background: linear-gradient(90deg, #EC4899 0%, #A855F7 100%);">
+                                {{ $item['porcentaje'] }}%
+                            </div>
+                        </div>
+                        <div class="chart-value">{{ $item['total'] }} asignaciones</div>
+                    </div>
+                </div>
+            @empty
+                <p style="text-align: center; color: #999; padding: 20px;">No hay datos disponibles</p>
+            @endforelse
+        </div>
     </div>
 
     <!-- Footer -->
