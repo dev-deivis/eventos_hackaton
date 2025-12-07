@@ -191,6 +191,9 @@ class EventoController extends Controller
             // Notificar a todos los participantes sobre el nuevo evento
             NotificationService::nuevoEvento($evento);
 
+            // ⚠️ CORREOS DESHABILITADOS TEMPORALMENTE PARA DESARROLLO
+            // TODO: Reactivar cuando se configure Brevo correctamente
+            /*
             // Enviar correo a todos los participantes usando Resend API
             try {
                 Log::info('Iniciando envío de correos para evento: ' . $evento->nombre);
@@ -219,6 +222,9 @@ class EventoController extends Controller
                     'error' => $mailException->getMessage()
                 ]);
             }
+            */
+
+            Log::info('📧 Envío de correos deshabilitado temporalmente');
 
             return redirect()
                 ->route('eventos.show', $evento)

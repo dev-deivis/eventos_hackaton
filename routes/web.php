@@ -19,48 +19,13 @@ use Illuminate\Support\Facades\Log;
 // Página principal
 Route::get('/', [EventoController::class, 'index'])->name('home');
 
-// RUTA DE PRUEBA - Probar envío con SMTP (Brevo)
+// RUTA DE PRUEBA - CORREOS DESHABILITADOS TEMPORALMENTE
 Route::get('/test-email', function() {
-    try {
-        $config = [
-            'MAIL_MAILER' => config('mail.default'),
-            'MAIL_HOST' => config('mail.mailers.smtp.host'),
-            'MAIL_PORT' => config('mail.mailers.smtp.port'),
-            'MAIL_USERNAME' => config('mail.mailers.smtp.username') ? 'Configurado ✓' : 'NO configurado ✗',
-            'MAIL_FROM' => config('mail.from.address'),
-            'MAIL_FROM_NAME' => config('mail.from.name'),
-        ];
-        
-        Log::info('=== TEST EMAIL BREVO/SMTP ===');
-        Log::info('Configuración:', $config);
-        
-        // En Sandbox, solo puede enviar al email registrado en Resend
-        $testEmail = config('mail.from.address'); // Usa el mismo email FROM
-        
-        Mail::raw('✅ Test exitoso con Brevo SMTP desde Railway! ' . now(), function($message) use ($testEmail) {
-            $message->to($testEmail)
-                    ->subject('✅ Test Email - Brevo SMTP - ' . now());
-        });
-        
-        Log::info('Correo enviado a: ' . $testEmail);
-        
-        return view('test-email-result', [
-            'config' => $config,
-            'email' => $testEmail,
-            'message' => '✅ Correo enviado! Revisa tu email: ' . $testEmail
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Error test email:', [
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        
-        return view('test-email-result', [
-            'config' => config('mail'),
-            'email' => 'N/A',
-            'message' => '❌ Error: ' . $e->getMessage()
-        ]);
-    }
+    return response()->json([
+        'status' => 'disabled',
+        'message' => '📧 Sistema de correos temporalmente deshabilitado para desarrollo',
+        'note' => 'Se configurará al final del proyecto'
+    ]);
 });
 
 // Autenticación (Laravel Breeze)
