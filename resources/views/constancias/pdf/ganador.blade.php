@@ -258,12 +258,13 @@
             en el evento <span class="event-name">{{ $evento->nombre }}</span>
             @if($equipo)
                 @if($proyecto && $proyecto->nombre)
-                    con el proyecto <span class="project-info">"{{ $proyecto->nombre }}"</span>
+                    con el equipo <span class="project-info">"{{ $equipo->nombre }}"</span> 
+                    en el proyecto <span class="project-info">"{{ $proyecto->nombre }}"</span>
                 @else
                     con el equipo <span class="project-info">"{{ $equipo->nombre }}"</span>
                 @endif
                 @if($perfilEquipo)
-                    con <span class="role-name">{{ $perfilEquipo->nombre }}</span>
+                    como <span class="role-name">{{ $perfilEquipo->nombre }}</span>
                 @endif
             @elseif($participante && $participante->carrera)
                 como estudiante de <span class="role-name">{{ $participante->carrera->nombre }}</span>
