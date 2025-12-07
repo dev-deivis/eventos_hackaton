@@ -26,19 +26,38 @@ Route::get('/test-email', function() {
             'MAIL_MAILER' => config('mail.default'),
             'RESEND_API_KEY' => config('services.resend.key') ? 'Configurada ✓' : 'NO configurada ✗',
             'MAIL_FROM' => config('mail.from.address'),
+            'MAIL_FROM_NAME' => config('mail.from.name'),
         ];
         
-        Log::info('Configuración Resend:', $config);
+        Log::info('=== TEST EMAIL RESEND ===');
+        Log::info('Configuración:', $config);
         
-        Mail::raw('✅ Test exitoso con Resend desde Railway!', function($message) {
-            $message->to(config('mail.from.address'))
-                    ->subject('✅ Test Email - Resend API');
+        // En Sandbox, solo puede enviar al email registrado en Resend
+        $testEmail = config('mail.from.address'); // Usa el mismo email FROM
+        
+        Mail::raw('✅ Test exitoso con Resend desde Railway! ' . now(), function($message) use ($testEmail) {
+            $message->to($testEmail)
+                    ->subject('✅ Test Email - Resend API - ' . now());
         });
         
-        return '✅ Correo enviado con Resend! Revisa tu email y los logs.';
+        Log::info('Correo enviado a: ' . $testEmail);
+        
+        return view('test-email-result', [
+            'config' => $config,
+            'email' => $testEmail,
+            'message' => '✅ Correo enviado! Revisa tu email: ' . $testEmail
+        ]);
     } catch (\Exception $e) {
-        Log::error('Error test email: ' . $e->getMessage());
-        return '❌ Error: ' . $e->getMessage();
+        Log::error('Error test email:', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return view('test-email-result', [
+            'config' => config('mail'),
+            'email' => 'N/A',
+            'message' => '❌ Error: ' . $e->getMessage()
+        ]);
     }
 });
 
