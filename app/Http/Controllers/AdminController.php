@@ -42,10 +42,10 @@ class AdminController extends Controller
     /**
      * Ver rankings consolidados de todos los equipos
      */
-    public function rankings()
+    public function rankings(Request $request)
     {
         // Obtener equipos con sus promedios de evaluación y número de evaluaciones
-        $equipos = Equipo::select('equipos.*')
+        $query = Equipo::select('equipos.*')
             ->selectRaw('AVG(evaluaciones.calificacion_total) as calificacion_promedio')
             ->selectRaw('COUNT(evaluaciones.id) as num_evaluaciones')
             ->selectRaw('AVG(evaluaciones.implementacion) as implementacion_promedio')
@@ -55,11 +55,19 @@ class AdminController extends Controller
             ->selectRaw('AVG(evaluaciones.viabilidad) as viabilidad_promedio')
             ->join('evaluaciones', 'equipos.id', '=', 'evaluaciones.equipo_id')
             ->with(['evento', 'participantes', 'proyecto'])
-            ->groupBy('equipos.id')
-            ->orderByDesc('calificacion_promedio')
-            ->paginate(20);
+            ->groupBy('equipos.id');
 
-        return view('admin.rankings', compact('equipos'));
+        // Filtro por evento
+        if ($request->filled('evento_id') && $request->evento_id !== 'todos') {
+            $query->where('equipos.evento_id', $request->evento_id);
+        }
+
+        $equipos = $query->orderByDesc('calificacion_promedio')->paginate(20)->withQueryString();
+
+        // Obtener todos los eventos para el filtro
+        $eventos = \App\Models\Evento::orderBy('nombre')->get();
+
+        return view('admin.rankings', compact('equipos', 'eventos'));
     }
 
     /**
