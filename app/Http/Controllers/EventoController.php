@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Evento;
 use App\Models\EventPremio;
+use App\Models\User;
+use App\Models\Rol;
+use App\Mail\NuevoEventoMail;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EventoController extends Controller
 {
@@ -186,6 +190,32 @@ class EventoController extends Controller
 
             // Notificar a todos los participantes sobre el nuevo evento
             NotificationService::nuevoEvento($evento);
+
+            // Enviar correo a todos los usuarios con rol de participante
+            try {
+                // Obtener el ID del rol "participante"
+                $rolParticipante = Rol::where('nombre', 'participante')->first();
+                
+                if ($rolParticipante) {
+                    // Obtener todos los usuarios que tienen el rol de participante
+                    $participantes = User::whereHas('roles', function($query) use ($rolParticipante) {
+                        $query->where('rol_id', $rolParticipante->id);
+                    })->get();
+
+                    // Enviar correo a cada participante
+                    foreach ($participantes as $participante) {
+                        Mail::to($participante->email)->send(new NuevoEventoMail($evento));
+                    }
+                    
+                    Log::info("Correos enviados a {$participantes->count()} participantes sobre el evento: {$evento->nombre}");
+                }
+            } catch (\Exception $mailException) {
+                // Log del error pero no fallar el proceso completo
+                Log::error('Error al enviar correos del evento:', [
+                    'evento_id' => $evento->id,
+                    'error' => $mailException->getMessage()
+                ]);
+            }
 
             return redirect()
                 ->route('eventos.show', $evento)
