@@ -219,8 +219,8 @@
         <div class="body-text">
             por haber participado en el evento <span class="event-name">{{ $evento->nombre }}</span>
             @if($equipo)
-                @if($proyecto && $proyecto->titulo)
-                    con el proyecto <span class="project-info">"{{ $proyecto->titulo }}"</span>
+                @if($proyecto && $proyecto->nombre)
+                    con el proyecto <span class="project-info">"{{ $proyecto->nombre }}"</span>
                 @else
                     con el equipo <span class="project-info">"{{ $equipo->nombre }}"</span>
                 @endif
