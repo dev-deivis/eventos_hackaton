@@ -50,6 +50,7 @@ Route::prefix('eventos')->name('eventos.')->group(function () {
 
     // Rutas de administración (solo admins)
     Route::middleware(['auth', 'admin'])->group(function () {
+        Route::get('/admin/gestionar', [EventoController::class, 'indexAdmin'])->name('admin.index');
         Route::get('/crear/nuevo', [EventoController::class, 'create'])->name('create');
         Route::post('/crear', [EventoController::class, 'store'])->name('store');
         Route::get('/{evento}/editar', [EventoController::class, 'edit'])->name('edit');
