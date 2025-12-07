@@ -1,43 +1,85 @@
 services:
+  # Base de datos PostgreSQL
+  - type: pserv
+    name: eventos-hackathon-db
+    env: docker
+    plan: free
+    region: oregon
+    databases:
+      - name: eventos_hackaton
+        user: eventos_hackaton_user
+
+  # Aplicación Web
   - type: web
-    name: hackathon-events
+    name: eventos-hackathon
     env: docker
     plan: free
     region: oregon
     dockerfilePath: ./Dockerfile
-    dockerContext: .
     healthCheckPath: /
     envVars:
+      # Aplicación
+      - key: APP_NAME
+        value: Eventos Hackathon TecNM
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://eventos-hackathon.onrender.com
+      
+      # Logs
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL
-        value: debug
+        value: error
+      
+      # Base de datos (se llenará automáticamente)
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: eventos-hackathon-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: eventos-hackathon-db
+          property: port
+      - key: DB_DATABASE
+        value: eventos_hackaton
+      - key: DB_USERNAME
+        value: eventos_hackaton_user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: eventos-hackathon-db
+          property: password
+      
+      # Sesión y Cache
       - key: SESSION_DRIVER
         value: database
+      - key: SESSION_LIFETIME
+        value: 120
       - key: QUEUE_CONNECTION
         value: database
       - key: CACHE_STORE
         value: database
-      - key: APP_KEY
-        generateValue: true
-      - key: APP_URL
-        sync: false
-      # SUPABASE PostgreSQL - CONFIGURAR EN RENDER DASHBOARD
-      - key: DB_CONNECTION
-        value: pgsql
-      - key: DB_HOST
-        sync: false
-      - key: DB_PORT
-        value: 5432
-      - key: DB_DATABASE
-        value: postgres
-      - key: DB_USERNAME
-        value: postgres
-      - key: DB_PASSWORD
-        sync: false
-      - key: DB_SSLMODE
-        value: require
+      
+      # Email - Brevo SMTP
+      - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_HOST
+        value: smtp-relay.brevo.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USERNAME
+        value: eventos.contacto.web@gmail.com
+      - key: MAIL_PASSWORD
+        value: lxxx gyrq bgrn ubty
+      - key: MAIL_ENCRYPTION
+        value: tls
+      - key: MAIL_FROM_ADDRESS
+        value: eventos.contacto.web@gmail.com
+      - key: MAIL_FROM_NAME
+        value: Eventos Hackathon TecNM
