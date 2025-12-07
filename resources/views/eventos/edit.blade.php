@@ -475,13 +475,11 @@
 
                 <!-- Botones de Acción -->
                 <div class="flex gap-4">
-                    <button type="submit" 
-                    class="flex-1 px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-lg transition shadow-lg hover:shadow-xl">
-                    Guardar Cambios
-                </button>
+                    <button type="submit" class="flex-1 px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-lg transition shadow-lg hover:shadow-xl">
+                        Guardar Cambios
+                    </button>
         
-                    <a href="{{ route('eventos.show', $evento) }}" 
-                       class="px-6 py-4 bg-white hover:bg-gray-50 border-2 border-gray-300 text-gray-700 rounded-lg font-medium transition">
+                    <a href="{{ route('eventos.show', $evento) }}" class="px-6 py-4 bg-white hover:bg-gray-50 border-2 border-gray-300 text-gray-700 rounded-lg font-medium transition">
                         Cancelar
                     </a>
                 </div>
