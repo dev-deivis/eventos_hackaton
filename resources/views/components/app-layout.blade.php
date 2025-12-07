@@ -13,14 +13,24 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Dark Mode Script (antes del body para evitar flash) -->
+    <script>
+        // Aplicar tema antes de renderizar para evitar flash
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+<body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen">
         @include('layouts.navigation')
 
         <!-- Page Heading -->
         @isset($header)
-            <header class="bg-white shadow">
+            <header class="bg-white dark:bg-gray-800 shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
@@ -34,5 +44,8 @@
     </div>
 
     @stack('scripts')
+    
+    <!-- Dark Mode Toggle Script -->
+    <script src="{{ asset('js/dark-mode.js') }}"></script>
 </body>
 </html>
