@@ -213,8 +213,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/rankings', [\App\Http\Controllers\AdminController::class, 'rankings'])->name('rankings');
 
     // Reportes y Análisis
-    Route::get('/reportes', [\App\Http\Controllers\AdminController::class, 'reportes'])->name('reportes.index');
-    Route::get('/reportes/datos', [\App\Http\Controllers\AdminController::class, 'datosReportes'])->name('reportes.datos');
+    Route::get('/reportes', [\App\Http\Controllers\Admin\ReportesController::class, 'index'])->name('reportes.index');
+    Route::get('/reportes/datos', [\App\Http\Controllers\Admin\ReportesController::class, 'getData'])->name('reportes.datos');
 
     // Gestión de usuarios
     Route::resource('usuarios', \App\Http\Controllers\AdminUserController::class)->except(['show']);
