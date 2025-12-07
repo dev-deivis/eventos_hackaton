@@ -3,60 +3,60 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Panel de Administrador</h1>
-                <p class="text-gray-600 mt-1">Bienvenido Dr. {{ auth()->user()->name }}, gestiona eventos, equipos y genera reportes</p>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Panel de Administrador</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Bienvenido Dr. {{ auth()->user()->name }}, gestiona eventos, equipos y genera reportes</p>
             </div>
 
             <!-- Estadísticas Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Eventos Activos -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-sm font-medium text-gray-600">Eventos Activos</h3>
+                        <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Eventos Activos</h3>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
-                            <p class="text-3xl font-bold text-pink-600">{{ \App\Models\Evento::activos()->count() }}</p>
-                            <p class="text-xs text-gray-500 mt-1">+1 desde el mes pasado</p>
+                            <p class="text-3xl font-bold text-pink-600 dark:text-pink-400">{{ \App\Models\Evento::activos()->count() }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">+1 desde el mes pasado</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Participantes -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-sm font-medium text-gray-600">Participantes</h3>
+                        <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Participantes</h3>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
-                            <p class="text-3xl font-bold text-indigo-600">{{ \App\Models\Participante::count() }}</p>
-                            <p class="text-xs text-gray-500 mt-1">Estudiantes registrados</p>
+                            <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ \App\Models\Participante::count() }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Estudiantes registrados</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Equipos Formados -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-sm font-medium text-gray-600">Equipos Formados</h3>
+                        <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Equipos Formados</h3>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
-                            <p class="text-3xl font-bold text-purple-600">{{ \App\Models\Equipo::count() }}</p>
-                            <p class="text-xs text-gray-500 mt-1">Promedio 4 miembros</p>
+                            <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ \App\Models\Equipo::count() }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Promedio 4 miembros</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tasa de Finalización -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-sm font-medium text-gray-600">Tasa de Finalización</h3>
+                        <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400">Tasa de Finalización</h3>
                     </div>
                     <div class="flex items-end justify-between">
                         <div>
-                            <p class="text-3xl font-bold text-pink-600">87%</p>
-                            <p class="text-xs text-gray-500 mt-1">+5% vs cuatri anterior</p>
+                            <p class="text-3xl font-bold text-pink-600 dark:text-pink-400">87%</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">+5% vs cuatri anterior</p>
                         </div>
                     </div>
                 </div>
@@ -67,8 +67,8 @@
                 
                 <!-- Columna Izquierda (2/3) - Acciones Rápidas -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Acciones Rápidas</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Acciones Rápidas</h3>
                         
                         <div class="grid grid-cols-2 gap-3">
                             <a href="{{ route('eventos.create') }}" 
