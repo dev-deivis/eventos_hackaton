@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\JuezMiddleware;
 use App\Http\Middleware\EnsureProfileComplete;
+use App\Http\Middleware\ActualizarEstadoEventosMiddleware;
 use App\Http\Middleware\TrustProxies;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -17,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Confiar en proxies de Railway
         $middleware->trustProxies(at: '*');
+        
+        // Middleware global para actualizar estados de eventos
+        $middleware->append(ActualizarEstadoEventosMiddleware::class);
         
         $middleware->alias([
             'admin' => AdminMiddleware::class,

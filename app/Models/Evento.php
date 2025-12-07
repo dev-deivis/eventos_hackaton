@@ -209,4 +209,36 @@ class Evento extends Model
 
         return $colores[$this->estado] ?? 'gray';
     }
+
+    /**
+     * Actualizar automáticamente los estados de los eventos según las fechas
+     */
+    public static function actualizarEstadosAutomaticamente(): int
+    {
+        $ahora = Carbon::now();
+        $actualizados = 0;
+
+        // 1. Eventos que deberían estar EN CURSO
+        $eventosEnCurso = self::where('estado', 'proximo')
+            ->where('fecha_inicio', '<=', $ahora)
+            ->where('fecha_fin', '>=', $ahora)
+            ->get();
+
+        foreach ($eventosEnCurso as $evento) {
+            $evento->update(['estado' => 'en_curso']);
+            $actualizados++;
+        }
+
+        // 2. Eventos que deberían estar FINALIZADOS
+        $eventosFinalizados = self::whereIn('estado', ['proximo', 'en_curso'])
+            ->where('fecha_fin', '<', $ahora)
+            ->get();
+
+        foreach ($eventosFinalizados as $evento) {
+            $evento->update(['estado' => 'finalizado']);
+            $actualizados++;
+        }
+
+        return $actualizados;
+    }
 }
