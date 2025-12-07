@@ -257,7 +257,21 @@
             
             try {
                 const response = await fetch(`/admin/reportes/datos?evento_id=${eventoSeleccionado}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                
+                if (!data.success && data.error) {
+                    console.error('Error del servidor:', data.error);
+                    if (data.trace) {
+                        console.error('Trace:', data.trace);
+                    }
+                    alert(`Error del servidor: ${data.error}`);
+                    return;
+                }
                 
                 // Actualizar KPIs
                 actualizarKPIs(data.stats);
@@ -270,8 +284,8 @@
                 actualizarEstadisticasEquipos(data.estadisticas_equipos);
                 
             } catch (error) {
-                console.error('Error al cargar datos:', error);
-                alert('Error al cargar los datos. Por favor, intenta de nuevo.');
+                console.error('Error completo:', error);
+                alert(`Error al cargar los datos: ${error.message}`);
             } finally {
                 // Ocultar loading
                 document.getElementById('loading').classList.add('hidden');
