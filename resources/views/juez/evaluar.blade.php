@@ -38,6 +38,73 @@
                             </div>
                         </div>
 
+                        <!-- Links del Proyecto -->
+                        @if($equipo->proyecto)
+                            <div class="mt-6">
+                                <h3 class="text-sm font-bold text-gray-900 mb-3">Enlaces del Proyecto</h3>
+                                <div class="space-y-2">
+                                    @if($equipo->proyecto->link_repositorio)
+                                        <a href="{{ $equipo->proyecto->link_repositorio }}" 
+                                           target="_blank"
+                                           class="flex items-center gap-3 p-3 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition group">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <div class="flex-1">
+                                                <div class="text-sm font-semibold">Repositorio GitHub</div>
+                                                <div class="text-xs opacity-75">Ver código fuente</div>
+                                            </div>
+                                            <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+
+                                    @if($equipo->proyecto->link_demo)
+                                        <a href="{{ $equipo->proyecto->link_demo }}" 
+                                           target="_blank"
+                                           class="flex items-center gap-3 p-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition group">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                                            </svg>
+                                            <div class="flex-1">
+                                                <div class="text-sm font-semibold">Video Demo</div>
+                                                <div class="text-xs opacity-75">Ver demostración</div>
+                                            </div>
+                                            <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+
+                                    @if($equipo->proyecto->link_presentacion)
+                                        <a href="{{ $equipo->proyecto->link_presentacion }}" 
+                                           target="_blank"
+                                           class="flex items-center gap-3 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition group">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <div class="flex-1">
+                                                <div class="text-sm font-semibold">Presentación</div>
+                                                <div class="text-xs opacity-75">Ver diapositivas</div>
+                                            </div>
+                                            <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+
+                                    @if(!$equipo->proyecto->link_repositorio && !$equipo->proyecto->link_demo && !$equipo->proyecto->link_presentacion)
+                                        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                            <p class="text-sm text-yellow-800">
+                                                <span class="font-semibold">⚠️ Sin enlaces:</span> El equipo no ha agregado links del proyecto.
+                                            </p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="mt-6">
                             <h3 class="text-sm font-bold text-gray-900 mb-3">Miembros del Equipo</h3>
                             <div class="space-y-2">
