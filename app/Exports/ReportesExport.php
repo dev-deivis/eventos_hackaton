@@ -251,7 +251,7 @@ class EquiposSheet implements FromCollection, WithHeadings, WithStyles, WithTitl
             ->select(
                 'equipos.nombre',
                 DB::raw('COUNT(DISTINCT equipo_participante.participante_id) as miembros'),
-                DB::raw('IF(proyectos.id IS NOT NULL, "Sí", "No") as proyecto_entregado'),
+                DB::raw("CASE WHEN proyectos.id IS NOT NULL THEN 'Sí' ELSE 'No' END as proyecto_entregado"),
                 'equipos.estado'
             )
             ->groupBy('equipos.id', 'equipos.nombre', 'equipos.estado', 'proyectos.id');
