@@ -218,12 +218,18 @@
         <!-- Texto del cuerpo -->
         <div class="body-text">
             por haber participado en el evento <span class="event-name">{{ $evento->nombre }}</span>
-            @if($proyecto)
-                con el proyecto <span class="project-info">"{{ $proyecto->titulo }}"</span>
-            @endif
-            @if($perfilEquipo)
-                con <span class="role-name">{{ $perfilEquipo->nombre }}</span>.
-            @endif
+            @if($equipo)
+                @if($proyecto && $proyecto->titulo)
+                    con el proyecto <span class="project-info">"{{ $proyecto->titulo }}"</span>
+                @else
+                    con el equipo <span class="project-info">"{{ $equipo->nombre }}"</span>
+                @endif
+                @if($perfilEquipo)
+                    con <span class="role-name">{{ $perfilEquipo->nombre }}</span>
+                @endif
+            @elseif($participante && $participante->carrera)
+                como estudiante de <span class="role-name">{{ $participante->carrera->nombre }}</span>
+            @endif.
         </div>
 
         <!-- Firmas 2x2 -->
