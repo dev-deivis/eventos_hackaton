@@ -6,13 +6,13 @@
             <div class="mb-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                            <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
                             Gestión de Eventos
                         </h1>
-                        <p class="text-gray-600 mt-2">Administra todos los eventos del sistema</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">Administra todos los eventos del sistema</p>
                     </div>
                     
                     <a href="{{ route('eventos.create') }}" 
@@ -26,18 +26,18 @@
             </div>
 
             <!-- Buscador y Filtros -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 border border-gray-100 dark:border-gray-700">
                 <form method="GET" action="{{ route('eventos.admin.index') }}" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         
                         <!-- Buscador -->
                         <div class="md:col-span-2">
-                            <label for="buscar" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="buscar" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Buscar Evento
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                     </svg>
                                 </div>
@@ -47,20 +47,20 @@
                                     id="buscar" 
                                     value="{{ request('buscar') }}"
                                     placeholder="Buscar por nombre o descripción..."
-                                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500"
                                 >
                             </div>
                         </div>
 
                         <!-- Filtro por Estado -->
                         <div>
-                            <label for="estado" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="estado" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Filtrar por Estado
                             </label>
                             <select 
                                 name="estado" 
                                 id="estado"
-                                class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                class="block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-indigo-500 focus:border-indigo-500"
                             >
                                 <option value="todos" {{ request('estado', 'todos') == 'todos' ? 'selected' : '' }}>
                                     Todos los estados
@@ -91,7 +91,7 @@
                         </button>
                         <a 
                             href="{{ route('eventos.admin.index') }}"
-                            class="inline-flex items-center gap-2 px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold transition"
+                            class="inline-flex items-center gap-2 px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-semibold transition"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -105,7 +105,7 @@
             <!-- Grid de Eventos -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse($eventos as $evento)
-                    <div class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 group">
                         
                         <!-- Imagen o Gradiente -->
                         @if($evento->imagen_portada)
@@ -172,28 +172,28 @@
                             </div>
                             
                             <!-- Título -->
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-600 transition">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
                                 {{ $evento->nombre }}
                             </h3>
                             
                             <!-- Descripción -->
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
                                 {{ $evento->descripcion }}
                             </p>
                             
                             <!-- Información -->
                             <div class="space-y-2 mb-4">
                                 <!-- Fecha -->
-                                <div class="flex items-center gap-2 text-sm text-gray-700">
-                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                                    <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>{{ \Carbon\Carbon::parse($evento->fecha_inicio)->format('d/m/Y') }}</span>
                                 </div>
                                 
                                 <!-- Ubicación -->
-                                <div class="flex items-center gap-2 text-sm text-gray-700">
-                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                                    <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
                                     </svg>
                                     <span class="line-clamp-1">{{ $evento->ubicacion }}</span>
@@ -201,8 +201,8 @@
                                 
                                 <!-- Estadísticas -->
                                 <div class="flex items-center gap-4 text-sm">
-                                    <div class="flex items-center gap-1 text-gray-700">
-                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <div class="flex items-center gap-1 text-gray-700 dark:text-gray-300">
+                                        <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
                                         </svg>
                                         <span>{{ $evento->equipos->count() }} equipos</span>
