@@ -1,12 +1,12 @@
-<x-app-layout>
+﻿<x-app-layout>
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Header del Evento -->
-            <div class="bg-white rounded-xl shadow-sm p-8 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 mb-6">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex-1">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $evento->nombre }}</h1>
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ $evento->nombre }}</h1>
                         <!-- Tipo de Evento -->
                         @php
                             $tipoColors = [
@@ -82,13 +82,13 @@
                                 
                                 <div x-show="open" 
                                      @click.away="open = false"
-                                     class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
                                     <div class="py-1">
                                         <form action="{{ route('eventos.cambiar-estado', $evento) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="draft">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                                 </svg>
@@ -99,7 +99,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="abierto">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-green-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-green-700 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                                 </svg>
@@ -110,7 +110,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="en_progreso">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-blue-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-blue-700 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
                                                 </svg>
@@ -121,7 +121,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="cerrado">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-red-700 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
                                                 </svg>
@@ -132,7 +132,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="completado">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 text-purple-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-purple-700 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                                 </svg>
@@ -176,15 +176,15 @@
                 <div class="lg:col-span-2 space-y-6">
                     
                     <!-- Descripción del Evento -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Descripción del Evento</h2>
-                        <p class="text-gray-700 leading-relaxed">{{ $evento->descripcion }}</p>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Descripción del Evento</h2>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $evento->descripcion }}</p>
                     </div>
 
                     <!-- Premios REALES con SVG -->
                     @if($evento->premios->count() > 0)
-                        <div class="bg-white rounded-xl shadow-sm p-6">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                 </svg>
@@ -226,7 +226,7 @@
                                         
                                         <div class="flex-1">
                                             <span class="font-bold text-gray-900">{{ $premio->lugar }}:</span>
-                                            <span class="text-gray-700 ml-2">{{ $premio->descripcion }}</span>
+                                            <span class="text-gray-700 dark:text-gray-300 ml-2">{{ $premio->descripcion }}</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -235,8 +235,8 @@
                     @endif
 
                     <!-- Requisitos -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
                             </svg>
@@ -271,8 +271,8 @@
                     </div>
 
                     <!-- Equipos Participantes -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center justify-between">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-between">
                             <span class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
@@ -282,14 +282,14 @@
                         </h3>
 
                         @forelse($evento->equipos as $equipo)
-                            <div class="border border-gray-200 rounded-lg p-4 mb-3 hover:border-indigo-300 transition">
+                            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-indigo-300 transition">
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="flex-1">
                                         <h4 class="font-bold text-gray-900">{{ $equipo->nombre }}</h4>
                                         <p class="text-sm text-gray-600">{{ $equipo->descripcion }}</p>
                                     </div>
                                     <a href="{{ route('equipos.show', $equipo) }}" 
-                                       class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium">
+                                       class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 rounded-lg text-sm font-medium">
                                         Ver Equipo
                                     </a>
                                 </div>
@@ -321,8 +321,8 @@
                 <div class="space-y-6">
                     
                     <!-- Cronograma -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
@@ -366,8 +366,8 @@
 
                     <!-- Acciones -->
                     @if(!auth()->check() || !auth()->user()->isAdmin())
-                        <div class="bg-white rounded-xl shadow-sm p-6">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4">Acciones</h3>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Acciones</h3>
                             <div class="space-y-3">
                                 @auth
                                     @if($estaInscrito)
@@ -380,7 +380,7 @@
                                         </a>
 
                                         <a href="{{ route('equipos.index', $evento) }}" 
-                                           class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white hover:bg-gray-50 border-2 border-gray-200 rounded-lg font-medium">
+                                           class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-700 rounded-lg font-medium">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
                                             </svg>
@@ -393,8 +393,8 @@
                     @endif
 
                     <!-- Información del Evento -->
-                    <div class="bg-gray-50 rounded-xl p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                             </svg>

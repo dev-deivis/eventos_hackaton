@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -7,10 +7,10 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-3xl font-bold text-gray-900">Proyectos Pendientes de Aprobación</h1>
-                        <p class="text-gray-600 mt-1">Revisa y aprueba proyectos para que puedan ser evaluados por los jueces</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">Revisa y aprueba proyectos para que puedan ser evaluados por los jueces</p>
                     </div>
                     <a href="{{ route('admin.dashboard') }}" 
-                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition">
+                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition">
                         ← Volver al Dashboard
                     </a>
                 </div>
@@ -45,7 +45,7 @@
 
             <!-- Lista de Proyectos -->
             @forelse($proyectos as $proyecto)
-                <div class="bg-white rounded-xl shadow-sm mb-6 border-l-4 border-purple-500 overflow-hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm mb-6 border-l-4 border-purple-500 overflow-hidden">
                     <div class="p-6">
                         <!-- Header del Proyecto -->
                         <div class="flex items-start justify-between mb-4">
@@ -56,7 +56,7 @@
                                         {{ $proyecto->estadoTexto }}
                                     </span>
                                 </div>
-                                <p class="text-gray-700 mb-2">{{ $proyecto->descripcion }}</p>
+                                <p class="text-gray-700 dark:text-gray-300 mb-2">{{ $proyecto->descripcion }}</p>
                                 <div class="flex items-center gap-4 text-sm text-gray-600">
                                     <span class="flex items-center gap-1">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -83,7 +83,7 @@
                             <!-- Porcentaje Completado -->
                             <div class="text-center ml-6">
                                 <div class="text-5xl font-bold text-purple-600">{{ $proyecto->porcentaje_completado }}%</div>
-                                <p class="text-xs text-gray-500 mt-1">Completitud</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Completitud</p>
                             </div>
                         </div>
 
@@ -124,7 +124,7 @@
                         </div>
 
                         <!-- Estadísticas del Proyecto -->
-                        <div class="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                        <div class="grid grid-cols-4 gap-4 mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                             <div class="text-center">
                                 <p class="text-2xl font-bold text-indigo-600">{{ $proyecto->equipo->participantes->count() }}</p>
                                 <p class="text-xs text-gray-600">Miembros</p>
@@ -205,27 +205,27 @@
 
                 <!-- Modal Rechazar -->
                 <div id="modalRechazar{{ $proyecto->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Rechazar Proyecto</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Rechazar Proyecto</h3>
                         
                         <form action="{{ route('admin.proyectos.rechazar', $proyecto) }}" method="POST">
                             @csrf
                             
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Motivo del rechazo *</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Motivo del rechazo *</label>
                                 <textarea name="motivo" 
                                           rows="4" 
                                           required
                                           maxlength="500"
                                           placeholder="Explica qué debe completar el equipo..."
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"></textarea>
-                                <p class="text-xs text-gray-500 mt-1">El equipo recibirá este mensaje y deberá completar lo que falta</p>
+                                          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500"></textarea>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">El equipo recibirá este mensaje y deberá completar lo que falta</p>
                             </div>
 
                             <div class="flex gap-3">
                                 <button type="button" 
                                         onclick="toggleModalRechazar('{{ $proyecto->id }}')"
-                                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50">
                                     Cancelar
                                 </button>
                                 <button type="submit" 
@@ -238,11 +238,11 @@
                 </div>
             @empty
                 <!-- Sin Proyectos Pendientes -->
-                <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
                     <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <h3 class="text-2xl font-bold text-gray-600 mb-2">No hay proyectos pendientes</h3>
+                    <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-2">No hay proyectos pendientes</h3>
                     <p class="text-gray-500">Todos los proyectos entregados han sido revisados</p>
                 </div>
             @endforelse
