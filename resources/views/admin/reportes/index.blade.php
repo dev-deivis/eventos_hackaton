@@ -40,11 +40,8 @@
             <!-- Tabs de Navegación -->
             <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
                 <nav class="flex space-x-8">
-                    <button onclick="switchTab('evento')" id="tab-evento" class="tab-button border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 py-4 px-1 font-semibold text-sm">
+                    <button id="tab-evento" class="border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 py-4 px-1 font-semibold text-sm">
                         Reporte del Evento
-                    </button>
-                    <button onclick="switchTab('historicos')" id="tab-historicos" class="tab-button border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 py-4 px-1 font-semibold text-sm transition">
-                        Análisis Históricos
                     </button>
                 </nav>
             </div>
@@ -204,18 +201,6 @@
 
             </div>
 
-            <!-- Tab Content: Análisis Históricos -->
-            <div id="content-historicos" class="tab-content hidden">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 text-center py-12">
-                    <svg class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Análisis Históricos</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Comparación de eventos a lo largo del tiempo</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-4">Funcionalidad en desarrollo</p>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -227,24 +212,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             cargarDatos();
         });
-
-        // Cambiar tab
-        function switchTab(tab) {
-            // Ocultar todos los contenidos
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
-            // Mostrar el seleccionado
-            document.getElementById('content-' + tab).classList.remove('hidden');
-            
-            // Actualizar botones
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('border-indigo-600', 'text-indigo-600', 'dark:text-indigo-400');
-                btn.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-            });
-            
-            document.getElementById('tab-' + tab).classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-            document.getElementById('tab-' + tab).classList.add('border-indigo-600', 'text-indigo-600', 'dark:text-indigo-400');
-        }
 
         // Cargar datos desde el servidor
         async function cargarDatos() {
