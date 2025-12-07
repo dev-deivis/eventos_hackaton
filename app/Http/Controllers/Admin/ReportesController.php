@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Participante;
 use App\Models\Equipo;
 use App\Models\Evaluacion;
+use App\Models\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportesExport;
 
 class ReportesController extends Controller
 {
@@ -256,5 +260,39 @@ class ReportesController extends Controller
                 'porcentaje' => $total > 0 ? round(($item->total / $total) * 100, 1) : 0
             ];
         })->toArray();
+    }
+
+    public function exportarPDF(Request $request)
+    {
+        $eventoId = $request->input('evento_id');
+        
+        $data = [
+            'stats' => [
+                'total_participantes' => $this->getTotalParticipantes($eventoId),
+                'equipos_formados' => $this->getEquiposFormados($eventoId),
+                'tasa_finalizacion' => $this->getTasaFinalizacion($eventoId),
+                'puntuacion_promedio' => $this->getPuntuacionPromedio($eventoId),
+            ],
+            'participacion_carrera' => $this->getParticipacionPorCarrera($eventoId),
+            'distribucion_roles' => $this->getDistribucionRoles($eventoId),
+            'evento' => $eventoId ? Evento::find($eventoId) : null,
+            'fecha' => now()->format('d/m/Y H:i'),
+        ];
+
+        $pdf = Pdf::loadView('admin.reportes.pdf', $data);
+        $pdf->setPaper('letter', 'portrait');
+        
+        $filename = 'reporte-' . ($eventoId ? 'evento-' . $eventoId : 'general') . '-' . now()->format('Y-m-d') . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+
+    public function exportarExcel(Request $request)
+    {
+        $eventoId = $request->input('evento_id');
+        
+        $filename = 'reporte-' . ($eventoId ? 'evento-' . $eventoId : 'general') . '-' . now()->format('Y-m-d') . '.xlsx';
+        
+        return Excel::download(new ReportesExport($eventoId), $filename);
     }
 }
