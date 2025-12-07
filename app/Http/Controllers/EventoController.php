@@ -30,6 +30,41 @@ class EventoController extends Controller
     }
 
     /**
+     * Panel de administración de eventos con búsqueda y filtros
+     */
+    public function indexAdmin(Request $request)
+    {
+        $query = Evento::with(['equipos', 'premios']);
+
+        // Búsqueda por nombre o descripción
+        if ($request->filled('buscar')) {
+            $search = $request->buscar;
+            $query->where(function($q) use ($search) {
+                $q->where('nombre', 'ILIKE', "%{$search}%")
+                  ->orWhere('descripcion', 'ILIKE', "%{$search}%");
+            });
+        }
+
+        // Filtro por estado
+        if ($request->filled('estado') && $request->estado !== 'todos') {
+            $query->where('estado', $request->estado);
+        }
+
+        // Ordenar por más reciente
+        $eventos = $query->latest()->paginate(12)->withQueryString();
+
+        // Estadísticas
+        $estadisticas = [
+            'total' => Evento::count(),
+            'proximo' => Evento::where('estado', 'proximo')->count(),
+            'en_curso' => Evento::where('estado', 'en_curso')->count(),
+            'finalizado' => Evento::where('estado', 'finalizado')->count(),
+        ];
+
+        return view('admin.eventos.index', compact('eventos', 'estadisticas'));
+    }
+
+    /**
      * Mostrar detalle de un evento
      */
     public function show(Evento $evento)
