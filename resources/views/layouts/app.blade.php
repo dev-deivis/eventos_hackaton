@@ -69,23 +69,23 @@
 
                             <!-- Notificaciones -->
                             <div class="relative" id="notificaciones-dropdown">
-                                <button id="notificaciones-btn" class="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 relative">
+                                <button id="notificaciones-btn" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 relative">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
                                     </svg>
-                                    <span id="notificaciones-badge" style="display: none;" class="absolute top-1 right-1 flex items-center justify-center h-5 w-5 text-xs font-bold text-white bg-red-500 rounded-full ring-2 ring-white animate-pulse">0</span>
+                                    <span id="notificaciones-badge" style="display: none;" class="absolute top-1 right-1 flex items-center justify-center h-5 w-5 text-xs font-bold text-white bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-800 animate-pulse">0</span>
                                 </button>
 
                                 <!-- Dropdown de Notificaciones -->
-                                <div id="notificaciones-menu" style="display: none; position: absolute; right: 0; top: 100%;" class="mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-[9999] max-h-[32rem] flex flex-col">
+                                <div id="notificaciones-menu" style="display: none; position: absolute; right: 0; top: 100%;" class="mt-2 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-[9999] max-h-[32rem] flex flex-col">
                                     <!-- Encabezado -->
-                                    <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gray-50 rounded-t-lg">
-                                        <h3 class="text-sm font-semibold text-gray-900">Notificaciones</h3>
+                                    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-900 rounded-t-lg">
+                                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Notificaciones</h3>
                                         <div class="flex items-center gap-2">
-                                            <button id="marcar-todas-btn" style="display: none;" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                            <button id="marcar-todas-btn" style="display: none;" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
                                                 Marcar todas leídas
                                             </button>
-                                            <a href="{{ route('notificaciones.index') }}" class="text-xs text-gray-600 hover:text-gray-800 font-medium">
+                                            <a href="{{ route('notificaciones.index') }}" class="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 font-medium">
                                                 Ver todas
                                             </a>
                                         </div>
@@ -96,15 +96,15 @@
                                         <!-- Estado de carga -->
                                         <div id="notificaciones-loading" class="p-8 text-center">
                                             <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                                            <p class="mt-2 text-sm text-gray-600">Cargando notificaciones...</p>
+                                            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Cargando notificaciones...</p>
                                         </div>
 
                                         <!-- Sin notificaciones -->
                                         <div id="notificaciones-empty" style="display: none;" class="p-8 text-center">
-                                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                                             </svg>
-                                            <p class="mt-2 text-sm text-gray-600">No hay notificaciones nuevas</p>
+                                            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">No hay notificaciones nuevas</p>
                                         </div>
 
                                         <!-- Lista de notificaciones -->
@@ -115,18 +115,18 @@
 
                             <!-- Perfil -->
                             <div class="flex items-center gap-2">
-                                <a href="{{ route('profile.show') }}" class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                <a href="{{ route('profile.show') }}" class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                                     </svg>
-                                    <span class="text-sm font-medium text-gray-700 hover:text-indigo-600">{{ auth()->user()->name }}</span>
+                                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">{{ auth()->user()->name }}</span>
                                 </a>
                             </div>
 
                             <!-- Salir -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg">
+                                <button type="submit" class="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm11 4.414l-4.293 4.293a1 1 0 01-1.414 0L4 7.414V13h10V7.414z" clip-rule="evenodd"/>
                                     </svg>
@@ -136,7 +136,7 @@
                         </div>
                     @else
                         <div class="flex items-center gap-4">
-                            <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                                 Iniciar Sesión
                             </a>
                             <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700">
