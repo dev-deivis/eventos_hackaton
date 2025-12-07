@@ -141,33 +141,33 @@
 
                 <!-- Columna Derecha (1/3) - Estadísticas -->
                 <div>
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Estadísticas Rápidas</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Estadísticas Rápidas</h3>
                         
                         <div class="space-y-4">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Total Usuarios</span>
-                                <span class="font-bold text-gray-900">{{ \App\Models\User::count() }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">Total Usuarios</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ \App\Models\User::count() }}</span>
                             </div>
                             
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Eventos Completados</span>
-                                <span class="font-bold text-gray-900">{{ \App\Models\Evento::where('estado', 'completado')->count() }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">Eventos Completados</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ \App\Models\Evento::where('estado', 'completado')->count() }}</span>
                             </div>
                             
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Proyectos Presentados</span>
-                                <span class="font-bold text-gray-900">{{ \App\Models\Proyecto::count() }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">Proyectos Presentados</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ \App\Models\Proyecto::count() }}</span>
                             </div>
 
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Equipos Activos</span>
-                                <span class="font-bold text-gray-900">{{ \App\Models\Equipo::where('estado', 'activo')->count() }}</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">Equipos Activos</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ \App\Models\Equipo::where('estado', 'activo')->count() }}</span>
                             </div>
                         </div>
 
-                        <div class="mt-6 pt-6 border-t">
-                            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <a href="#" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
                                 Ver estadísticas completas →
                             </a>
                         </div>
@@ -177,10 +177,10 @@
             </div>
 
             <!-- Eventos Recientes (Ancho Completo) -->
-            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                         </svg>
                         Eventos Recientes
@@ -189,13 +189,13 @@
 
                 <div class="grid grid-cols-1 gap-4">
                     @forelse(\App\Models\Evento::latest()->take(4)->get() as $evento)
-                        <div class="flex items-center justify-between p-5 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                        <div class="flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
                             <div class="flex-1">
-                                <h4 class="font-bold text-gray-900 text-lg">{{ $evento->nombre }}</h4>
-                                <p class="text-sm text-gray-600 mt-1">{{ $evento->totalEquipos() }} Equipos registrados</p>
+                                <h4 class="font-bold text-gray-900 dark:text-white text-lg">{{ $evento->nombre }}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ $evento->totalEquipos() }} Equipos registrados</p>
                             </div>
                             <div class="flex items-center gap-4">
-                                <span class="px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">
+                                <span class="px-4 py-2 bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 rounded-full text-sm font-medium">
                                     {{ $evento->estadoTexto }}
                                 </span>
                                 <a href="{{ route('eventos.show', $evento) }}" 
@@ -205,11 +205,11 @@
                             </div>
                         </div>
                     @empty
-                        <div class="text-center py-12 text-gray-500">
-                            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                            <svg class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
-                            <p class="text-lg font-medium">No hay eventos recientes</p>
+                            <p class="text-lg font-medium text-gray-600 dark:text-gray-400">No hay eventos recientes</p>
                             <a href="{{ route('eventos.create') }}" class="inline-block mt-3 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
                                 Crear el primer evento
                             </a>
