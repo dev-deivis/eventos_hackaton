@@ -19,38 +19,51 @@ class ReportesController extends Controller
 
     public function getData(Request $request)
     {
-        $eventoId = $request->input('evento_id');
+        try {
+            $eventoId = $request->input('evento_id');
 
-        // Estadísticas generales
-        $stats = [
-            'total_participantes' => $this->getTotalParticipantes($eventoId),
-            'equipos_formados' => $this->getEquiposFormados($eventoId),
-            'promedio_miembros' => $this->getPromedioMiembros($eventoId),
-            'tasa_finalizacion' => $this->getTasaFinalizacion($eventoId),
-            'equipos_terminaron' => $this->getEquiposTerminaron($eventoId),
-            'puntuacion_promedio' => $this->getPuntuacionPromedio($eventoId),
-            'puntuacion_maxima' => $this->getPuntuacionMaxima($eventoId),
-        ];
+            // Estadísticas generales
+            $stats = [
+                'total_participantes' => $this->getTotalParticipantes($eventoId),
+                'equipos_formados' => $this->getEquiposFormados($eventoId),
+                'promedio_miembros' => $this->getPromedioMiembros($eventoId),
+                'tasa_finalizacion' => $this->getTasaFinalizacion($eventoId),
+                'equipos_terminaron' => $this->getEquiposTerminaron($eventoId),
+                'puntuacion_promedio' => $this->getPuntuacionPromedio($eventoId),
+                'puntuacion_maxima' => $this->getPuntuacionMaxima($eventoId),
+            ];
 
-        // Participación por carrera
-        $participacionCarrera = $this->getParticipacionPorCarrera($eventoId);
+            // Participación por carrera
+            $participacionCarrera = $this->getParticipacionPorCarrera($eventoId);
 
-        // Estadísticas de equipos
-        $estadisticasEquipos = [
-            'completos' => $this->getEquiposCompletos($eventoId),
-            'incompletos' => $this->getEquiposIncompletos($eventoId),
-            'tamano_promedio' => $this->getPromedioMiembros($eventoId),
-        ];
+            // Estadísticas de equipos
+            $estadisticasEquipos = [
+                'completos' => $this->getEquiposCompletos($eventoId),
+                'incompletos' => $this->getEquiposIncompletos($eventoId),
+                'tamano_promedio' => $this->getPromedioMiembros($eventoId),
+            ];
 
-        // Distribución de roles
-        $distribucionRoles = $this->getDistribucionRoles($eventoId);
+            // Distribución de roles
+            $distribucionRoles = $this->getDistribucionRoles($eventoId);
 
-        return response()->json([
-            'stats' => $stats,
-            'participacion_carrera' => $participacionCarrera,
-            'estadisticas_equipos' => $estadisticasEquipos,
-            'distribucion_roles' => $distribucionRoles,
-        ]);
+            return response()->json([
+                'success' => true,
+                'stats' => $stats,
+                'participacion_carrera' => $participacionCarrera,
+                'estadisticas_equipos' => $estadisticasEquipos,
+                'distribucion_roles' => $distribucionRoles,
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error en ReportesController::getData: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null
+            ], 500);
+        }
     }
 
     private function getTotalParticipantes($eventoId = null)
