@@ -215,9 +215,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Reportes y Análisis
     Route::get('/reportes', [\App\Http\Controllers\Admin\ReportesController::class, 'index'])->name('reportes.index');
     Route::get('/reportes/datos', [\App\Http\Controllers\Admin\ReportesController::class, 'getData'])->name('reportes.datos');
-    // Exportaciones deshabilitadas temporalmente (requieren librerías con PHP 8.3)
-    // Route::get('/reportes/exportar-pdf', [\App\Http\Controllers\Admin\ReportesController::class, 'exportarPDF'])->name('reportes.exportar-pdf');
-    // Route::get('/reportes/exportar-excel', [\App\Http\Controllers\Admin\ReportesController::class, 'exportarExcel'])->name('reportes.exportar-excel');
+    Route::get('/reportes/exportar-pdf', [\App\Http\Controllers\Admin\ReportesController::class, 'exportarPDF'])->name('reportes.exportar-pdf');
+    Route::get('/reportes/exportar-excel', [\App\Http\Controllers\Admin\ReportesController::class, 'exportarExcel'])->name('reportes.exportar-excel');
 
     // Gestión de usuarios
     Route::resource('usuarios', \App\Http\Controllers\AdminUserController::class)->except(['show']);
