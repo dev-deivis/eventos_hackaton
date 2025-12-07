@@ -161,16 +161,16 @@ class ReportesController extends Controller
 
     private function getParticipacionPorCarrera($eventoId = null)
     {
-        $query = Participante::select('carrera', DB::raw('count(*) as total'))
-            ->whereNotNull('carrera')
-            ->groupBy('carrera')
+        $query = Participante::select('carreras.nombre as carrera', DB::raw('count(participantes.id) as total'))
+            ->join('carreras', 'participantes.carrera_id', '=', 'carreras.id')
+            ->groupBy('carreras.nombre')
             ->orderBy('total', 'desc');
 
         if ($eventoId) {
             $evento = Evento::find($eventoId);
             if ($evento) {
-                $participantesIds = $evento->participantes()->pluck('id');
-                $query->whereIn('id', $participantesIds);
+                $participantesIds = $evento->participantes()->pluck('participantes.id');
+                $query->whereIn('participantes.id', $participantesIds);
             }
         }
 
