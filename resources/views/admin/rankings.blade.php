@@ -8,6 +8,66 @@
                 <p class="text-gray-600 mt-1">Clasificación actual basada en evaluaciones consolidadas</p>
             </div>
 
+            <!-- Filtro por Evento -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                <form method="GET" action="{{ route('admin.rankings') }}" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <!-- Selector de Evento -->
+                        <div class="flex-1">
+                            <label for="evento_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                Filtrar por Evento
+                            </label>
+                            <select 
+                                name="evento_id" 
+                                id="evento_id"
+                                class="block w-full py-2 px-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                            >
+                                <option value="todos" {{ request('evento_id', 'todos') == 'todos' ? 'selected' : '' }}>
+                                    📊 Todos los eventos
+                                </option>
+                                @foreach($eventos as $evento)
+                                    <option value="{{ $evento->id }}" {{ request('evento_id') == $evento->id ? 'selected' : '' }}>
+                                        {{ $evento->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="flex items-end gap-3">
+                            <button 
+                                type="submit"
+                                class="inline-flex items-center gap-2 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1v-6a1 1 0 00-1-1h-6z"/>
+                                </svg>
+                                Filtrar
+                            </button>
+                            <a 
+                                href="{{ route('admin.rankings') }}"
+                                class="inline-flex items-center gap-2 px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold transition"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Limpiar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Info del filtro activo -->
+                    @if(request('evento_id') && request('evento_id') !== 'todos')
+                        <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-sm text-blue-800">
+                                <span class="font-semibold">📌 Filtrando por:</span> 
+                                {{ $eventos->find(request('evento_id'))->nombre ?? 'Evento' }}
+                            </p>
+                        </div>
+                    @endif
+                </form>
+            </div>
+
             <!-- Clasificación General -->
             <div class="bg-gray-50 rounded-xl p-6">
                 <div class="mb-6">
