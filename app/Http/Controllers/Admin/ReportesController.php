@@ -185,7 +185,7 @@ class ReportesController extends Controller
             });
         }
 
-        $promedio = $query->avg('puntuacion_total');
+        $promedio = $query->avg('calificacion_total');
         return $promedio ? round($promedio, 1) : 0;
     }
 
@@ -199,7 +199,7 @@ class ReportesController extends Controller
             });
         }
 
-        $maxima = $query->max('puntuacion_total');
+        $maxima = $query->max('calificacion_total');
         return $maxima ? round($maxima, 1) : 100;
     }
 
