@@ -78,13 +78,13 @@ class ReportesController extends Controller
             $query->where('evento_id', $eventoId);
         }
 
-        $equipos = $query->withCount('miembros')->get();
+        $equipos = $query->withCount('participantes')->get();
         
         if ($equipos->isEmpty()) {
             return 0;
         }
 
-        $promedio = $equipos->avg('miembros_count');
+        $promedio = $equipos->avg('participantes_count');
         return round($promedio, 1);
     }
 
@@ -182,9 +182,7 @@ class ReportesController extends Controller
             $query->where('evento_id', $eventoId);
         }
 
-        return $query->whereHas('miembros', function($q) {
-            // Equipos con 5 o más miembros
-        }, '>=', 5)->count();
+        return $query->has('participantes', '>=', 5)->count();
     }
 
     private function getEquiposIncompletos($eventoId = null)
@@ -195,9 +193,10 @@ class ReportesController extends Controller
             $query->where('evento_id', $eventoId);
         }
 
-        return $query->whereHas('miembros', function($q) {
-            // Equipos con menos de 5 miembros
-        }, '<', 5)->count();
+        $total = $query->count();
+        $completos = $this->getEquiposCompletos($eventoId);
+        
+        return $total - $completos;
     }
 
     private function getDistribucionRoles($eventoId = null)
