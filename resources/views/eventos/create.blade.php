@@ -43,9 +43,16 @@
                                    id="nombre" 
                                    name="nombre" 
                                    value="{{ old('nombre') }}"
+                                   maxlength="35"
                                    placeholder="Ej: Hackathon 2025"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">Solo letras, números y guiones (-)</p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="nombreCount">0</span>/35
+                                </p>
+                            </div>
                             @error('nombre')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -92,10 +99,17 @@
                             </label>
                             <textarea id="descripcion" 
                                       name="descripcion" 
-                                      rows="4" 
+                                      rows="4"
+                                      maxlength="150" 
                                       required
                                       placeholder="Describe el evento, objetivos y qué pueden esperar los participantes..."
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">Descripción del evento</p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="descripcionCount">0</span>/150
+                                </p>
+                            </div>
                             @error('descripcion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -206,8 +220,10 @@
                                    name="max_participantes" 
                                    value="{{ old('max_participantes', 100) }}"
                                    min="10"
+                                   max="1000"
                                    placeholder="100"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">Mínimo 10, máximo 1000</p>
                         </div>
 
                         <!-- Tamaño Mínimo de Equipo -->
@@ -218,11 +234,13 @@
                             <input type="number" 
                                    id="min_miembros_equipo" 
                                    name="min_miembros_equipo" 
-                                   value="{{ old('min_miembros_equipo', 3) }}"
-                                   min="1" 
-                                   max="10"
+                                   value="{{ old('min_miembros_equipo', 5) }}"
+                                   min="5" 
+                                   max="5"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                   readonly
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-500">Obligatorio: 5 miembros</p>
                         </div>
 
                         <!-- Tamaño Máximo de Equipo -->
@@ -233,11 +251,13 @@
                             <input type="number" 
                                    id="max_miembros_equipo" 
                                    name="max_miembros_equipo" 
-                                   value="{{ old('max_miembros_equipo', 5) }}"
-                                   min="1" 
-                                   max="10"
+                                   value="{{ old('max_miembros_equipo', 6) }}"
+                                   min="6" 
+                                   max="6"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                   readonly
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-500">Obligatorio: 6 miembros</p>
                         </div>
                     </div>
                 </div>
@@ -264,18 +284,31 @@
                     
                     <div id="roles-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @php
-                            $rolesBase = ['Programador', 'Diseñador', 'Analista de Negocios', 'Analista de Datos'];
-                            $rolesSeleccionados = old('roles', []);
+                            $rolesBase = ['Programador', 'Diseñador', 'Analista de Negocios', 'Analista de Datos', 'Asesor'];
+                            $rolesSeleccionados = old('roles', ['Asesor']);
                         @endphp
                         
                         @foreach($rolesBase as $rol)
-                            <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer transition">
+                            @php
+                                $esAsesor = $rol === 'Asesor';
+                            @endphp
+                            <label class="flex items-center gap-3 p-4 border-2 {{ $esAsesor ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200' }} rounded-lg hover:border-indigo-300 cursor-pointer transition {{ $esAsesor ? 'ring-2 ring-indigo-200' : '' }}">
                                 <input type="checkbox" 
                                        name="roles[]" 
                                        value="{{ $rol }}" 
                                        {{ in_array($rol, $rolesSeleccionados) ? 'checked' : '' }}
-                                       class="w-5 h-5 text-indigo-600 rounded">
-                                <span class="font-medium">{{ $rol }}</span>
+                                       {{ $esAsesor ? 'disabled' : '' }}
+                                       class="w-5 h-5 text-indigo-600 rounded {{ $esAsesor ? 'cursor-not-allowed' : '' }}">
+                                <!-- Hidden input para Asesor siempre seleccionado -->
+                                @if($esAsesor)
+                                    <input type="hidden" name="roles[]" value="Asesor">
+                                @endif
+                                <span class="font-medium {{ $esAsesor ? 'text-indigo-700' : '' }}">
+                                    {{ $rol }}
+                                    @if($esAsesor)
+                                        <span class="ml-1 px-2 py-0.5 bg-indigo-200 text-indigo-800 rounded text-xs">Obligatorio</span>
+                                    @endif
+                                </span>
                             </label>
                         @endforeach
                     </div>
@@ -319,9 +352,16 @@
                                    id="ubicacion" 
                                    name="ubicacion" 
                                    value="{{ old('ubicacion') }}"
+                                   maxlength="50"
                                    placeholder="Ej: Instituto Tecnológico de Oaxaca, Centro de Cómputo"
                                    required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('ubicacion') border-red-500 @enderror">
+                            <div class="flex items-center justify-between mt-1">
+                                <p class="text-xs text-gray-500">Letras, números, comas y puntos</p>
+                                <p class="text-xs text-gray-500">
+                                    <span id="ubicacionCount">0</span>/50
+                                </p>
+                            </div>
                             @error('ubicacion')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -370,95 +410,32 @@
         </div>
     </div>
 
+    <!-- Script de validaciones -->
+    <script src="{{ asset('js/eventos-validaciones.js') }}"></script>
+    
+    <!-- Inicializar contadores con valores existentes -->
     <script>
-        let premioIndex = 0;
-        let contadorLugar = 1;
-
-        function agregarPremio() {
-            const container = document.getElementById('premios-container');
-            const div = document.createElement('div');
-            div.className = 'flex items-center gap-4';
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar contador de nombre
+            const nombre = document.getElementById('nombre');
+            const nombreCount = document.getElementById('nombreCount');
+            if (nombre && nombreCount) {
+                nombreCount.textContent = nombre.value.length;
+            }
             
-            // Determinar el texto del lugar según el número
-            let textoLugar = '';
-            if (contadorLugar === 1) textoLugar = '1er lugar';
-            else if (contadorLugar === 2) textoLugar = '2do lugar';
-            else if (contadorLugar === 3) textoLugar = '3er lugar';
-            else textoLugar = `${contadorLugar}to lugar`;
+            // Inicializar contador de descripción
+            const descripcion = document.getElementById('descripcion');
+            const descripcionCount = document.getElementById('descripcionCount');
+            if (descripcion && descripcionCount) {
+                descripcionCount.textContent = descripcion.value.length;
+            }
             
-            div.innerHTML = `
-                <input type="text" 
-                       name="premios[${premioIndex}][lugar]" 
-                       value="${textoLugar}"
-                       class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
-                <input type="text" 
-                       name="premios[${premioIndex}][descripcion]" 
-                       placeholder="Ej: $10,000 + Trofeo"
-                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
-                <button type="button" onclick="eliminarPremio(this)" class="text-red-500 hover:text-red-700">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            `;
-            container.appendChild(div);
-            premioIndex++;
-            contadorLugar++;
-        }
-
-        function eliminarPremio(button) {
-            button.parentElement.remove();
-            contadorLugar--;
-            // Recalcular números de lugares después de eliminar
-            recalcularLugares();
-        }
-
-        function recalcularLugares() {
-            const container = document.getElementById('premios-container');
-            const premios = container.querySelectorAll('div.flex.items-center');
-            contadorLugar = 1;
-            
-            premios.forEach((premio) => {
-                const inputLugar = premio.querySelector('input[name*="[lugar]"]');
-                if (inputLugar) {
-                    let textoLugar = '';
-                    if (contadorLugar === 1) textoLugar = '1er lugar';
-                    else if (contadorLugar === 2) textoLugar = '2do lugar';
-                    else if (contadorLugar === 3) textoLugar = '3er lugar';
-                    else textoLugar = `${contadorLugar}to lugar`;
-                    
-                    inputLugar.value = textoLugar;
-                    contadorLugar++;
-                }
-            });
-        }
-
-        function agregarRolPersonalizado() {
-            const nombreRol = prompt('Ingrese el nombre del rol:');
-            if (!nombreRol || nombreRol.trim() === '') return;
-            
-            const container = document.getElementById('roles-container');
-            const div = document.createElement('div');
-            div.className = 'flex items-center gap-2 p-4 border-2 border-gray-200 rounded-lg';
-            div.innerHTML = `
-                <input type="checkbox" 
-                       name="roles[]" 
-                       value="${nombreRol.trim()}" 
-                       checked
-                       class="w-5 h-5 text-indigo-600 rounded">
-                <input type="text" 
-                       value="${nombreRol.trim()}" 
-                       readonly
-                       class="flex-1 font-medium bg-transparent border-0 p-0 focus:ring-0">
-                <button type="button" 
-                        onclick="this.parentElement.remove()" 
-                        class="text-red-500 hover:text-red-700">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            `;
-            container.appendChild(div);
-        }
+            // Inicializar contador de ubicación
+            const ubicacion = document.getElementById('ubicacion');
+            const ubicacionCount = document.getElementById('ubicacionCount');
+            if (ubicacion && ubicacionCount) {
+                ubicacionCount.textContent = ubicacion.value.length;
+            }
+        });
     </script>
 </x-app-layout>

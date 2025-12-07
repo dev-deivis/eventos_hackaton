@@ -124,8 +124,17 @@
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Biografía</label>
                                     <textarea name="biografia" 
+                                              id="biografia"
                                               rows="4"
-                                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">{{ old('biografia', auth()->user()->participante->biografia) }}</textarea>
+                                              maxlength="300"
+                                              placeholder="Cuéntanos sobre ti, tus intereses y experiencia..."
+                                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none">{{ old('biografia', auth()->user()->participante->biografia) }}</textarea>
+                                    <div class="flex items-center justify-between mt-1">
+                                        <p class="text-xs text-gray-500">Cuéntanos sobre ti y tus intereses</p>
+                                        <p class="text-xs text-gray-500">
+                                            <span id="biografiaCount">{{ strlen(old('biografia', auth()->user()->participante->biografia ?? '')) }}</span>/300
+                                        </p>
+                                    </div>
                                     @error('biografia')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -220,17 +229,28 @@
                 <div class="bg-white rounded-xl shadow-sm p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Cambiar Contraseña</h3>
                     
-                    <form method="POST" action="{{ route('profile.password') }}">
+                    <form method="POST" action="{{ route('profile.password') }}" id="formPassword">
                         @csrf
                         @method('PUT')
 
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña Actual</label>
-                                <input type="password" 
-                                       name="current_password" 
-                                       required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <div class="relative">
+                                    <input type="password" 
+                                           id="current_password"
+                                           name="current_password" 
+                                           required
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <button type="button" 
+                                            onclick="togglePassword('current_password')"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                </div>
                                 @error('current_password')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -238,10 +258,60 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña</label>
-                                <input type="password" 
-                                       name="password" 
-                                       required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <div class="relative">
+                                    <input type="password" 
+                                           id="password"
+                                           name="password" 
+                                           required
+                                           minlength="8"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <button type="button" 
+                                            onclick="togglePassword('password')"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Requisitos de contraseña -->
+                                <div class="mt-2 space-y-1">
+                                    <p class="text-xs font-medium text-gray-700">La contraseña debe contener:</p>
+                                    <div class="space-y-1 text-xs">
+                                        <div id="req-length" class="flex items-center gap-2 text-gray-500">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>Mínimo 8 caracteres</span>
+                                        </div>
+                                        <div id="req-upper" class="flex items-center gap-2 text-gray-500">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>Una letra mayúscula</span>
+                                        </div>
+                                        <div id="req-lower" class="flex items-center gap-2 text-gray-500">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>Una letra minúscula</span>
+                                        </div>
+                                        <div id="req-number" class="flex items-center gap-2 text-gray-500">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>Un número</span>
+                                        </div>
+                                        <div id="req-special" class="flex items-center gap-2 text-gray-500">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span>Un carácter especial (!@#$%^&*)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -249,16 +319,29 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar Nueva Contraseña</label>
-                                <input type="password" 
-                                       name="password_confirmation" 
-                                       required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <div class="relative">
+                                    <input type="password" 
+                                           id="password_confirmation"
+                                           name="password_confirmation" 
+                                           required
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <button type="button" 
+                                            onclick="togglePassword('password_confirmation')"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p id="match-message" class="mt-1 text-xs hidden"></p>
                             </div>
                         </div>
 
                         <div class="mt-6">
                             <button type="submit" 
-                                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                    id="btnSubmitPassword"
+                                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
                                 Actualizar Contraseña
                             </button>
                         </div>
@@ -427,6 +510,162 @@
         document.getElementById('modalEditar').addEventListener('click', function(e) {
             if (e.target === this) toggleModalEditar();
         });
+
+        // ============================================
+        // VALIDACIÓN DE BIOGRAFÍA
+        // ============================================
+        const biografia = document.getElementById('biografia');
+        const biografiaCount = document.getElementById('biografiaCount');
+        
+        if (biografia && biografiaCount) {
+            biografia.addEventListener('input', function() {
+                const length = this.value.length;
+                biografiaCount.textContent = length;
+                
+                // Código de colores
+                if (length >= 280) {
+                    biografiaCount.classList.remove('text-gray-500', 'text-yellow-600');
+                    biografiaCount.classList.add('text-red-600', 'font-bold');
+                } else if (length >= 250) {
+                    biografiaCount.classList.remove('text-gray-500', 'text-red-600');
+                    biografiaCount.classList.add('text-yellow-600', 'font-semibold');
+                } else {
+                    biografiaCount.classList.remove('text-yellow-600', 'text-red-600', 'font-bold', 'font-semibold');
+                    biografiaCount.classList.add('text-gray-500');
+                }
+                
+                // Limitar a 300 caracteres
+                if (length > 300) {
+                    this.value = this.value.substring(0, 300);
+                    biografiaCount.textContent = 300;
+                }
+            });
+        }
+
+        // ============================================
+        // VALIDACIÓN DE CONTRASEÑA
+        // ============================================
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmation = document.getElementById('password_confirmation');
+        const btnSubmit = document.getElementById('btnSubmitPassword');
+        const matchMessage = document.getElementById('match-message');
+        
+        // Requisitos
+        const requirements = {
+            length: false,
+            upper: false,
+            lower: false,
+            number: false,
+            special: false
+        };
+        
+        // Función para alternar visibilidad de contraseña
+        window.togglePassword = function(inputId) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        };
+        
+        // Validar requisitos de contraseña
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                
+                // Validar longitud
+                requirements.length = password.length >= 8;
+                updateRequirement('req-length', requirements.length);
+                
+                // Validar mayúscula
+                requirements.upper = /[A-Z]/.test(password);
+                updateRequirement('req-upper', requirements.upper);
+                
+                // Validar minúscula
+                requirements.lower = /[a-z]/.test(password);
+                updateRequirement('req-lower', requirements.lower);
+                
+                // Validar número
+                requirements.number = /[0-9]/.test(password);
+                updateRequirement('req-number', requirements.number);
+                
+                // Validar carácter especial
+                requirements.special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                updateRequirement('req-special', requirements.special);
+                
+                // Validar coincidencia
+                checkPasswordMatch();
+                
+                // Habilitar/deshabilitar botón
+                updateSubmitButton();
+            });
+        }
+        
+        // Validar que las contraseñas coincidan
+        if (passwordConfirmation) {
+            passwordConfirmation.addEventListener('input', checkPasswordMatch);
+        }
+        
+        function updateRequirement(id, isValid) {
+            const element = document.getElementById(id);
+            if (isValid) {
+                element.classList.remove('text-gray-500');
+                element.classList.add('text-green-600');
+            } else {
+                element.classList.remove('text-green-600');
+                element.classList.add('text-gray-500');
+            }
+        }
+        
+        function checkPasswordMatch() {
+            if (!passwordInput || !passwordConfirmation || !matchMessage) return;
+            
+            const password = passwordInput.value;
+            const confirmation = passwordConfirmation.value;
+            
+            if (confirmation.length === 0) {
+                matchMessage.classList.add('hidden');
+                return;
+            }
+            
+            matchMessage.classList.remove('hidden');
+            
+            if (password === confirmation) {
+                matchMessage.textContent = '✓ Las contraseñas coinciden';
+                matchMessage.classList.remove('text-red-600');
+                matchMessage.classList.add('text-green-600');
+            } else {
+                matchMessage.textContent = '✗ Las contraseñas no coinciden';
+                matchMessage.classList.remove('text-green-600');
+                matchMessage.classList.add('text-red-600');
+            }
+            
+            updateSubmitButton();
+        }
+        
+        function updateSubmitButton() {
+            if (!btnSubmit || !passwordInput || !passwordConfirmation) return;
+            
+            const allRequirementsMet = Object.values(requirements).every(req => req === true);
+            const passwordsMatch = passwordInput.value === passwordConfirmation.value;
+            const confirmationFilled = passwordConfirmation.value.length > 0;
+            
+            if (allRequirementsMet && passwordsMatch && confirmationFilled) {
+                btnSubmit.disabled = false;
+                btnSubmit.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                btnSubmit.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+            } else {
+                btnSubmit.disabled = true;
+                btnSubmit.classList.add('bg-gray-400', 'cursor-not-allowed');
+                btnSubmit.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            }
+        }
+        
+        // Inicializar estado del botón
+        if (btnSubmit) {
+            updateSubmitButton();
+        }
     </script>
     @endpush
 </x-app-layout>

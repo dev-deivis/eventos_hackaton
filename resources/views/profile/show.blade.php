@@ -220,7 +220,10 @@
                 <!-- Columna Derecha (1/3) -->
                 <div class="space-y-6">
                     
-                    <!-- Estadísticas -->
+                    <!-- ========================================== -->
+                    <!-- ESTADÍSTICAS PARA PARTICIPANTE -->
+                    <!-- ========================================== -->
+                    @if(auth()->user()->isParticipante() && $stats)
                     <div class="bg-white rounded-xl shadow-sm p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -229,101 +232,232 @@
                             Estadísticas
                         </h3>
 
-                        @php
-                            $eventos = auth()->user()->equiposActivos->pluck('evento_id')->unique()->count();
-                            $equipos = auth()->user()->equiposActivos->count();
-                            $proyectos = auth()->user()->proyectosCompletados ?? 0;
-                            $constancias = auth()->user()->constancias->count() ?? 0;
-                            $calificacionPromedio = 4.8;
-                            $horasContribuidas = 160;
-                        @endphp
-
                         <div class="grid grid-cols-2 gap-4">
                             <div class="text-center p-4 bg-indigo-50 rounded-lg">
-                                <div class="text-3xl font-bold text-indigo-600">{{ $eventos }}</div>
+                                <div class="text-3xl font-bold text-indigo-600">{{ $stats['eventos_participados'] }}</div>
                                 <div class="text-sm text-gray-600 mt-1">Eventos</div>
                             </div>
 
                             <div class="text-center p-4 bg-purple-50 rounded-lg">
-                                <div class="text-3xl font-bold text-purple-600">{{ $equipos }}</div>
+                                <div class="text-3xl font-bold text-purple-600">{{ $stats['total_equipos'] }}</div>
                                 <div class="text-sm text-gray-600 mt-1">Equipos</div>
                             </div>
 
                             <div class="text-center p-4 bg-pink-50 rounded-lg">
-                                <div class="text-3xl font-bold text-pink-600">{{ $proyectos }}</div>
-                                <div class="text-sm text-gray-600 mt-1">Proyectos</div>
+                                <div class="text-3xl font-bold text-pink-600">{{ $stats['veces_lider'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Veces Líder</div>
                             </div>
 
                             <div class="text-center p-4 bg-green-50 rounded-lg">
-                                <div class="text-3xl font-bold text-green-600">{{ $constancias }}</div>
+                                <div class="text-3xl font-bold text-green-600">{{ $stats['constancias'] }}</div>
                                 <div class="text-sm text-gray-600 mt-1">Constancias</div>
                             </div>
                         </div>
 
                         <div class="mt-4 space-y-3">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Calificación promedio</span>
+                                <span class="text-sm text-gray-600">Proyectos Presentados</span>
+                                <span class="font-bold text-gray-900">{{ $stats['proyectos_presentados'] }}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Total de Premios</span>
                                 <span class="font-bold text-yellow-600 flex items-center gap-1">
                                     <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                     </svg>
-                                    {{ $calificacionPromedio }}
+                                    {{ $stats['total_premios'] }}
                                 </span>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Horas Contribuidas</span>
-                                <span class="font-bold text-gray-900">{{ $horasContribuidas }}h</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Logros -->
+                    <!-- Logros de Participante -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
-                            Logros
+                            Logros y Premios
                         </h3>
 
                         <div class="space-y-3">
-                            @php
-                                $logros = [
-                                    ['titulo' => 'Primer Hackathon Ganado', 'descripcion' => 'Ganaste tu primer hackathon', 'fecha' => 'Nov 2025', 'icon' => 'trophy', 'color' => 'indigo'],
-                                    ['titulo' => 'Colaborador Estrella', 'descripcion' => 'Participaste en 10+ eventos', 'fecha' => 'Dic 2023', 'icon' => 'star', 'color' => 'purple'],
-                                    ['titulo' => 'Líder de Equipo', 'descripcion' => 'Lideraste un equipo exitosamente', 'fecha' => 'Abr 2023', 'icon' => 'users', 'color' => 'pink'],
-                                ];
-                            @endphp
-
-                            @foreach($logros as $logro)
-                                <div class="p-3 bg-{{ $logro['color'] }}-50 rounded-lg">
+                            @if($stats['premios']['primero'] > 0)
+                                <div class="p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
                                     <div class="flex items-start gap-3">
-                                        <div class="w-10 h-10 bg-{{ $logro['color'] }}-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                            @if($logro['icon'] == 'trophy')
-                                                <svg class="w-5 h-5 text-{{ $logro['color'] }}-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/>
-                                                </svg>
-                                            @elseif($logro['icon'] == 'star')
-                                                <svg class="w-5 h-5 text-{{ $logro['color'] }}-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                </svg>
-                                            @else
-                                                <svg class="w-5 h-5 text-{{ $logro['color'] }}-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                                                </svg>
-                                            @endif
+                                        <div class="flex-shrink-0 w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xl">
+                                            🥇
                                         </div>
                                         <div class="flex-1">
-                                            <p class="font-semibold text-sm text-gray-900">{{ $logro['titulo'] }}</p>
-                                            <p class="text-xs text-gray-600 mt-0.5">{{ $logro['descripcion'] }}</p>
-                                            <p class="text-xs text-gray-500 mt-1">{{ $logro['fecha'] }}</p>
+                                            <h4 class="font-bold text-gray-900">{{ $stats['premios']['primero'] }}x Primer Lugar</h4>
+                                            <p class="text-xs text-gray-600 mt-1">Ganaste el primer lugar en {{ $stats['premios']['primero'] }} evento(s)</p>
                                         </div>
                                     </div>
+                                </div>
+                            @endif
+
+                            @if($stats['premios']['segundo'] > 0)
+                                <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-gray-400">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white text-xl">
+                                            🥈
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-gray-900">{{ $stats['premios']['segundo'] }}x Segundo Lugar</h4>
+                                            <p class="text-xs text-gray-600 mt-1">Obtuviste el segundo lugar en {{ $stats['premios']['segundo'] }} evento(s)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if($stats['premios']['tercero'] > 0)
+                                <div class="p-3 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white text-xl">
+                                            🥉
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-gray-900">{{ $stats['premios']['tercero'] }}x Tercer Lugar</h4>
+                                            <p class="text-xs text-gray-600 mt-1">Lograste el tercer lugar en {{ $stats['premios']['tercero'] }} evento(s)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if($stats['veces_lider'] > 0)
+                                <div class="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-shrink-0 w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white">
+                                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-gray-900">Líder de Equipo</h4>
+                                            <p class="text-xs text-gray-600 mt-1">Has liderado {{ $stats['veces_lider'] }} equipo(s)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if($stats['total_premios'] == 0 && $stats['veces_lider'] == 0)
+                                <div class="text-center py-8 text-gray-400">
+                                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                    </svg>
+                                    <p class="text-sm">Sigue participando para ganar logros</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- ========================================== -->
+                    <!-- ESTADÍSTICAS PARA JUEZ -->
+                    <!-- ========================================== -->
+                    @if(auth()->user()->isJuez() && $juezStats)
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Estadísticas como Juez
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <div class="text-3xl font-bold text-blue-600">{{ $juezStats['eventos_como_juez'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Eventos</div>
+                            </div>
+
+                            <div class="text-center p-4 bg-indigo-50 rounded-lg">
+                                <div class="text-3xl font-bold text-indigo-600">{{ $juezStats['equipos_evaluados'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Equipos</div>
+                            </div>
+
+                            <div class="text-center p-4 bg-purple-50 rounded-lg col-span-2">
+                                <div class="text-3xl font-bold text-purple-600">{{ $juezStats['total_evaluaciones'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Total de Evaluaciones Realizadas</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Promedio de Calificaciones</span>
+                                <span class="font-bold text-yellow-600 flex items-center gap-1">
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    {{ $juezStats['promedio_calificaciones'] }}/10
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evaluaciones por Evento -->
+                    @if($juezStats['evaluaciones_por_evento']->count() > 0)
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Evaluaciones por Evento</h3>
+                        <div class="space-y-3">
+                            @foreach($juezStats['evaluaciones_por_evento']->take(5) as $evento => $cantidad)
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-sm font-medium text-gray-700 flex-1 truncate">{{ $evento }}</span>
+                                    <span class="ml-2 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold">{{ $cantidad }}</span>
                                 </div>
                             @endforeach
                         </div>
                     </div>
+                    @endif
+                    @endif
+
+                    <!-- ========================================== -->
+                    <!-- ESTADÍSTICAS PARA ADMINISTRADOR -->
+                    <!-- ========================================== -->
+                    @if(auth()->user()->isAdmin() && $adminStats)
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Panel de Administrador
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-indigo-50 rounded-lg">
+                                <div class="text-3xl font-bold text-indigo-600">{{ $adminStats['eventos_creados'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Eventos Creados</div>
+                            </div>
+
+                            <div class="text-center p-4 bg-green-50 rounded-lg">
+                                <div class="text-3xl font-bold text-green-600">{{ $adminStats['eventos_activos'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Eventos Activos</div>
+                            </div>
+
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <div class="text-3xl font-bold text-blue-600">{{ $adminStats['total_usuarios'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Usuarios</div>
+                            </div>
+
+                            <div class="text-center p-4 bg-purple-50 rounded-lg">
+                                <div class="text-3xl font-bold text-purple-600">{{ $adminStats['total_equipos'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Equipos</div>
+                            </div>
+
+                            <div class="text-center p-4 bg-pink-50 rounded-lg col-span-2">
+                                <div class="text-3xl font-bold text-pink-600">{{ $adminStats['total_proyectos'] }}</div>
+                                <div class="text-sm text-gray-600 mt-1">Proyectos Presentados</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <a href="{{ route('admin.dashboard') }}" 
+                               class="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                                Ir al Panel de Administrador
+                            </a>
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- Configuración -->
                     <div class="bg-white rounded-xl shadow-sm p-6">
