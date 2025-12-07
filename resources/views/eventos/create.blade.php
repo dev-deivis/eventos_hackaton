@@ -30,13 +30,13 @@
                         <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                         </svg>
-                        <h2 class="text-xl font-bold text-gray-900">Información Básica</h2>
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Información Básica</h2>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Nombre del Evento -->
                         <div class="md:col-span-2">
-                            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Nombre del Evento
                             </label>
                             <input type="text" 
@@ -46,27 +46,27 @@
                                    maxlength="35"
                                    placeholder="Ej: Hackathon 2025"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
                             <div class="flex items-center justify-between mt-1">
-                                <p class="text-xs text-gray-500">Solo letras, números y guiones (-)</p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Solo letras, números y guiones (-)</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <span id="nombreCount">0</span>/35
                                 </p>
                             </div>
                             @error('nombre')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Tipo de Evento -->
                         <div>
-                            <label for="tipo" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Tipo de Evento
                             </label>
                             <select id="tipo" 
                                     name="tipo" 
                                     required
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('tipo') border-red-500 @enderror">
+                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('tipo') border-red-500 @enderror">
                                 <option value="">Selecciona un tipo</option>
                                 <option value="hackathon" {{ old('tipo') == 'hackathon' ? 'selected' : '' }}>Hackathon</option>
                                 <option value="datathon" {{ old('tipo') == 'datathon' ? 'selected' : '' }}>Datathon</option>
@@ -74,13 +74,13 @@
                                 <option value="workshop" {{ old('tipo') == 'workshop' ? 'selected' : '' }}>Workshop</option>
                             </select>
                             @error('tipo')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Duración -->
                         <div>
-                            <label for="duracion_horas" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="duracion_horas" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Duración (horas)
                             </label>
                             <input type="number" 
@@ -89,12 +89,12 @@
                                    value="{{ old('duracion_horas', 48) }}"
                                    min="1"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         </div>
 
                         <!-- Descripción -->
                         <div class="md:col-span-2">
-                            <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Descripción
                             </label>
                             <textarea id="descripcion" 
@@ -103,34 +103,34 @@
                                       maxlength="150" 
                                       required
                                       placeholder="Describe el evento, objetivos y qué pueden esperar los participantes..."
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
                             <div class="flex items-center justify-between mt-1">
-                                <p class="text-xs text-gray-500">Descripción del evento</p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Descripción del evento</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <span id="descripcionCount">0</span>/150
                                 </p>
                             </div>
                             @error('descripcion')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
                 </div>
 
                 <!-- Fechas y Cronograma -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center gap-2 mb-6">
-                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                         </svg>
-                        <h2 class="text-xl font-bold text-gray-900">Fechas y Cronograma</h2>
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Fechas y Cronograma</h2>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Límite de Registro -->
                         <div>
-                            <label for="fecha_limite_registro" class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                                <span class="flex items-center justify-center w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold">1</span>
+                            <label for="fecha_limite_registro" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                <span class="flex items-center justify-center w-6 h-6 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 rounded-full text-xs font-bold">1</span>
                                 Límite de Registro
                             </label>
                             <input type="datetime-local" 
@@ -138,14 +138,14 @@
                                    name="fecha_limite_registro" 
                                    value="{{ old('fecha_limite_registro') }}"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_limite_registro') border-red-500 @enderror">
-                            <p class="mt-1 text-xs text-gray-500">Fecha límite para que los usuarios se registren</p>
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_limite_registro') border-red-500 @enderror">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Fecha límite para que los usuarios se registren</p>
                         </div>
 
                         <!-- Fecha de Inicio -->
                         <div>
-                            <label for="fecha_inicio" class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                                <span class="flex items-center justify-center w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold">2</span>
+                            <label for="fecha_inicio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                <span class="flex items-center justify-center w-6 h-6 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 rounded-full text-xs font-bold">2</span>
                                 Fecha de Inicio del Evento
                             </label>
                             <input type="datetime-local" 
@@ -153,7 +153,7 @@
                                    name="fecha_inicio" 
                                    value="{{ old('fecha_inicio') }}"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_inicio') border-red-500 @enderror">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('fecha_inicio') border-red-500 @enderror">
                         </div>
 
                         <!-- Fecha de Fin -->
