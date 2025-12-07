@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['nodejs-18_x', 'php82', 'php82Packages.composer', 'php82Extensions.intl', 'php82Extensions.opcache', 'postgresql']
+nixPkgs = ['nodejs-18_x', 'php83', 'php83Packages.composer', 'php83Extensions.intl', 'php83Extensions.opcache', 'postgresql']
 
 [phases.install]
 cmds = [
