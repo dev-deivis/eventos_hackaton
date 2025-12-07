@@ -38,29 +38,20 @@
             z-index: 0;
         }
 
-        /* Estrella/flor decorativa dorada */
+        /* Estrella/flor decorativa usando SVG en lugar de clip-path */
         .star-decoration {
             position: absolute;
             top: 120px;
             right: 30px;
             width: 380px;
             height: 380px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.45) 0%, rgba(217, 119, 6, 0.40) 100%);
-            clip-path: polygon(
-                50% 0%, 
-                58% 20%, 61% 35%, 
-                75% 38%, 98% 35%, 
-                80% 50%, 68% 57%, 
-                75% 72%, 79% 91%, 
-                60% 80%, 50% 70%, 
-                40% 80%, 21% 91%, 
-                25% 72%, 32% 57%, 
-                20% 50%, 2% 35%, 
-                25% 38%, 39% 35%, 
-                42% 20%
-            );
             z-index: 1;
             opacity: 0.85;
+        }
+
+        .star-decoration svg {
+            width: 100%;
+            height: 100%;
         }
 
         .container {
@@ -216,7 +207,20 @@
 <body>
     <!-- Decoraciones de fondo -->
     <div class="gradient-decoration"></div>
-    <div class="star-decoration"></div>
+    <div class="star-decoration">
+        <!-- Estrella SVG dorada compatible con DomPDF -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="starGradientGold" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:rgb(251, 191, 36);stop-opacity:0.5" />
+                    <stop offset="100%" style="stop-color:rgb(217, 119, 6);stop-opacity:0.4" />
+                </radialGradient>
+            </defs>
+            <!-- Estrella de 10 puntas -->
+            <polygon points="100,10 110,70 150,50 120,90 170,110 120,120 130,170 100,135 70,170 80,120 30,110 80,90 50,50 90,70" 
+                     fill="url(#starGradientGold)" />
+        </svg>
+    </div>
 
     <div class="container">
         <!-- Header con logos -->
