@@ -131,13 +131,13 @@
             font-weight: bold;
         }
 
-        /* Signatures - Grid 2x2 */
+        /* Signatures - Grid 2x2 con más espacio */
         .signatures {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px 60px;
+            gap: 50px 80px;
             margin-top: 80px;
-            max-width: 700px;
+            max-width: 750px;
         }
 
         .signature {
