@@ -17,34 +17,70 @@ class ReportesController extends Controller
         return view('admin.reportes.index');
     }
 
+    public function test()
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Controlador funcionando correctamente',
+            'timestamp' => now()->toDateTimeString()
+        ]);
+    }
+
     public function getData(Request $request)
     {
         try {
             $eventoId = $request->input('evento_id');
+            
+            \Log::info('ReportesController::getData iniciado', ['evento_id' => $eventoId]);
+
+            // Probar cada método uno por uno
+            \Log::info('Obteniendo total participantes...');
+            $totalParticipantes = $this->getTotalParticipantes($eventoId);
+            
+            \Log::info('Obteniendo equipos formados...');
+            $equiposFormados = $this->getEquiposFormados($eventoId);
+            
+            \Log::info('Obteniendo promedio miembros...');
+            $promedioMiembros = $this->getPromedioMiembros($eventoId);
+            
+            \Log::info('Obteniendo tasa finalización...');
+            $tasaFinalizacion = $this->getTasaFinalizacion($eventoId);
+            
+            \Log::info('Obteniendo equipos terminaron...');
+            $equiposTerminaron = $this->getEquiposTerminaron($eventoId);
+            
+            \Log::info('Obteniendo puntuación promedio...');
+            $puntuacionPromedio = $this->getPuntuacionPromedio($eventoId);
+            
+            \Log::info('Obteniendo puntuación máxima...');
+            $puntuacionMaxima = $this->getPuntuacionMaxima($eventoId);
 
             // Estadísticas generales
             $stats = [
-                'total_participantes' => $this->getTotalParticipantes($eventoId),
-                'equipos_formados' => $this->getEquiposFormados($eventoId),
-                'promedio_miembros' => $this->getPromedioMiembros($eventoId),
-                'tasa_finalizacion' => $this->getTasaFinalizacion($eventoId),
-                'equipos_terminaron' => $this->getEquiposTerminaron($eventoId),
-                'puntuacion_promedio' => $this->getPuntuacionPromedio($eventoId),
-                'puntuacion_maxima' => $this->getPuntuacionMaxima($eventoId),
+                'total_participantes' => $totalParticipantes,
+                'equipos_formados' => $equiposFormados,
+                'promedio_miembros' => $promedioMiembros,
+                'tasa_finalizacion' => $tasaFinalizacion,
+                'equipos_terminaron' => $equiposTerminaron,
+                'puntuacion_promedio' => $puntuacionPromedio,
+                'puntuacion_maxima' => $puntuacionMaxima,
             ];
 
-            // Participación por carrera
+            \Log::info('Obteniendo participación por carrera...');
             $participacionCarrera = $this->getParticipacionPorCarrera($eventoId);
 
+            \Log::info('Obteniendo estadísticas de equipos...');
             // Estadísticas de equipos
             $estadisticasEquipos = [
                 'completos' => $this->getEquiposCompletos($eventoId),
                 'incompletos' => $this->getEquiposIncompletos($eventoId),
-                'tamano_promedio' => $this->getPromedioMiembros($eventoId),
+                'tamano_promedio' => $promedioMiembros,
             ];
 
-            // Distribución de roles
+            \Log::info('Obteniendo distribución de roles...');
             $distribucionRoles = $this->getDistribucionRoles($eventoId);
+
+            \Log::info('Datos obtenidos exitosamente');
 
             return response()->json([
                 'success' => true,
@@ -55,12 +91,18 @@ class ReportesController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            \Log::error('Error en ReportesController::getData: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+            \Log::error('Error en ReportesController::getData', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
             
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
                 'trace' => config('app.debug') ? $e->getTraceAsString() : null
             ], 500);
         }
@@ -69,8 +111,10 @@ class ReportesController extends Controller
     private function getTotalParticipantes($eventoId = null)
     {
         if ($eventoId) {
-            $evento = Evento::find($eventoId);
-            return $evento ? $evento->participantes()->count() : 0;
+            // Contar participantes únicos en equipos de este evento
+            return Participante::whereHas('equipos', function($query) use ($eventoId) {
+                $query->where('evento_id', $eventoId);
+            })->count();
         }
         return Participante::count();
     }
@@ -167,11 +211,10 @@ class ReportesController extends Controller
             ->orderBy('total', 'desc');
 
         if ($eventoId) {
-            $evento = Evento::find($eventoId);
-            if ($evento) {
-                $participantesIds = $evento->participantes()->pluck('participantes.id');
-                $query->whereIn('participantes.id', $participantesIds);
-            }
+            // Filtrar por participantes en equipos de este evento
+            $query->whereHas('equipos', function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            });
         }
 
         $resultados = $query->get();
@@ -220,11 +263,10 @@ class ReportesController extends Controller
             ->orderBy('total', 'desc');
 
         if ($eventoId) {
-            $evento = Evento::find($eventoId);
-            if ($evento) {
-                $participantesIds = $evento->participantes()->pluck('id');
-                $query->whereIn('id', $participantesIds);
-            }
+            // Filtrar por participantes en equipos de este evento
+            $query->whereHas('equipos', function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            });
         }
 
         $resultados = $query->get();
