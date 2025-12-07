@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Constancia de {{ ucfirst(str_replace('_', ' ', $constancia->tipo)) }}</title>
+    <title>Constancia de Participación</title>
     <style>
         @page {
             margin: 0;
@@ -26,26 +26,26 @@
             overflow: hidden;
         }
 
-        /* Gradiente decorativo dorado más grande y visible */
+        /* Gradiente decorativo más grande y más visible */
         .gradient-decoration {
             position: absolute;
             top: 80px;
             right: -100px;
             width: 450px;
             height: 450px;
-            background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.4) 0%, rgba(245, 158, 11, 0.35) 40%, rgba(217, 119, 6, 0.25) 70%, transparent 100%);
+            background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.4) 0%, rgba(99, 102, 241, 0.35) 40%, rgba(59, 130, 246, 0.25) 70%, transparent 100%);
             border-radius: 50%;
             z-index: 0;
         }
 
-        /* Estrella/flor decorativa dorada */
+        /* Estrella/flor decorativa más grande y prominente */
         .star-decoration {
             position: absolute;
             top: 120px;
             right: 30px;
             width: 380px;
             height: 380px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.45) 0%, rgba(217, 119, 6, 0.40) 100%);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.45) 0%, rgba(59, 130, 246, 0.40) 100%);
             clip-path: polygon(
                 50% 0%, 
                 58% 20%, 61% 35%, 
@@ -103,21 +103,7 @@
             width: 100%;
             height: 1px;
             background: #d1d5db;
-            margin: 8px 0 20px 0;
-        }
-
-        /* Award badge */
-        .award-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-            padding: 8px 25px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin: 8px 0 30px 0;
         }
 
         /* Content */
@@ -127,10 +113,10 @@
             margin-bottom: 15px;
         }
 
-        /* Nombre en líneas separadas - color dorado */
+        /* Nombre en líneas separadas como en la imagen */
         .recipient-name {
             font-size: 54px;
-            color: #d97706;
+            color: #5b21b6;
             font-weight: bold;
             line-height: 1.0;
             text-transform: uppercase;
@@ -156,8 +142,7 @@
         }
 
         .project-info {
-            color: #d97706;
-            font-weight: bold;
+            color: #5b21b6;
         }
 
         .role-name {
@@ -224,6 +209,7 @@
             <!-- Logo TecNM -->
             <div>
                 <svg class="logo-left" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Escudo TecNM simplificado -->
                     <circle cx="50" cy="50" r="45" fill="#1e3a8a"/>
                     <circle cx="50" cy="50" r="35" fill="#2563eb"/>
                     <text x="50" y="60" font-family="Arial" font-size="20" font-weight="bold" fill="white" text-anchor="middle">TEC</text>
@@ -242,6 +228,7 @@
             <!-- Logo SEP -->
             <div>
                 <svg class="logo-right" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Escudo SEP simplificado -->
                     <circle cx="30" cy="30" r="25" fill="#8b4513"/>
                     <circle cx="30" cy="30" r="20" fill="#a0522d"/>
                     <text x="70" y="25" font-family="Arial" font-size="18" font-weight="bold" fill="#8b4513">EDUCACIÓN</text>
@@ -252,47 +239,20 @@
 
         <div class="divider-line"></div>
 
-        <!-- Award badge -->
-        <div class="award-badge">
-            @if($constancia->tipo == 'primer_lugar')
-                🥇 PRIMER LUGAR
-            @elseif($constancia->tipo == 'segundo_lugar')
-                🥈 SEGUNDO LUGAR
-            @elseif($constancia->tipo == 'tercer_lugar')
-                🥉 TERCER LUGAR
-            @else
-                {{ strtoupper(str_replace('_', ' ', $constancia->tipo)) }}
-            @endif
-        </div>
-
         <!-- Content -->
-        <div class="certifica-text">Certificado de reconocimiento a</div>
+        <div class="certifica-text">Certificado de participación a</div>
 
         <!-- Nombre del participante en líneas separadas -->
         <div class="recipient-name">
-            @php
-                $nombres = explode(' ', $user->name);
-            @endphp
-            @foreach($nombres as $nombre)
-                <span class="name-line">{{ strtoupper($nombre) }}</span>
-            @endforeach
+            <span class="name-line">{{ strtoupper(explode(' ', $user->name)[0] ?? '') }}</span>
+            <span class="name-line">{{ strtoupper(explode(' ', $user->name)[1] ?? '') }}</span>
+            <span class="name-line">{{ strtoupper(explode(' ', $user->name)[2] ?? '') }}</span>
+            <span class="name-line">{{ strtoupper(explode(' ', $user->name)[3] ?? '') }}</span>
         </div>
 
         <!-- Texto del cuerpo -->
         <div class="body-text">
-            por haber obtenido el
-            <strong>
-                @if($constancia->tipo == 'primer_lugar')
-                    PRIMER LUGAR
-                @elseif($constancia->tipo == 'segundo_lugar')
-                    SEGUNDO LUGAR
-                @elseif($constancia->tipo == 'tercer_lugar')
-                    TERCER LUGAR
-                @else
-                    {{ strtoupper(str_replace('_', ' ', $constancia->tipo)) }}
-                @endif
-            </strong>
-            en el evento <span class="event-name">{{ $evento->nombre }}</span>
+            por haber participado en el evento <span class="event-name">{{ $evento->nombre }}</span>
             @if($equipo)
                 @if($proyecto && $proyecto->nombre)
                     con el equipo <span class="project-info">"{{ $equipo->nombre }}"</span> 
@@ -311,6 +271,7 @@
         <!-- Firmas 2x2 con simulación de firma manuscrita -->
         <div class="signatures">
             <div class="signature">
+                <!-- Firma manuscrita simulada -->
                 <div class="signature-image">
                     <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10,25 Q20,15 30,25 T50,25 Q60,20 70,25 T90,25 L110,20" 
