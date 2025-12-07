@@ -233,18 +233,17 @@ class ReportesController extends Controller
 
     private function getDistribucionRoles($eventoId = null)
     {
-        $query = DB::table('participantes')
-            ->select('rol', DB::raw('COUNT(*) as total'))
-            ->whereNotNull('rol');
+        $query = DB::table('equipo_participante')
+            ->join('perfiles', 'equipo_participante.perfil_id', '=', 'perfiles.id')
+            ->select('perfiles.nombre as rol', DB::raw('COUNT(*) as total'));
 
         if ($eventoId) {
-            $query->join('equipo_participante', 'participantes.id', '=', 'equipo_participante.participante_id')
-                ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+            $query->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
                 ->where('equipos.evento_id', $eventoId);
         }
 
         $resultados = $query
-            ->groupBy('rol')
+            ->groupBy('perfiles.nombre')
             ->orderByDesc('total')
             ->get();
 
