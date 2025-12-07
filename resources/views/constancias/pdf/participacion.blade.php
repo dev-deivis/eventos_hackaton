@@ -2,9 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constancia de Participación</title>
     <style>
+        @page {
+            margin: 0;
+            padding: 0;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,221 +16,248 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: white;
             color: #333;
+            position: relative;
+            width: 210mm;
+            height: 297mm;
+            padding: 40px 50px;
+        }
+
+        /* Gradiente decorativo en la esquina */
+        .gradient-decoration {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6366f1 100%);
+            border-radius: 0 0 0 100%;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .gradient-shape {
+            position: absolute;
+            top: 120px;
+            right: 60px;
+            width: 280px;
+            height: 280px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 1;
         }
 
         .container {
-            background: white;
-            padding: 60px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Header con logos */
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 20px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
         }
 
-        .logo {
+        .logo-left {
             width: 80px;
             height: 80px;
+            object-fit: contain;
         }
 
-        .header-text {
-            text-align: center;
+        .header-center {
             flex: 1;
+            text-align: left;
+            padding: 0 20px;
         }
 
         .institution {
-            font-size: 14px;
-            color: #666;
+            font-size: 11px;
+            color: #374151;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
         }
 
-        .title {
-            font-size: 36px;
-            color: #667eea;
-            margin: 30px 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .logo-right {
+            width: 180px;
+            height: auto;
+            object-fit: contain;
         }
 
-        .subtitle {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 30px;
+        /* Content */
+        .content {
+            flex: 1;
+            padding-top: 20px;
+        }
+
+        .certifica-text {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
         }
 
         .recipient-name {
-            font-size: 42px;
-            color: #333;
+            font-size: 52px;
+            color: #4f46e5;
             font-weight: bold;
-            margin: 30px 0;
+            margin: 20px 0;
+            line-height: 1.1;
             text-transform: uppercase;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-            display: inline-block;
+            letter-spacing: -0.5px;
+        }
+
+        .divider {
+            width: 350px;
+            height: 2px;
+            background: #e5e7eb;
+            margin: 15px 0;
         }
 
         .body-text {
-            font-size: 16px;
-            line-height: 2;
-            color: #555;
-            margin: 30px 0;
-            text-align: justify;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #4b5563;
+            margin: 25px 0;
+            max-width: 600px;
         }
 
         .event-name {
             font-weight: bold;
-            color: #667eea;
-            font-size: 20px;
+            color: #1f2937;
         }
 
-        .team-info {
-            background: #f8f9ff;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-            border-left: 4px solid #667eea;
+        .team-name {
+            font-style: italic;
+            color: #4f46e5;
         }
 
-        .team-info p {
-            margin: 8px 0;
-            font-size: 14px;
-            color: #555;
-        }
-
+        /* Signatures */
         .signatures {
             display: flex;
-            justify-content: space-around;
-            margin-top: 60px;
-            padding-top: 40px;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 60px;
+            gap: 15px;
         }
 
         .signature {
             text-align: center;
             flex: 1;
+            max-width: 200px;
         }
 
         .signature-line {
-            width: 200px;
-            height: 2px;
-            background: #333;
-            margin: 10px auto 5px;
+            width: 100%;
+            height: 1.5px;
+            background: #9ca3af;
+            margin-bottom: 5px;
         }
 
         .signature-name {
-            font-size: 12px;
+            font-size: 9px;
             font-weight: bold;
-            color: #333;
+            color: #1f2937;
+            line-height: 1.3;
+            margin-bottom: 2px;
         }
 
         .signature-title {
-            font-size: 10px;
-            color: #666;
-        }
-
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
-            font-size: 10px;
-            color: #999;
-        }
-
-        .verification-code {
-            font-size: 12px;
-            color: #667eea;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .date {
-            font-size: 14px;
-            color: #666;
-            margin-top: 20px;
+            font-size: 8px;
+            color: #6b7280;
+            line-height: 1.2;
         }
     </style>
 </head>
 <body>
+    <!-- Gradientes decorativos -->
+    <div class="gradient-decoration"></div>
+    <div class="gradient-shape"></div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-text">
-                <div class="institution">Instituto Tecnológico Nacional de México</div>
-                <div class="institution" style="font-size: 12px; margin-top: 5px;">Campus Oaxaca</div>
+            <!-- Logo TecNM (izquierda) -->
+            <div>
+                <svg class="logo-left" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#1e3a8a" stroke="#1e40af" stroke-width="2"/>
+                    <text x="50" y="60" font-family="Arial" font-size="35" font-weight="bold" fill="white" text-anchor="middle">TEC</text>
+                </svg>
+            </div>
+
+            <!-- Texto central -->
+            <div class="header-center">
+                <div class="institution">Tecnológico Nacional de México</div>
+                <div class="institution" style="margin-top: 3px;">Campus Oaxaca otorgan el presente</div>
+            </div>
+
+            <!-- Logo SEP (derecha) -->
+            <div>
+                <svg class="logo-right" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="25" cy="25" r="20" fill="#8b4513"/>
+                    <text x="55" y="20" font-family="Arial" font-size="18" font-weight="bold" fill="#8b4513">EDUCACIÓN</text>
+                    <text x="55" y="35" font-family="Arial" font-size="10" fill="#666">SECRETARÍA DE EDUCACIÓN PÚBLICA</text>
+                </svg>
             </div>
         </div>
 
-        <!-- Title -->
-        <div class="title">Constancia de Participación</div>
-        
-        <div class="subtitle">El Instituto Tecnológico Nacional de México otorga la presente</div>
+        <!-- Content -->
+        <div class="content">
+            <div class="certifica-text">Certificado de participación a</div>
 
-        <!-- Recipient Name -->
-        <div class="recipient-name">{{ strtoupper($user->name) }}</div>
+            <!-- Nombre del participante -->
+            <div class="recipient-name">
+                {{ strtoupper($user->name) }}
+            </div>
 
-        <!-- Body Text -->
-        <div class="body-text">
-            Por haber participado activamente en el evento
-            <span class="event-name">"{{ $evento->nombre }}"</span>
-            @if($participante && $participante->carrera)
-                como estudiante de la carrera de <strong>{{ $participante->carrera->nombre }}</strong>
-            @endif
-            realizado el {{ $evento->fecha_inicio->format('d') }} de {{ $evento->fecha_inicio->translatedFormat('F') }} de {{ $evento->fecha_inicio->format('Y') }}.
+            <div class="divider"></div>
+
+            <!-- Texto del cuerpo -->
+            <div class="body-text">
+                por haber participado en el evento <span class="event-name">{{ $evento->nombre }}</span>
+                @if($equipo)
+                    con el proyecto <span class="team-name">"{{ $proyecto->titulo ?? $equipo->nombre }}"</span>
+                @endif
+                @if($participante && $participante->carrera)
+                    con <strong>{{ $perfilEquipo->nombre ?? 'Participante' }}</strong>.
+                @endif
+            </div>
         </div>
 
-        <!-- Team Info (if exists) -->
-        @if($equipo)
-        <div class="team-info">
-            <p><strong>Equipo:</strong> {{ $equipo->nombre }}</p>
-            @if($proyecto)
-                <p><strong>Proyecto:</strong> {{ $proyecto->titulo }}</p>
-            @endif
-            @if($perfilEquipo)
-                <p><strong>Rol en el equipo:</strong> {{ $perfilEquipo->nombre }}</p>
-            @endif
-        </div>
-        @endif
-
-        <!-- Date -->
-        <div class="date">
-            Oaxaca de Juárez, Oaxaca a {{ $constancia->fecha_emision->format('d') }} de {{ $constancia->fecha_emision->translatedFormat('F') }} de {{ $constancia->fecha_emision->format('Y') }}
-        </div>
-
-        <!-- Signatures -->
+        <!-- Firmas -->
         <div class="signatures">
             <div class="signature">
                 <div class="signature-line"></div>
-                <div class="signature-name">Director del Plantel</div>
-                <div class="signature-title">Instituto Tecnológico de Oaxaca</div>
+                <div class="signature-name">M.C. Silvia Santiago Cruz</div>
+                <div class="signature-title">Directora</div>
             </div>
+
             <div class="signature">
                 <div class="signature-line"></div>
-                <div class="signature-name">Coordinador del Evento</div>
-                <div class="signature-title">{{ $evento->nombre }}</div>
+                <div class="signature-name">Dra. Alma Dolores Pérez Santiago</div>
+                <div class="signature-title">Subdirectora Académica</div>
             </div>
-        </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            <div class="verification-code">
-                Código de verificación: {{ $constancia->codigo_verificacion ?? $constancia->codigo_qr ?? 'N/A' }}
+            <div class="signature">
+                <div class="signature-line"></div>
+                <div class="signature-name">Dra. Marisol Altamirano Cabrera</div>
+                <div class="signature-title">Subdirectora de Planeación y<br>Vinculación</div>
             </div>
-            <p style="margin-top: 10px;">Este documento es válido y puede ser verificado en línea</p>
+
+            <div class="signature">
+                <div class="signature-line"></div>
+                <div class="signature-name">Ing. Huitziil Díaz Jaimes</div>
+                <div class="signature-title">Jefa del Depto. de Servicios<br>Escolares</div>
+            </div>
         </div>
     </div>
 </body>
