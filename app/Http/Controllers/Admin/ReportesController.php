@@ -10,9 +10,9 @@ use App\Models\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ReportesExport;
+// use Barryvdh\DomPDF\Facade\Pdf;
+// use Maatwebsite\Excel\Facades\Excel;
+// use App\Exports\ReportesExport;
 
 class ReportesController extends Controller
 {
@@ -262,6 +262,9 @@ class ReportesController extends Controller
         })->toArray();
     }
 
+    /* EXPORTACIONES DESHABILITADAS TEMPORALMENTE
+     * Requieren librerías incompatibles con PHP 8.2 en Railway
+     * 
     public function exportarPDF(Request $request)
     {
         $eventoId = $request->input('evento_id');
@@ -295,4 +298,5 @@ class ReportesController extends Controller
         
         return Excel::download(new ReportesExport($eventoId), $filename);
     }
+    */
 }
