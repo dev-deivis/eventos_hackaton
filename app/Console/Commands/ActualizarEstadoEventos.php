@@ -33,34 +33,34 @@ class ActualizarEstadoEventos extends Command
         $ahora = Carbon::now();
         $actualizados = 0;
 
-        // 1. Eventos que deberían estar EN CURSO
-        $eventosEnCurso = Evento::where('estado', 'proximo')
+        // 1. Eventos que deberían estar EN PROGRESO (en_progreso)
+        $eventosEnProgreso = Evento::whereIn('estado', ['draft', 'abierto'])
             ->where('fecha_inicio', '<=', $ahora)
             ->where('fecha_fin', '>=', $ahora)
             ->get();
 
-        foreach ($eventosEnCurso as $evento) {
-            $evento->update(['estado' => 'en_curso']);
-            $this->line("✅ '{$evento->nombre}' → EN CURSO");
+        foreach ($eventosEnProgreso as $evento) {
+            $evento->update(['estado' => 'en_progreso']);
+            $this->line("✅ '{$evento->nombre}' → EN PROGRESO");
             $actualizados++;
             
-            Log::info("Evento cambiado a EN CURSO", [
+            Log::info("Evento cambiado a EN PROGRESO", [
                 'evento_id' => $evento->id,
                 'nombre' => $evento->nombre
             ]);
         }
 
-        // 2. Eventos que deberían estar FINALIZADOS
-        $eventosFinalizados = Evento::whereIn('estado', ['proximo', 'en_curso'])
+        // 2. Eventos que deberían estar COMPLETADOS
+        $eventosCompletados = Evento::whereIn('estado', ['draft', 'abierto', 'en_progreso'])
             ->where('fecha_fin', '<', $ahora)
             ->get();
 
-        foreach ($eventosFinalizados as $evento) {
-            $evento->update(['estado' => 'finalizado']);
-            $this->line("✅ '{$evento->nombre}' → FINALIZADO");
+        foreach ($eventosCompletados as $evento) {
+            $evento->update(['estado' => 'completado']);
+            $this->line("✅ '{$evento->nombre}' → COMPLETADO");
             $actualizados++;
             
-            Log::info("Evento cambiado a FINALIZADO", [
+            Log::info("Evento cambiado a COMPLETADO", [
                 'evento_id' => $evento->id,
                 'nombre' => $evento->nombre
             ]);

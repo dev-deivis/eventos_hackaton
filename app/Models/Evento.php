@@ -218,24 +218,24 @@ class Evento extends Model
         $ahora = Carbon::now();
         $actualizados = 0;
 
-        // 1. Eventos que deberían estar EN CURSO
-        $eventosEnCurso = self::where('estado', 'proximo')
+        // 1. Eventos que deberían estar EN PROGRESO
+        $eventosEnProgreso = self::whereIn('estado', ['draft', 'abierto'])
             ->where('fecha_inicio', '<=', $ahora)
             ->where('fecha_fin', '>=', $ahora)
             ->get();
 
-        foreach ($eventosEnCurso as $evento) {
-            $evento->update(['estado' => 'en_curso']);
+        foreach ($eventosEnProgreso as $evento) {
+            $evento->update(['estado' => 'en_progreso']);
             $actualizados++;
         }
 
-        // 2. Eventos que deberían estar FINALIZADOS
-        $eventosFinalizados = self::whereIn('estado', ['proximo', 'en_curso'])
+        // 2. Eventos que deberían estar COMPLETADOS
+        $eventosCompletados = self::whereIn('estado', ['draft', 'abierto', 'en_progreso'])
             ->where('fecha_fin', '<', $ahora)
             ->get();
 
-        foreach ($eventosFinalizados as $evento) {
-            $evento->update(['estado' => 'finalizado']);
+        foreach ($eventosCompletados as $evento) {
+            $evento->update(['estado' => 'completado']);
             $actualizados++;
         }
 
