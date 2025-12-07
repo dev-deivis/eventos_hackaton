@@ -201,18 +201,18 @@
                 </div>
 
                 <!-- Participantes y Equipos -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center gap-2 mb-6">
-                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
                         </svg>
-                        <h2 class="text-xl font-bold text-gray-900">Participantes y Equipos</h2>
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Participantes y Equipos</h2>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Máximo de Participantes -->
                         <div>
-                            <label for="max_participantes" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="max_participantes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Máximo de Participantes
                             </label>
                             <input type="number" 
@@ -222,13 +222,13 @@
                                    min="10"
                                    max="1000"
                                    placeholder="100"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                            <p class="mt-1 text-xs text-gray-500">Mínimo 10, máximo 1000</p>
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Mínimo 10, máximo 1000</p>
                         </div>
 
                         <!-- Tamaño Mínimo de Equipo -->
                         <div>
-                            <label for="min_miembros_equipo" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="min_miembros_equipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Tamaño Mínimo de Equipo
                             </label>
                             <input type="number" 
@@ -239,13 +239,13 @@
                                    max="5"
                                    required
                                    readonly
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
-                            <p class="mt-1 text-xs text-gray-500">Obligatorio: 5 miembros</p>
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-gray-300 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Obligatorio: 5 miembros</p>
                         </div>
 
                         <!-- Tamaño Máximo de Equipo -->
                         <div>
-                            <label for="max_miembros_equipo" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="max_miembros_equipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Tamaño Máximo de Equipo
                             </label>
                             <input type="number" 
@@ -256,25 +256,25 @@
                                    max="6"
                                    required
                                    readonly
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
-                            <p class="mt-1 text-xs text-gray-500">Obligatorio: 6 miembros</p>
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-gray-300 cursor-not-allowed">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Obligatorio: 6 miembros</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Roles Requeridos -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-2">
-                            <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
                                 <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"/>
                             </svg>
-                            <h2 class="text-xl font-bold text-gray-900">Roles Requeridos</h2>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Roles Requeridos</h2>
                         </div>
                         <button type="button" 
                                 onclick="agregarRolPersonalizado()" 
-                                class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-200 transition flex items-center gap-2">
+                                class="px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800 transition flex items-center gap-2">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
                             </svg>
@@ -315,37 +315,37 @@
                 </div>
 
                 <!-- Ubicación -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center gap-2 mb-6">
-                        <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
                         </svg>
-                        <h2 class="text-xl font-bold text-gray-900">Ubicación</h2>
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Ubicación</h2>
                     </div>
 
                     <div class="space-y-4">
                         <!-- Tipo de Evento -->
                         <div class="flex gap-4">
-                            <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 cursor-pointer flex-1 transition">
+                            <label class="flex items-center gap-3 p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-indigo-300 dark:hover:border-indigo-500 cursor-pointer flex-1 transition bg-white dark:bg-gray-700">
                                 <input type="radio" name="es_virtual" value="1" class="w-5 h-5 text-indigo-600">
                                 <div>
-                                    <p class="font-medium">Evento Virtual</p>
-                                    <p class="text-sm text-gray-600">Se llevará a cabo en línea</p>
+                                    <p class="font-medium text-gray-900 dark:text-white">Evento Virtual</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Se llevará a cabo en línea</p>
                                 </div>
                             </label>
 
-                            <label class="flex items-center gap-3 p-4 border-2 border-indigo-500 rounded-lg cursor-pointer flex-1 bg-indigo-50">
+                            <label class="flex items-center gap-3 p-4 border-2 border-indigo-500 dark:border-indigo-400 rounded-lg cursor-pointer flex-1 bg-indigo-50 dark:bg-indigo-900/30">
                                 <input type="radio" name="es_virtual" value="0" checked class="w-5 h-5 text-indigo-600">
                                 <div>
-                                    <p class="font-medium">Ubicación Física</p>
-                                    <p class="text-sm text-gray-600">Lugar físico especificado</p>
+                                    <p class="font-medium text-gray-900 dark:text-white">Ubicación Física</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Lugar físico especificado</p>
                                 </div>
                             </label>
                         </div>
 
                         <!-- Ubicación Física -->
                         <div id="ubicacion-fisica">
-                            <label for="ubicacion" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="ubicacion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Ubicación Física
                             </label>
                             <input type="text" 
@@ -355,32 +355,32 @@
                                    maxlength="50"
                                    placeholder="Ej: Instituto Tecnológico de Oaxaca, Centro de Cómputo"
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('ubicacion') border-red-500 @enderror">
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('ubicacion') border-red-500 @enderror">
                             <div class="flex items-center justify-between mt-1">
-                                <p class="text-xs text-gray-500">Letras, números, comas y puntos</p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Letras, números, comas y puntos</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <span id="ubicacionCount">0</span>/50
                                 </p>
                             </div>
                             @error('ubicacion')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
                 </div>
 
                 <!-- Premios -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-2">
-                            <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-6 h-6 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
-                            <h2 class="text-xl font-bold text-gray-900">Premios</h2>
+                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Premios</h2>
                         </div>
                         <button type="button" 
                                 onclick="agregarPremio()" 
-                                class="px-4 py-2 bg-pink-100 text-pink-700 rounded-lg text-sm font-medium hover:bg-pink-200 transition flex items-center gap-2">
+                                class="px-4 py-2 bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 rounded-lg text-sm font-medium hover:bg-pink-200 dark:hover:bg-pink-800 transition flex items-center gap-2">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
                             </svg>
