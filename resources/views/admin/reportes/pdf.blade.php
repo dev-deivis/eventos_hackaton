@@ -81,45 +81,69 @@
             margin: 20px 0;
         }
         .chart-bar {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
         }
         .chart-label {
             font-size: 11px;
-            color: #333;
-            margin-bottom: 4px;
+            color: #1F2937;
+            margin-bottom: 6px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chart-label-name {
+            flex: 1;
+        }
+        .chart-label-value {
+            font-size: 10px;
+            color: #6B7280;
             font-weight: 500;
+            margin-left: 10px;
         }
         .chart-bar-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .chart-bar-bg {
-            flex: 1;
-            height: 25px;
-            background-color: #E5E7EB;
-            border-radius: 4px;
             position: relative;
+            height: 32px;
+            background: linear-gradient(to right, #F3F4F6 0%, #E5E7EB 100%);
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .chart-bar-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
             height: 100%;
-            background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
-            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding-right: 8px;
+            padding-right: 12px;
             color: white;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            transition: width 0.3s ease;
         }
-        .chart-value {
-            min-width: 80px;
-            text-align: right;
-            font-size: 11px;
-            color: #666;
-            font-weight: 500;
+        .chart-bar-fill.indigo {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%);
+        }
+        .chart-bar-fill.pink {
+            background: linear-gradient(135deg, #EC4899 0%, #DB2777 50%, #BE185D 100%);
+        }
+        .chart-bar-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
         .footer {
             margin-top: 30px;
@@ -176,14 +200,15 @@
         <div class="chart-container">
             @forelse($participacion_carrera as $item)
                 <div class="chart-bar">
-                    <div class="chart-label">{{ $item['carrera'] }}</div>
+                    <div class="chart-label">
+                        <span class="chart-label-name">{{ $item['carrera'] }}</span>
+                        <span class="chart-label-value">{{ $item['total'] }} estudiantes</span>
+                    </div>
                     <div class="chart-bar-wrapper">
-                        <div class="chart-bar-bg">
-                            <div class="chart-bar-fill" style="width: {{ $item['porcentaje'] }}%">
-                                {{ $item['porcentaje'] }}%
-                            </div>
+                        <div class="chart-bar-fill indigo" style="width: {{ $item['porcentaje'] }}%">
+                            <div class="chart-bar-pattern"></div>
+                            <span style="position: relative; z-index: 1;">{{ $item['porcentaje'] }}%</span>
                         </div>
-                        <div class="chart-value">{{ $item['total'] }} estudiantes</div>
                     </div>
                 </div>
             @empty
@@ -198,14 +223,15 @@
         <div class="chart-container">
             @forelse($distribucion_roles as $item)
                 <div class="chart-bar">
-                    <div class="chart-label">{{ $item['rol'] }}</div>
+                    <div class="chart-label">
+                        <span class="chart-label-name">{{ $item['rol'] }}</span>
+                        <span class="chart-label-value">{{ $item['total'] }} asignaciones</span>
+                    </div>
                     <div class="chart-bar-wrapper">
-                        <div class="chart-bar-bg">
-                            <div class="chart-bar-fill" style="width: {{ $item['porcentaje'] }}%; background: linear-gradient(90deg, #EC4899 0%, #A855F7 100%);">
-                                {{ $item['porcentaje'] }}%
-                            </div>
+                        <div class="chart-bar-fill pink" style="width: {{ $item['porcentaje'] }}%">
+                            <div class="chart-bar-pattern"></div>
+                            <span style="position: relative; z-index: 1;">{{ $item['porcentaje'] }}%</span>
                         </div>
-                        <div class="chart-value">{{ $item['total'] }} asignaciones</div>
                     </div>
                 </div>
             @empty
