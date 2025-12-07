@@ -24,39 +24,29 @@ class ReportesController extends Controller
             
             Log::info('ReportesController::getData iniciado', ['evento_id' => $eventoId]);
 
-            // Estadísticas básicas
+            // Estadísticas generales
             $stats = [
-                'total_participantes' => Participante::count(),
-                'equipos_formados' => Equipo::count(),
-                'promedio_miembros' => 4.0,
-                'tasa_finalizacion' => 81.8,
-                'equipos_terminaron' => 18,
-                'puntuacion_promedio' => 78.5,
-                'puntuacion_maxima' => 92.3,
+                'total_participantes' => $this->getTotalParticipantes($eventoId),
+                'equipos_formados' => $this->getEquiposFormados($eventoId),
+                'promedio_miembros' => $this->getPromedioMiembros($eventoId),
+                'tasa_finalizacion' => $this->getTasaFinalizacion($eventoId),
+                'equipos_terminaron' => $this->getEquiposTerminaron($eventoId),
+                'puntuacion_promedio' => $this->getPuntuacionPromedio($eventoId),
+                'puntuacion_maxima' => $this->getPuntuacionMaxima($eventoId),
             ];
 
-            // Participación por carrera (datos de ejemplo)
-            $participacionCarrera = [
-                ['carrera' => 'Ingeniería en Sistemas Computacionales', 'total' => 45, 'porcentaje' => 51.7],
-                ['carrera' => 'Ingeniería en Gestión Empresarial', 'total' => 18, 'porcentaje' => 20.7],
-                ['carrera' => 'Ingeniería Industrial', 'total' => 15, 'porcentaje' => 17.2],
-                ['carrera' => 'Ingeniería Electrónica', 'total' => 9, 'porcentaje' => 10.3],
-            ];
+            // Participación por carrera
+            $participacionCarrera = $this->getParticipacionPorCarrera($eventoId);
 
             // Estadísticas de equipos
             $estadisticasEquipos = [
-                'completos' => 18,
-                'incompletos' => 4,
-                'tamano_promedio' => 4.0,
+                'completos' => $this->getEquiposCompletos($eventoId),
+                'incompletos' => $this->getEquiposIncompletos($eventoId),
+                'tamano_promedio' => $stats['promedio_miembros'],
             ];
 
-            // Distribución de roles (datos de ejemplo)
-            $distribucionRoles = [
-                ['rol' => 'Programador', 'total' => 38, 'porcentaje' => 43.7],
-                ['rol' => 'Diseñador', 'total' => 22, 'porcentaje' => 25.3],
-                ['rol' => 'Analista de Negocios', 'total' => 18, 'porcentaje' => 20.7],
-                ['rol' => 'Analista De Datos', 'total' => 9, 'porcentaje' => 10.3],
-            ];
+            // Distribución de roles
+            $distribucionRoles = $this->getDistribucionRoles($eventoId);
 
             Log::info('Datos obtenidos exitosamente');
 
@@ -82,5 +72,190 @@ class ReportesController extends Controller
                 'line' => $e->getLine(),
             ], 500);
         }
+    }
+
+    private function getTotalParticipantes($eventoId = null)
+    {
+        if ($eventoId) {
+            // Contar participantes únicos en equipos de este evento
+            return DB::table('participantes')
+                ->join('equipo_participante', 'participantes.id', '=', 'equipo_participante.participante_id')
+                ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+                ->where('equipos.evento_id', $eventoId)
+                ->distinct()
+                ->count('participantes.id');
+        }
+        return Participante::count();
+    }
+
+    private function getEquiposFormados($eventoId = null)
+    {
+        if ($eventoId) {
+            return Equipo::where('evento_id', $eventoId)->count();
+        }
+        return Equipo::count();
+    }
+
+    private function getPromedioMiembros($eventoId = null)
+    {
+        $query = DB::table('equipos')
+            ->leftJoin('equipo_participante', 'equipos.id', '=', 'equipo_participante.equipo_id')
+            ->select('equipos.id', DB::raw('COUNT(equipo_participante.participante_id) as miembros_count'))
+            ->groupBy('equipos.id');
+
+        if ($eventoId) {
+            $query->where('equipos.evento_id', $eventoId);
+        }
+
+        $resultados = $query->get();
+        
+        if ($resultados->isEmpty()) {
+            return 0;
+        }
+
+        $promedio = $resultados->avg('miembros_count');
+        return round($promedio, 1);
+    }
+
+    private function getTasaFinalizacion($eventoId = null)
+    {
+        $query = Equipo::query();
+        
+        if ($eventoId) {
+            $query->where('evento_id', $eventoId);
+        }
+
+        $total = $query->count();
+        
+        if ($total == 0) {
+            return 0;
+        }
+
+        $conProyecto = Equipo::query()
+            ->when($eventoId, function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            })
+            ->whereHas('proyecto')
+            ->count();
+        
+        return round(($conProyecto / $total) * 100, 1);
+    }
+
+    private function getEquiposTerminaron($eventoId = null)
+    {
+        $query = Equipo::query();
+        
+        if ($eventoId) {
+            $query->where('evento_id', $eventoId);
+        }
+
+        return $query->whereHas('proyecto')->count();
+    }
+
+    private function getPuntuacionPromedio($eventoId = null)
+    {
+        $query = Evaluacion::query();
+        
+        if ($eventoId) {
+            $query->whereHas('equipo', function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            });
+        }
+
+        $promedio = $query->avg('calificacion_total');
+        return $promedio ? round($promedio, 1) : 0;
+    }
+
+    private function getPuntuacionMaxima($eventoId = null)
+    {
+        $query = Evaluacion::query();
+        
+        if ($eventoId) {
+            $query->whereHas('equipo', function($q) use ($eventoId) {
+                $q->where('evento_id', $eventoId);
+            });
+        }
+
+        $maxima = $query->max('calificacion_total');
+        return $maxima ? round($maxima, 1) : 100;
+    }
+
+    private function getParticipacionPorCarrera($eventoId = null)
+    {
+        $query = DB::table('participantes')
+            ->join('carreras', 'participantes.carrera_id', '=', 'carreras.id')
+            ->select('carreras.nombre as carrera', DB::raw('COUNT(participantes.id) as total'));
+
+        if ($eventoId) {
+            $query->join('equipo_participante', 'participantes.id', '=', 'equipo_participante.participante_id')
+                ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+                ->where('equipos.evento_id', $eventoId);
+        }
+
+        $resultados = $query
+            ->groupBy('carreras.nombre')
+            ->orderByDesc('total')
+            ->get();
+
+        $total = $resultados->sum('total');
+
+        return $resultados->map(function($item) use ($total) {
+            return [
+                'carrera' => $item->carrera,
+                'total' => $item->total,
+                'porcentaje' => $total > 0 ? round(($item->total / $total) * 100, 1) : 0
+            ];
+        })->toArray();
+    }
+
+    private function getEquiposCompletos($eventoId = null)
+    {
+        $query = DB::table('equipos')
+            ->leftJoin('equipo_participante', 'equipos.id', '=', 'equipo_participante.equipo_id')
+            ->select('equipos.id', DB::raw('COUNT(equipo_participante.participante_id) as miembros_count'))
+            ->groupBy('equipos.id')
+            ->havingRaw('COUNT(equipo_participante.participante_id) >= 5');
+
+        if ($eventoId) {
+            $query->where('equipos.evento_id', $eventoId);
+        }
+
+        return $query->count();
+    }
+
+    private function getEquiposIncompletos($eventoId = null)
+    {
+        $total = $this->getEquiposFormados($eventoId);
+        $completos = $this->getEquiposCompletos($eventoId);
+        
+        return $total - $completos;
+    }
+
+    private function getDistribucionRoles($eventoId = null)
+    {
+        $query = DB::table('participantes')
+            ->select('rol', DB::raw('COUNT(*) as total'))
+            ->whereNotNull('rol');
+
+        if ($eventoId) {
+            $query->join('equipo_participante', 'participantes.id', '=', 'equipo_participante.participante_id')
+                ->join('equipos', 'equipo_participante.equipo_id', '=', 'equipos.id')
+                ->where('equipos.evento_id', $eventoId);
+        }
+
+        $resultados = $query
+            ->groupBy('rol')
+            ->orderByDesc('total')
+            ->get();
+
+        $total = $resultados->sum('total');
+
+        return $resultados->map(function($item) use ($total) {
+            return [
+                'rol' => $item->rol,
+                'total' => $item->total,
+                'porcentaje' => $total > 0 ? round(($item->total / $total) * 100, 1) : 0
+            ];
+        })->toArray();
     }
 }
