@@ -375,7 +375,46 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkboxAsesor = document.querySelector('input[type="checkbox"][value="Asesor"]');
             if (!checkboxAsesor || !checkboxAsesor.checked) {
                 e.preventDefault();
+                
+                // Mostrar error visible en la página
+                const form = e.target;
+                let errorDiv = form.querySelector('.error-asesor');
+                
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-asesor bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg';
+                    errorDiv.innerHTML = `
+                        <div class="flex items-start">
+                            <svg class="w-6 h-6 text-red-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            <div class="flex-1">
+                                <h3 class="text-red-800 font-semibold mb-2">Error de validación:</h3>
+                                <p class="text-red-700">El rol de <strong>Asesor</strong> es obligatorio. Por favor, selecciónalo antes de guardar.</p>
+                            </div>
+                        </div>
+                    `;
+                    form.insertBefore(errorDiv, form.firstChild);
+                }
+                
+                // Scroll al error
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // También mostrar alert como respaldo
                 alert('El rol de Asesor es obligatorio');
+                
+                // Marcar el checkbox de Asesor visualmente si existe
+                if (checkboxAsesor) {
+                    checkboxAsesor.focus();
+                    const container = checkboxAsesor.closest('div');
+                    if (container) {
+                        container.style.border = '2px solid red';
+                        setTimeout(() => {
+                            container.style.border = '';
+                        }, 3000);
+                    }
+                }
+                
                 return false;
             }
             
