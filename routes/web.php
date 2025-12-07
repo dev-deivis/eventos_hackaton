@@ -19,25 +19,27 @@ use Illuminate\Support\Facades\Log;
 // Página principal
 Route::get('/', [EventoController::class, 'index'])->name('home');
 
-// RUTA DE PRUEBA - Probar envío con Resend
+// RUTA DE PRUEBA - Probar envío con SMTP (Brevo)
 Route::get('/test-email', function() {
     try {
         $config = [
             'MAIL_MAILER' => config('mail.default'),
-            'RESEND_API_KEY' => config('services.resend.key') ? 'Configurada ✓' : 'NO configurada ✗',
+            'MAIL_HOST' => config('mail.mailers.smtp.host'),
+            'MAIL_PORT' => config('mail.mailers.smtp.port'),
+            'MAIL_USERNAME' => config('mail.mailers.smtp.username') ? 'Configurado ✓' : 'NO configurado ✗',
             'MAIL_FROM' => config('mail.from.address'),
             'MAIL_FROM_NAME' => config('mail.from.name'),
         ];
         
-        Log::info('=== TEST EMAIL RESEND ===');
+        Log::info('=== TEST EMAIL BREVO/SMTP ===');
         Log::info('Configuración:', $config);
         
         // En Sandbox, solo puede enviar al email registrado en Resend
         $testEmail = config('mail.from.address'); // Usa el mismo email FROM
         
-        Mail::raw('✅ Test exitoso con Resend desde Railway! ' . now(), function($message) use ($testEmail) {
+        Mail::raw('✅ Test exitoso con Brevo SMTP desde Railway! ' . now(), function($message) use ($testEmail) {
             $message->to($testEmail)
-                    ->subject('✅ Test Email - Resend API - ' . now());
+                    ->subject('✅ Test Email - Brevo SMTP - ' . now());
         });
         
         Log::info('Correo enviado a: ' . $testEmail);
