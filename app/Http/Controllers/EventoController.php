@@ -193,8 +193,11 @@ class EventoController extends Controller
 
             // Enviar correo a todos los usuarios con rol de participante
             try {
+                Log::info('Iniciando envío de correos para evento: ' . $evento->nombre);
+                
                 // Obtener el ID del rol "participante"
                 $rolParticipante = Rol::where('nombre', 'participante')->first();
+                Log::info('Rol participante encontrado: ' . ($rolParticipante ? 'SI' : 'NO'));
                 
                 if ($rolParticipante) {
                     // Obtener todos los usuarios que tienen el rol de participante
@@ -202,18 +205,28 @@ class EventoController extends Controller
                         $query->where('rol_id', $rolParticipante->id);
                     })->get();
 
+                    Log::info("Total de participantes encontrados: {$participantes->count()}");
+
                     // Enviar correo a cada participante
+                    $enviados = 0;
                     foreach ($participantes as $participante) {
-                        Mail::to($participante->email)->send(new NuevoEventoMail($evento));
+                        try {
+                            Mail::to($participante->email)->send(new NuevoEventoMail($evento));
+                            $enviados++;
+                            Log::info("Correo enviado a: {$participante->email}");
+                        } catch (\Exception $e) {
+                            Log::error("Error enviando a {$participante->email}: " . $e->getMessage());
+                        }
                     }
                     
-                    Log::info("Correos enviados a {$participantes->count()} participantes sobre el evento: {$evento->nombre}");
+                    Log::info("Correos enviados exitosamente: {$enviados} de {$participantes->count()}");
                 }
             } catch (\Exception $mailException) {
                 // Log del error pero no fallar el proceso completo
-                Log::error('Error al enviar correos del evento:', [
+                Log::error('Error general al enviar correos del evento:', [
                     'evento_id' => $evento->id,
-                    'error' => $mailException->getMessage()
+                    'error' => $mailException->getMessage(),
+                    'trace' => $mailException->getTraceAsString()
                 ]);
             }
 

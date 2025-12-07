@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConstanciaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TareaController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,31 @@ use App\Http\Controllers\TareaController;
 
 // Página principal
 Route::get('/', [EventoController::class, 'index'])->name('home');
+
+// RUTA TEMPORAL DE PRUEBA - ELIMINAR DESPUÉS
+Route::get('/test-email', function() {
+    try {
+        $config = [
+            'MAIL_MAILER' => config('mail.default'),
+            'MAIL_HOST' => config('mail.mailers.smtp.host'),
+            'MAIL_PORT' => config('mail.mailers.smtp.port'),
+            'MAIL_USERNAME' => config('mail.mailers.smtp.username'),
+            'MAIL_FROM' => config('mail.from.address'),
+        ];
+        
+        Log::info('Configuración de correo:', $config);
+        
+        Mail::raw('Test desde Railway', function($message) {
+            $message->to(config('mail.from.address'))
+                    ->subject('Test Email');
+        });
+        
+        return 'Correo enviado! Revisa los logs y tu correo.';
+    } catch (\Exception $e) {
+        Log::error('Error test email: ' . $e->getMessage());
+        return 'Error: ' . $e->getMessage();
+    }
+});
 
 // Autenticación (Laravel Breeze)
 require __DIR__ . '/auth.php';
