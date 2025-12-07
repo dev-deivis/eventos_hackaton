@@ -212,9 +212,9 @@
                             
                             <!-- Botones Admin -->
                             <div class="space-y-2">
-                                <a href="{{ route('eventos.dashboard', $evento) }}" 
+                                <a href="{{ route('eventos.show', $evento) }}" 
                                    class="block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
-                                    Ver Dashboard
+                                    Ver Detalles
                                 </a>
                                 <div class="grid grid-cols-2 gap-2">
                                     <a href="{{ route('eventos.edit', $evento) }}" 
