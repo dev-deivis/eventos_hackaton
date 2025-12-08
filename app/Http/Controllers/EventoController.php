@@ -224,42 +224,7 @@ class EventoController extends Controller
             DB::commit();
 
             // Notificar a todos los participantes sobre el nuevo evento
-            NotificationService::nuevoEvento($evento);
-
-            // ⚠️ CORREOS DESHABILITADOS TEMPORALMENTE PARA DESARROLLO
-            // TODO: Reactivar cuando se configure Brevo correctamente
-            /*
-            // Enviar correo a todos los participantes usando Resend API
-            try {
-                Log::info('Iniciando envío de correos para evento: ' . $evento->nombre);
-                
-                $rolParticipante = Rol::where('nombre', 'participante')->first();
-                
-                if ($rolParticipante) {
-                    $participantes = User::whereHas('roles', function($query) use ($rolParticipante) {
-                        $query->where('rol_id', $rolParticipante->id);
-                    })->get();
-
-                    Log::info("Total de participantes: {$participantes->count()}");
-
-                    foreach ($participantes as $participante) {
-                        try {
-                            Mail::to($participante->email)->send(new NuevoEventoMail($evento));
-                            Log::info("Correo enviado a: {$participante->email}");
-                        } catch (\Exception $e) {
-                            Log::error("Error enviando a {$participante->email}: " . $e->getMessage());
-                        }
-                    }
-                }
-            } catch (\Exception $mailException) {
-                Log::error('Error al enviar correos:', [
-                    'evento_id' => $evento->id,
-                    'error' => $mailException->getMessage()
-                ]);
-            }
-            */
-
-            Log::info('📧 Envío de correos deshabilitado temporalmente');
+            \App\Helpers\NotificacionHelper::nuevoEvento($evento);
 
             return redirect()
                 ->route('eventos.show', $evento)
