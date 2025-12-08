@@ -213,9 +213,10 @@
                                 </label>
                                 
                                 @php
-                                    $juecesDisponibles = \App\Models\User::where('rol', 'juez')
-                                        ->where('is_active', true)
-                                        ->get();
+                                    // Obtener jueces: usuarios con el rol 'juez'
+                                    $juecesDisponibles = \App\Models\User::whereHas('roles', function($query) {
+                                        $query->where('nombre', 'juez');
+                                    })->get();
                                 @endphp
 
                                 @if($juecesDisponibles->count() > 0)
