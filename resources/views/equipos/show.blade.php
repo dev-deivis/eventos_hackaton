@@ -1093,13 +1093,41 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona tu rol en el equipo</label>
-                    <select name="perfil_id" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                        <option value="">-- Selecciona un rol --</option>
-                        @foreach (\App\Models\Perfil::all() as $perfil)
-                            <option value="{{ $perfil->id }}">{{ $perfil->nombre }}</option>
-                        @endforeach
-                    </select>
+                    @php
+                        // Obtener roles ya ocupados en el equipo
+                        $rolesOcupados = DB::table('equipo_participante')
+                            ->join('perfiles', 'equipo_participante.perfil_id', '=', 'perfiles.id')
+                            ->where('equipo_participante.equipo_id', $equipo->id)
+                            ->where('equipo_participante.estado', 'activo')
+                            ->pluck('perfiles.id')
+                            ->toArray();
+                        
+                        // Obtener todos los perfiles
+                        $todosPerfiles = \App\Models\Perfil::all();
+                        
+                        // Filtrar solo los disponibles
+                        $perfilesDisponibles = $todosPerfiles->whereNotIn('id', $rolesOcupados);
+                    @endphp
+                    
+                    @if($perfilesDisponibles->count() > 0)
+                        <select name="perfil_id" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <option value="">-- Selecciona un rol --</option>
+                            @foreach ($perfilesDisponibles as $perfil)
+                                <option value="{{ $perfil->id }}">{{ $perfil->nombre }}</option>
+                            @endforeach
+                        </select>
+                        <p class="mt-2 text-xs text-gray-500">
+                            Solo se muestran roles disponibles. Roles ocupados: 
+                            @foreach($todosPerfiles->whereIn('id', $rolesOcupados) as $ocupado)
+                                <span class="text-red-600">{{ $ocupado->nombre }}</span>{{ !$loop->last ? ', ' : '' }}
+                            @endforeach
+                        </p>
+                    @else
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                            <p class="text-sm text-yellow-800">⚠️ Todos los roles están ocupados en este equipo.</p>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mb-4">
@@ -1113,8 +1141,9 @@
                         class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
                         Cancelar
                     </button>
-                    <button type="submit"
-                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    <button type="submit" 
+                        @if($perfilesDisponibles->count() === 0) disabled @endif
+                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
                         Enviar Solicitud
                     </button>
                 </div>
