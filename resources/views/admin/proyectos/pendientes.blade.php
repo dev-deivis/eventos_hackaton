@@ -180,14 +180,10 @@
                         <!-- Botones de Acción -->
                         <div class="flex gap-3">
                             @if($proyecto->cumpleRequisitosMinimos())
-                                <form action="{{ route('admin.proyectos.aprobar', $proyecto) }}" method="POST" class="flex-1"
-                                      onsubmit="return confirm('¿Aprobar este proyecto para evaluación?\n\nUna vez aprobado, los jueces podrán evaluarlo.')">
-                                    @csrf
-                                    <button type="submit" 
-                                            class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg">
-                                        ✓ Aprobar para Evaluación
-                                    </button>
-                                </form>
+                                <button onclick="toggleModalAsignarJuez('{{ $proyecto->id }}')"
+                                        class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg">
+                                    ✓ Aprobar para Evaluación
+                                </button>
 
                                 <button onclick="toggleModalRechazar('{{ $proyecto->id }}')" 
                                         class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition">
@@ -200,6 +196,69 @@
                                 </button>
                             @endif
                         </div>
+                    </div>
+                </div>
+
+                <!-- Modal Asignar Juez -->
+                <div id="modalAsignarJuez{{ $proyecto->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Asignar Juez al Proyecto</h3>
+                        
+                        <form action="{{ route('admin.proyectos.aprobar', $proyecto) }}" method="POST">
+                            @csrf
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Selecciona el juez que evaluará este proyecto *
+                                </label>
+                                
+                                @php
+                                    $juecesDisponibles = \App\Models\User::where('rol', 'juez')
+                                        ->where('is_active', true)
+                                        ->get();
+                                @endphp
+
+                                @if($juecesDisponibles->count() > 0)
+                                    <select name="juez_id" required
+                                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500">
+                                        <option value="">-- Selecciona un juez --</option>
+                                        @foreach($juecesDisponibles as $juez)
+                                            @php
+                                                $proyectosAsignados = \DB::table('juez_equipo')
+                                                    ->join('equipos', 'juez_equipo.equipo_id', '=', 'equipos.id')
+                                                    ->where('juez_equipo.juez_id', $juez->id)
+                                                    ->where('equipos.evento_id', $proyecto->evento_id)
+                                                    ->count();
+                                            @endphp
+                                            <option value="{{ $juez->id }}">
+                                                {{ $juez->name }} 
+                                                ({{ $proyectosAsignados }} proyecto{{ $proyectosAsignados != 1 ? 's' : '' }} asignado{{ $proyectosAsignados != 1 ? 's' : '' }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                        El juez seleccionado será asignado automáticamente para evaluar este proyecto
+                                    </p>
+                                @else
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                        <p class="text-sm text-yellow-800">⚠️ No hay jueces disponibles en el sistema.</p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button type="button" 
+                                        onclick="toggleModalAsignarJuez('{{ $proyecto->id }}')"
+                                        class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    Cancelar
+                                </button>
+                                <button type="submit" 
+                                        @if($juecesDisponibles->count() === 0) disabled @endif
+                                        class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold disabled:bg-gray-400 disabled:cursor-not-allowed">
+                                    Aprobar y Asignar
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -256,8 +315,12 @@
             document.getElementById('modalRechazar' + proyectoId).classList.toggle('hidden');
         }
 
+        function toggleModalAsignarJuez(proyectoId) {
+            document.getElementById('modalAsignarJuez' + proyectoId).classList.toggle('hidden');
+        }
+
         // Cerrar modal al hacer click fuera
-        document.querySelectorAll('[id^="modalRechazar"]').forEach(modal => {
+        document.querySelectorAll('[id^="modalRechazar"], [id^="modalAsignarJuez"]').forEach(modal => {
             modal.addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.classList.add('hidden');

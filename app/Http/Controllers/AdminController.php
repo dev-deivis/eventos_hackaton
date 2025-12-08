@@ -100,9 +100,9 @@ class AdminController extends Controller
     }
 
     /**
-     * Aprobar proyecto para evaluación
+     * Aprobar proyecto para evaluación y asignar juez
      */
-    public function aprobarProyecto(Proyecto $proyecto)
+    public function aprobarProyecto(Request $request, Proyecto $proyecto)
     {
         // Verificar que esté en estado entregado
         if ($proyecto->estado !== 'entregado') {
@@ -110,18 +110,34 @@ class AdminController extends Controller
                 ->with('error', 'Este proyecto no está en estado de entregado.');
         }
 
+        // Validar que se haya seleccionado un juez
+        $request->validate([
+            'juez_id' => 'required|exists:users,id'
+        ]);
+
         try {
             // Aprobar proyecto
             $proyecto->aprobarParaEvaluacion();
 
-            Log::info('Proyecto aprobado para evaluación', [
+            // Asignar juez al equipo
+            $equipo = $proyecto->equipo;
+            $juezId = $request->juez_id;
+
+            // Verificar si el juez ya está asignado
+            if (!$equipo->jueces()->where('juez_id', $juezId)->exists()) {
+                $equipo->jueces()->attach($juezId);
+            }
+
+            Log::info('Proyecto aprobado y juez asignado', [
                 'proyecto_id' => $proyecto->id,
                 'equipo_id' => $proyecto->equipo_id,
+                'juez_id' => $juezId,
                 'admin_id' => auth()->id()
             ]);
 
+            $juez = \App\Models\User::find($juezId);
             return redirect()->route('admin.proyectos.pendientes')
-                ->with('success', "Proyecto '{$proyecto->nombre}' aprobado exitosamente. Ahora puede ser evaluado por los jueces.");
+                ->with('success', "Proyecto '{$proyecto->nombre}' aprobado exitosamente y asignado a {$juez->name} para evaluación.");
         } catch (\Exception $e) {
             Log::error('Error al aprobar proyecto:', [
                 'error' => $e->getMessage(),
