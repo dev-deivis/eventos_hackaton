@@ -261,11 +261,28 @@ class NotificationService
     {
         $participante = $constancia->participante;
         
+        // 🆕 Títulos especiales para ganadores
+        $titulosGanadores = [
+            'primer_lugar' => '🥇 ¡FELICIDADES! Ganaste el PRIMER LUGAR',
+            'segundo_lugar' => '🥈 ¡EXCELENTE! Ganaste el SEGUNDO LUGAR',
+            'tercer_lugar' => '🥉 ¡MUY BIEN! Ganaste el TERCER LUGAR',
+        ];
+        
+        $esGanador = in_array($constancia->tipo, array_keys($titulosGanadores));
+        
+        $titulo = $esGanador 
+            ? $titulosGanadores[$constancia->tipo]
+            : '📜 Constancia disponible';
+        
+        $mensaje = $esGanador
+            ? "¡Tu equipo ganó en {$constancia->evento->nombre}! Tu constancia está lista para descargar"
+            : "Tu constancia de {$constancia->evento->nombre} está lista";
+        
         self::crear(
             userId: $participante->user_id,
             tipo: self::CONSTANCIA_GENERADA,
-            titulo: '🏆 Constancia disponible',
-            mensaje: "Tu constancia de {$constancia->evento->nombre} está lista",
+            titulo: $titulo,
+            mensaje: $mensaje,
             urlAccion: route('profile.show') . '#constancias'
         );
     }
