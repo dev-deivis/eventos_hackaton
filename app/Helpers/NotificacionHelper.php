@@ -4,9 +4,57 @@ namespace App\Helpers;
 
 use App\Models\Notificacion;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\NuevoEventoMail;
+use App\Mail\SolicitudEquipoMail;
+use App\Mail\SolicitudAceptadaMail;
+use App\Mail\EvaluacionCompletadaMail;
+use App\Mail\ProyectoAprobadoMail;
+use App\Mail\ConstanciaGeneradaMail;
 
 class NotificacionHelper
 {
+    /**
+     * Configuración para habilitar/deshabilitar correos
+     */
+    private static function correosHabilitados(): bool
+    {
+        // Cambiar a true para habilitar el envío de correos
+        // Asegúrate de tener configurado Brevo en .env
+        return env('MAIL_ENABLED', false);
+    }
+
+    /**
+     * Enviar correo de forma segura (con manejo de errores)
+     */
+    private static function enviarCorreo($mailable, $destinatario)
+    {
+        if (!self::correosHabilitados()) {
+            Log::info('Correo NO enviado (sistema deshabilitado)', [
+                'destinatario' => $destinatario,
+                'mailable' => get_class($mailable)
+            ]);
+            return false;
+        }
+
+        try {
+            Mail::to($destinatario)->send($mailable);
+            Log::info('Correo enviado exitosamente', [
+                'destinatario' => $destinatario,
+                'mailable' => get_class($mailable)
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Error al enviar correo', [
+                'destinatario' => $destinatario,
+                'error' => $e->getMessage(),
+                'mailable' => get_class($mailable)
+            ]);
+            return false;
+        }
+    }
+
     /**
      * Crear notificación para un usuario
      */
@@ -31,13 +79,19 @@ class NotificacionHelper
      */
     public static function solicitudEquipo($lider, $solicitante, $equipo)
     {
-        return self::crear(
+        // Crear notificación
+        $notificacion = self::crear(
             $lider,
             'solicitud_equipo',
             '🤝 Nueva solicitud para unirse',
             "{$solicitante->name} quiere unirse a tu equipo '{$equipo->nombre}'",
             route('equipos.show', $equipo)
         );
+
+        // Enviar correo
+        self::enviarCorreo(new SolicitudEquipoMail($equipo, $solicitante), $lider->email);
+
+        return $notificacion;
     }
 
     /**
@@ -45,13 +99,19 @@ class NotificacionHelper
      */
     public static function solicitudAceptada($usuario, $equipo)
     {
-        return self::crear(
+        // Crear notificación
+        $notificacion = self::crear(
             $usuario,
             'solicitud_aceptada',
             '✅ ¡Bienvenido al equipo!',
             "Has sido aceptado en el equipo '{$equipo->nombre}'",
             route('equipos.show', $equipo)
         );
+
+        // Enviar correo
+        self::enviarCorreo(new SolicitudAceptadaMail($equipo, $usuario), $usuario->email);
+
+        return $notificacion;
     }
 
     /**
@@ -99,6 +159,7 @@ class NotificacionHelper
         })->get();
 
         foreach ($participantes as $user) {
+            // Crear notificación
             self::crear(
                 $user,
                 'nuevo_evento',
@@ -106,23 +167,33 @@ class NotificacionHelper
                 "'{$evento->nombre}' ya está abierto para inscripciones",
                 route('eventos.show', $evento)
             );
+
+            // Enviar correo
+            self::enviarCorreo(new NuevoEventoMail($evento), $user->email);
         }
     }
 
     /**
      * Notificar a los miembros del equipo sobre una evaluación recibida
      */
-    public static function evaluacionRecibida($equipo, $juez)
+    public static function evaluacionRecibida($equipo, $evaluacion)
     {
         $miembros = $equipo->miembrosActivos()->get();
 
         foreach ($miembros as $participante) {
+            // Crear notificación
             self::crear(
                 $participante->user,
                 'evaluacion_recibida',
                 '⭐ Tu equipo fue evaluado',
-                "El juez {$juez->name} evaluó a '{$equipo->nombre}'",
+                "Tu equipo '{$equipo->nombre}' recibió una nueva evaluación",
                 route('equipos.show', $equipo)
+            );
+
+            // Enviar correo
+            self::enviarCorreo(
+                new EvaluacionCompletadaMail($equipo, $evaluacion), 
+                $participante->user->email
             );
         }
     }
@@ -151,12 +222,19 @@ class NotificacionHelper
         $miembros = $proyecto->equipo->miembrosActivos()->get();
 
         foreach ($miembros as $participante) {
+            // Crear notificación
             self::crear(
                 $participante->user,
                 'proyecto_aprobado',
                 '✅ Proyecto aprobado',
                 "¡El proyecto de '{$proyecto->equipo->nombre}' fue aprobado!",
                 route('equipos.show', $proyecto->equipo)
+            );
+
+            // Enviar correo
+            self::enviarCorreo(
+                new ProyectoAprobadoMail($proyecto->equipo, $proyecto), 
+                $participante->user->email
             );
         }
     }
@@ -187,13 +265,19 @@ class NotificacionHelper
      */
     public static function constanciaGenerada($usuario, $constancia)
     {
-        return self::crear(
+        // Crear notificación
+        $notificacion = self::crear(
             $usuario,
             'constancia_generada',
             '🏆 Constancia disponible',
             "Tu constancia de '{$constancia->evento->nombre}' está lista",
             route('admin.constancias.descargar', $constancia)
         );
+
+        // Enviar correo
+        self::enviarCorreo(new ConstanciaGeneradaMail($constancia), $usuario->email);
+
+        return $notificacion;
     }
 
     /**
