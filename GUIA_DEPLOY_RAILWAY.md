@@ -62,9 +62,9 @@ MAIL_MAILER=smtp
 MAIL_HOST=smtp-relay.brevo.com
 MAIL_PORT=587
 MAIL_USERNAME=9d814c001@smtp-brevo.com
-MAIL_PASSWORD=xsmtpsib-e4d50a446a6526ee5071a897473a4f7fabcffd54c015bff746afdb72e77f7aa7-qdKCMEBE0tr7MFZd
+MAIL_PASSWORD=TU_CLAVE_SMTP_DE_BREVO_AQUI
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=alonsoalmaraz18@gmail.com
+MAIL_FROM_ADDRESS=tu_email_verificado@gmail.com
 MAIL_FROM_NAME=Hackathon Events
 ```
 
