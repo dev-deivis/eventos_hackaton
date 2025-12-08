@@ -639,6 +639,11 @@
 
                     <!-- Tareas del Proyecto -->
                     @if ($equipo->proyecto)
+                        @php
+                            // Verificar si el proyecto ya fue evaluado
+                            $proyectoEvaluado = in_array($proyecto->estado, ['evaluado', 'finalizado']);
+                        @endphp
+                        
                         <div class="bg-white rounded-xl shadow-sm p-6">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-lg font-bold flex items-center gap-2">
@@ -651,11 +656,6 @@
                                     Tareas del Proyecto
                                 </h3>
                                 @if ($esLider)
-                                    @php
-                                        // Verificar si el proyecto ya fue evaluado
-                                        $proyectoEvaluado = in_array($proyecto->estado, ['evaluado', 'finalizado']);
-                                    @endphp
-                                    
                                     @if(!$proyectoEvaluado)
                                         <button onclick="toggleModalCrearTarea()"
                                             class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1 font-medium">
