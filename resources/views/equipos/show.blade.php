@@ -76,6 +76,142 @@
                 </div>
             @endif
 
+            {{-- 🆕 Banner de Ganador --}}
+            @php
+                // Verificar si el usuario tiene constancia de ganador en este evento
+                $constanciaGanador = null;
+                if (auth()->user()->participante) {
+                    $constanciaGanador = auth()->user()->participante
+                        ->constancias()
+                        ->where('evento_id', $equipo->evento_id)
+                        ->whereIn('tipo', ['primer_lugar', 'segundo_lugar', 'tercer_lugar'])
+                        ->first();
+                }
+            @endphp
+
+            @if($constanciaGanador && $esMiembro)
+                @php
+                    $premios = [
+                        'primer_lugar' => [
+                            'titulo' => '¡PRIMER LUGAR!',
+                            'emoji' => '🥇',
+                            'gradiente' => 'from-yellow-400 via-yellow-300 to-yellow-200',
+                            'border' => 'border-yellow-500',
+                            'text' => 'text-yellow-900',
+                            'bg' => 'bg-yellow-600',
+                            'hover' => 'hover:bg-yellow-700',
+                            'mensaje' => '¡Felicidades! Tu equipo obtuvo la mejor calificación del hackathon'
+                        ],
+                        'segundo_lugar' => [
+                            'titulo' => '¡SEGUNDO LUGAR!',
+                            'emoji' => '🥈',
+                            'gradiente' => 'from-gray-400 via-gray-300 to-gray-200',
+                            'border' => 'border-gray-500',
+                            'text' => 'text-gray-900',
+                            'bg' => 'bg-gray-600',
+                            'hover' => 'hover:bg-gray-700',
+                            'mensaje' => '¡Excelente trabajo! Tu equipo quedó en segundo lugar'
+                        ],
+                        'tercer_lugar' => [
+                            'titulo' => '¡TERCER LUGAR!',
+                            'emoji' => '🥉',
+                            'gradiente' => 'from-orange-400 via-orange-300 to-orange-200',
+                            'border' => 'border-orange-500',
+                            'text' => 'text-orange-900',
+                            'bg' => 'bg-orange-600',
+                            'hover' => 'hover:bg-orange-700',
+                            'mensaje' => '¡Muy bien! Tu equipo quedó en el top 3 del hackathon'
+                        ],
+                    ];
+                    $premio = $premios[$constanciaGanador->tipo];
+                @endphp
+
+                {{-- Banner de Ganador con animaciones --}}
+                <div class="bg-gradient-to-r {{ $premio['gradiente'] }} border-4 {{ $premio['border'] }} rounded-2xl shadow-2xl p-8 mb-8 relative overflow-hidden">
+                    {{-- Efecto de brillo --}}
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20" style="animation: shimmer 3s infinite;"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="text-center">
+                            {{-- Emoji grande con animación --}}
+                            <div class="text-8xl mb-4" style="animation: bounce 1s infinite;">{{ $premio['emoji'] }}</div>
+                            
+                            {{-- Título --}}
+                            <h2 class="text-5xl font-black {{ $premio['text'] }} mb-3 drop-shadow-lg">
+                                {{ $premio['titulo'] }}
+                            </h2>
+                            
+                            {{-- Mensaje --}}
+                            <p class="text-xl {{ $premio['text'] }} mb-6 font-semibold">
+                                {{ $premio['mensaje'] }}
+                            </p>
+                            
+                            {{-- Calificación destacada --}}
+                            @if($calificacion)
+                                <div class="inline-block bg-white/80 backdrop-blur rounded-xl px-8 py-4 mb-6 shadow-lg">
+                                    <div class="text-sm {{ $premio['text'] }} font-medium mb-1">Calificación Final</div>
+                                    <div class="text-5xl font-black {{ $premio['text'] }}">
+                                        {{ number_format($calificacion, 2) }}
+                                        <span class="text-2xl opacity-70">/100</span>
+                                    </div>
+                                </div>
+                            @endif
+                            
+                            {{-- Botones de acción --}}
+                            <div class="flex flex-wrap justify-center gap-4 mt-6">
+                                <a href="{{ route('profile.show') }}#constancias" 
+                                   class="inline-flex items-center gap-2 px-8 py-4 {{ $premio['bg'] }} {{ $premio['hover'] }} text-white rounded-xl font-bold shadow-xl transform hover:scale-105 transition">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z"/>
+                                        <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+                                    </svg>
+                                    Descargar Mi Constancia
+                                </a>
+                                
+                                <a href="{{ route('equipos.show', $equipo) }}#proyecto" 
+                                   class="inline-flex items-center gap-2 px-8 py-4 bg-white/90 backdrop-blur {{ $premio['text'] }} rounded-xl font-bold shadow-xl transform hover:scale-105 transition hover:bg-white">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Ver Detalles del Proyecto
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Script para confetti --}}
+                <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+                <script>
+                    // Lanzar confetti solo una vez al cargar la página
+                    if (!sessionStorage.getItem('confetti_{{ $equipo->id }}_shown')) {
+                        setTimeout(() => {
+                            confetti({
+                                particleCount: 150,
+                                spread: 70,
+                                origin: { y: 0.6 },
+                                colors: ['#FFD700', '#FFA500', '#FFFFFF']
+                            });
+                            sessionStorage.setItem('confetti_{{ $equipo->id }}_shown', 'true');
+                        }, 500);
+                    }
+                </script>
+
+                {{-- Estilos inline para animaciones --}}
+                <style>
+                    @keyframes shimmer {
+                        0% { transform: translateX(-100%); }
+                        100% { transform: translateX(100%); }
+                    }
+                    
+                    @keyframes bounce {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-20px); }
+                    }
+                </style>
+            @endif
+
             <!-- Header -->
             <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
@@ -641,7 +777,7 @@
                     @if ($equipo->proyecto)
                         @php
                             // Verificar si el proyecto ya fue evaluado
-                            $proyectoEvaluado = in_array($proyecto->estado, ['evaluado', 'finalizado']);
+                            $proyectoEvaluado = in_array($equipo->proyecto->estado, ['evaluado', 'finalizado']);
                         @endphp
                         
                         <div class="bg-white rounded-xl shadow-sm p-6">
