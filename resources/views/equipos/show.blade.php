@@ -651,15 +651,29 @@
                                     Tareas del Proyecto
                                 </h3>
                                 @if ($esLider)
-                                    <button onclick="toggleModalCrearTarea()"
-                                        class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1 font-medium">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Nueva Tarea
-                                    </button>
+                                    @php
+                                        // Verificar si el proyecto ya fue evaluado
+                                        $proyectoEvaluado = in_array($proyecto->estado, ['evaluado', 'finalizado']);
+                                    @endphp
+                                    
+                                    @if(!$proyectoEvaluado)
+                                        <button onclick="toggleModalCrearTarea()"
+                                            class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1 font-medium">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            Nueva Tarea
+                                        </button>
+                                    @else
+                                        <span class="text-sm text-gray-500 flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                            </svg>
+                                            Proyecto evaluado
+                                        </span>
+                                    @endif
                                 @endif
                             </div>
 
@@ -684,7 +698,7 @@
                                                 <div class="flex items-start gap-3 flex-1">
                                                     <!-- Checkbox para marcar como completada -->
                                                     @php
-                                                        $puedeMarcar = $esMiembro && (
+                                                        $puedeMarcar = !$proyectoEvaluado && $esMiembro && (
                                                             $esLider || 
                                                             $tarea->participantes->contains('id', auth()->user()->participante->id)
                                                         );
@@ -772,7 +786,7 @@
                                                 </div>
 
                                                 <!-- Acciones del líder -->
-                                                @if ($esLider)
+                                                @if ($esLider && !$proyectoEvaluado)
                                                     <div class="flex gap-2 ml-4">
                                                         <button
                                                             onclick="abrirModalEditarTarea({{ json_encode($tarea) }})"
