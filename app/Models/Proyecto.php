@@ -69,6 +69,7 @@ class Proyecto extends Model
     public function cumpleRequisitosMinimos(): bool
     {
         $evento = $this->evento;
+        $equipo = $this->equipo;
         $checks = [];
         
         // 1. Verificar nombre y descripción
@@ -94,6 +95,19 @@ class Proyecto extends Model
         
         $checks[] = $totalTareas >= $evento->min_tareas_proyecto;
         $checks[] = $totalTareas > 0 && $totalTareas === $tareasCompletadas; // Todas completas
+        
+        // 4. Verificar que el equipo tenga exactamente 5 miembros activos
+        $miembrosActivos = $equipo->miembrosActivos()->count();
+        $checks[] = $miembrosActivos === 5;
+        
+        // 5. Verificar que el equipo tenga un asesor
+        $tieneAsesor = \DB::table('equipo_participante')
+            ->join('perfiles', 'equipo_participante.perfil_id', '=', 'perfiles.id')
+            ->where('equipo_participante.equipo_id', $equipo->id)
+            ->where('equipo_participante.estado', 'activo')
+            ->where('perfiles.nombre', 'Asesor')
+            ->exists();
+        $checks[] = $tieneAsesor;
         
         // Todas las validaciones deben pasar
         return !in_array(false, $checks, true);
