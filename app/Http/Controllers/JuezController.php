@@ -135,7 +135,7 @@ class JuezController extends Controller
         }
         
         // Notificar a todos los miembros del equipo
-        NotificationService::evaluacionRecibida($equipo, auth()->user(), round($calificacionTotal, 2));
+        \App\Helpers\NotificacionHelper::evaluacionCompletada($equipo, round($calificacionTotal, 2));
         
         return redirect()->route('juez.dashboard')
             ->with('success', 'Evaluación guardada exitosamente. Calificación final: ' . round($calificacionTotal, 2) . ' puntos.');
