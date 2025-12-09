@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Equipo;
-use App\Models\User;
+use App\Models\Participante;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -20,7 +20,7 @@ class SolicitudAceptadaMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(Equipo $equipo, User $participante)
+    public function __construct(Equipo $equipo, Participante $participante)
     {
         $this->equipo = $equipo;
         $this->participante = $participante;
