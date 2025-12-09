@@ -27,7 +27,8 @@ class NotificacionHelper
 
     /**
      * Enviar correo de forma segura (con manejo de errores)
-     * IMPORTANTE: Usa queue() para enviar en background y no bloquear la petición
+     * IMPORTANTE: Usa Brevo API HTTP en producción (Railway bloquea SMTP)
+     *             Usa SMTP en local (funciona normal)
      */
     private static function enviarCorreo($mailable, $destinatario)
     {
@@ -40,17 +41,38 @@ class NotificacionHelper
         }
 
         try {
-            // Usar queue() en lugar de send() para no bloquear la petición
-            // Los correos se envían en background
-            Mail::to($destinatario)->queue($mailable);
+            // En producción (Railway), usar API HTTP para evitar bloqueo de SMTP
+            if (env('APP_ENV') === 'production' && env('BREVO_API_KEY')) {
+                // Renderizar el contenido del correo
+                $mailableHtml = $mailable->render();
+                $asunto = $mailable->subject ?? 'Notificación - Hackathon Events';
+                
+                // Usar servicio de Brevo API (HTTP, no SMTP)
+                $brevoService = app(\App\Services\BrevoEmailService::class);
+                $resultado = $brevoService->enviar($destinatario, $asunto, $mailableHtml);
+                
+                if ($resultado) {
+                    Log::info('Correo enviado exitosamente via Brevo API (producción)', [
+                        'destinatario' => $destinatario,
+                        'mailable' => get_class($mailable)
+                    ]);
+                }
+                
+                return $resultado;
+            } else {
+                // En local, usar SMTP normal (funciona bien)
+                Mail::to($destinatario)->send($mailable);
+                
+                Log::info('Correo enviado exitosamente via SMTP (local)', [
+                    'destinatario' => $destinatario,
+                    'mailable' => get_class($mailable)
+                ]);
+                
+                return true;
+            }
             
-            Log::info('Correo encolado para envío en background', [
-                'destinatario' => $destinatario,
-                'mailable' => get_class($mailable)
-            ]);
-            return true;
         } catch (\Exception $e) {
-            Log::error('Error al encolar correo', [
+            Log::error('Error al enviar correo', [
                 'destinatario' => $destinatario,
                 'error' => $e->getMessage(),
                 'mailable' => get_class($mailable)
