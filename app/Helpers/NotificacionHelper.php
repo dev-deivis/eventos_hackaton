@@ -27,6 +27,7 @@ class NotificacionHelper
 
     /**
      * Enviar correo de forma segura (con manejo de errores)
+     * IMPORTANTE: Usa queue() para enviar en background y no bloquear la petición
      */
     private static function enviarCorreo($mailable, $destinatario)
     {
@@ -39,14 +40,17 @@ class NotificacionHelper
         }
 
         try {
-            Mail::to($destinatario)->send($mailable);
-            Log::info('Correo enviado exitosamente', [
+            // Usar queue() en lugar de send() para no bloquear la petición
+            // Los correos se envían en background
+            Mail::to($destinatario)->queue($mailable);
+            
+            Log::info('Correo encolado para envío en background', [
                 'destinatario' => $destinatario,
                 'mailable' => get_class($mailable)
             ]);
             return true;
         } catch (\Exception $e) {
-            Log::error('Error al enviar correo', [
+            Log::error('Error al encolar correo', [
                 'destinatario' => $destinatario,
                 'error' => $e->getMessage(),
                 'mailable' => get_class($mailable)
