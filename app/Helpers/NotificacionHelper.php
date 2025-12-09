@@ -108,7 +108,20 @@ class NotificacionHelper
      */
     public static function solicitudEquipo(Equipo $equipo, Participante $solicitante)
     {
+        Log::info('🔍 [DEBUG] solicitudEquipo llamado', [
+            'equipo_id' => $equipo->id,
+            'equipo_nombre' => $equipo->nombre,
+            'solicitante_id' => $solicitante->id,
+            'solicitante_nombre' => $solicitante->user->name
+        ]);
+        
         $lider = $equipo->lider->user;
+        
+        Log::info('🔍 [DEBUG] Líder obtenido', [
+            'lider_id' => $lider->id,
+            'lider_nombre' => $lider->name,
+            'lider_email' => $lider->email
+        ]);
         
         // Crear notificación
         $notificacion = self::crear(
@@ -118,9 +131,20 @@ class NotificacionHelper
             "{$solicitante->user->name} quiere unirse a tu equipo '{$equipo->nombre}'",
             route('equipos.show', $equipo)
         );
+        
+        Log::info('🔍 [DEBUG] Notificación creada', [
+            'notificacion_id' => $notificacion->id
+        ]);
 
         // Enviar correo
+        Log::info('🔍 [DEBUG] Intentando enviar correo', [
+            'destinatario' => $lider->email,
+            'mail_enabled' => env('MAIL_ENABLED')
+        ]);
+        
         self::enviarCorreo(new SolicitudEquipoMail($equipo, $solicitante), $lider->email);
+        
+        Log::info('🔍 [DEBUG] solicitudEquipo completado');
 
         return $notificacion;
     }
