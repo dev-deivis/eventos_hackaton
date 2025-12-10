@@ -72,7 +72,7 @@
                             $posicion = ($equipos->currentPage() - 1) * $equipos->perPage() + $index + 1;
                             $badgeColors = [
                                 1 => ['bg' => 'bg-yellow-100 dark:bg-yellow-900/30', 'text' => 'text-yellow-700 dark:text-yellow-300', 'icon' => '🥇', 'label' => '1er Lugar'],
-                                2 => ['bg' => 'bg-gray-200 dark:bg-gray-600', 'text' => 'text-gray-700 dark:text-gray-300 dark:text-gray-600', 'icon' => '🥈', 'label' => '2do Lugar'],
+                                2 => ['bg' => 'bg-gray-200 dark:bg-gray-600', 'text' => 'text-gray-700 dark:text-gray-300', 'icon' => '🥈', 'label' => '2do Lugar'],
                                 3 => ['bg' => 'bg-orange-100 dark:bg-orange-900/30', 'text' => 'text-orange-700 dark:text-orange-300', 'icon' => '🥉', 'label' => '3er Lugar'],
                             ];
                             $badge = $badgeColors[$posicion] ?? null;
@@ -99,7 +99,7 @@
                                     <div class="flex items-start justify-between mb-2">
                                         <div class="flex-1">
                                             <div class="flex items-center gap-3 mb-2">
-                                                <h3 class="text-xl font-bold text-gray-900">{{ $equipo->nombre }}</h3>
+                                                <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ $equipo->nombre }}</h3>
                                                 @if($badge)
                                                     <span class="px-3 py-1 {{ $badge['bg'] }} {{ $badge['text'] }} rounded-full text-xs font-bold">
                                                         {{ $badge['label'] }}
@@ -114,8 +114,8 @@
                                             <p class="text-xs text-gray-500 dark:text-gray-400">{{ $equipo->evento->nombre }}</p>
                                         </div>
                                         <div class="text-right ml-6">
-                                            <div class="text-4xl font-bold text-gray-900">{{ number_format($equipo->calificacion_promedio, 0) }}</div>
-                                            <div class="text-xs text-gray-500">Puntuación Final</div>
+                                            <div class="text-4xl font-bold text-gray-900 dark:text-white">{{ number_format($equipo->calificacion_promedio, 0) }}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Puntuación Final</div>
                                         </div>
                                     </div>
 
@@ -133,11 +133,11 @@
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <span class="font-medium">Innovación:</span>
-                                            <span class="text-blue-600 font-bold">{{ number_format($equipo->innovacion_promedio, 0) }}</span>
+                                            <span class="text-blue-600 dark:text-blue-400 font-bold">{{ number_format($equipo->innovacion_promedio, 0) }}</span>
                                         </div>
                                         <div class="flex items-center gap-1">
                                             <span class="font-medium">Presentación:</span>
-                                            <span class="text-green-600 font-bold">{{ number_format($equipo->presentacion_promedio, 0) }}</span>
+                                            <span class="text-green-600 dark:text-green-400 font-bold">{{ number_format($equipo->presentacion_promedio, 0) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">No hay equipos evaluados aún</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No hay equipos evaluados aún</h3>
                             <p class="text-gray-600 dark:text-gray-400 mb-6">Los rankings se generarán automáticamente cuando se completen las evaluaciones</p>
                             <a href="{{ route('juez.dashboard') }}" 
                                class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">
