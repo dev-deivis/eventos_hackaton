@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -24,7 +24,7 @@
                 </div>
 
                 <!-- Evaluaciones Completadas -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-sm font-medium text-gray-600">Evaluaciones Completadas</h3>
                     </div>
@@ -37,7 +37,7 @@
                 </div>
 
                 <!-- Promedio de Calificación -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-sm font-medium text-gray-600">Promedio de Calificación</h3>
                     </div>
@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Tiempo Promedio -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-sm font-medium text-gray-600">Tiempo Promedio</h3>
                     </div>
@@ -68,7 +68,7 @@
                 
                 <!-- Columna Izquierda (1/3) - Acciones -->
                 <div>
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Acciones de Evaluación</h3>
                         
                         <div class="space-y-3">
@@ -99,11 +99,11 @@
                             </a>
 
                             <a href="{{ route('juez.mis-evaluaciones') }}" 
-                               class="w-full flex items-center gap-3 p-4 bg-white dark:bg-gray-800 hover:bg-gray-50 border-2 border-gray-200 dark:border-gray-700 rounded-lg transition text-left">
+                               class="w-full flex items-center gap-3 p-4 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-2 border-gray-200 dark:border-gray-600 rounded-lg transition text-left">
                                 <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
                                 </svg>
-                                <span class="font-semibold text-gray-700">Mis Evaluaciones</span>
+                                <span class="font-semibold text-gray-700 dark:text-gray-300">Mis Evaluaciones</span>
                             </a>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
 
                 <!-- Columna Derecha (2/3) - Equipos Pendientes -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                 <svg class="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
@@ -177,7 +177,7 @@
                                             @else
                                                 <div class="text-center">
                                                     <button disabled 
-                                                            class="px-5 py-2.5 bg-gray-300 text-gray-500 dark:text-gray-400 rounded-lg text-sm font-bold cursor-not-allowed flex items-center gap-2"
+                                                            class="px-5 py-2.5 bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 rounded-lg text-sm font-bold cursor-not-allowed flex items-center gap-2"
                                                             title="{{ $proyecto ? 'Estado: ' . $proyecto->estadoTexto : 'Sin proyecto' }}">
                                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
@@ -207,11 +207,11 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="text-center py-12 bg-gray-50 rounded-lg">
+                                <div class="text-center py-12 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                                     <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    <p class="text-lg font-medium text-gray-600">¡Excelente trabajo!</p>
+                                    <p class="text-lg font-medium text-gray-600 dark:text-gray-300">¡Excelente trabajo!</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Has completado todas tus evaluaciones asignadas</p>
                                 </div>
                             @endforelse
