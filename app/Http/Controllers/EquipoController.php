@@ -342,12 +342,15 @@ class EquipoController extends Controller
                 'estado' => 'pendiente',
             ]);
 
+            Log::info('🔍 [CONTROLADOR] Antes de notificar solicitud', [
+                'equipo_id' => $equipo->id,
+                'participante_id' => $participante->id
+            ]);
+
             // Notificar al líder del equipo
-            NotificationService::solicitudEquipo(
-                $equipo->lider->user_id,
-                $participante,
-                $equipo
-            );
+            \App\Helpers\NotificacionHelper::solicitudEquipo($equipo, $participante);
+
+            Log::info('🔍 [CONTROLADOR] Después de notificar solicitud');
 
             return back()->with('success', 'Solicitud enviada. El líder del equipo la revisará.');
 
@@ -387,10 +390,7 @@ class EquipoController extends Controller
             $participante = Participante::findOrFail($participanteId);
 
             // Notificar al participante aceptado
-            NotificationService::solicitudAceptada($participante->user_id, $equipo);
-
-            // Notificar a todos los miembros del equipo sobre el nuevo integrante
-            NotificationService::nuevoMiembro($equipo, $participante, auth()->id());
+            \App\Helpers\NotificacionHelper::solicitudAceptada($equipo, $participante);
 
             return back()->with('success', 'Miembro aceptado en el equipo.');
 
@@ -652,11 +652,7 @@ class EquipoController extends Controller
             ]);
 
             // Notificar al líder del equipo
-            NotificationService::solicitudEquipo(
-                $equipo->lider->user_id,
-                $participante,
-                $equipo
-            );
+            \App\Helpers\NotificacionHelper::solicitudEquipo($equipo, $participante);
 
             // Obtener perfil
             $perfil = \App\Models\Perfil::find($validated['perfil_id']);

@@ -27,25 +27,25 @@
         <div class="content">
             <p>¡Hola!</p>
             
-            <p><strong>{{ $solicitante->name }}</strong> ha solicitado unirse a tu equipo.</p>
+            <p><strong>{{ $solicitante->user->name }}</strong> ha solicitado unirse a tu equipo.</p>
             
             <div class="team-info">
                 <h2 style="margin-top: 0; color: #3b82f6;">{{ $equipo->nombre }}</h2>
                 
                 <div class="info-row">
                     <span class="label">👤 Solicitante:</span>
-                    <span class="value">{{ $solicitante->name }}</span>
+                    <span class="value">{{ $solicitante->user->name }}</span>
                 </div>
                 
                 <div class="info-row">
                     <span class="label">📧 Email:</span>
-                    <span class="value">{{ $solicitante->email }}</span>
+                    <span class="value">{{ $solicitante->user->email }}</span>
                 </div>
                 
-                @if($solicitante->participante && $solicitante->participante->perfil)
+                @if($solicitante->perfil)
                 <div class="info-row">
                     <span class="label">🎓 Carrera:</span>
-                    <span class="value">{{ $solicitante->participante->perfil->carrera->nombre ?? 'No especificada' }}</span>
+                    <span class="value">{{ $solicitante->perfil->carrera->nombre ?? 'No especificada' }}</span>
                 </div>
                 @endif
                 
