@@ -3,20 +3,20 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             
             <!-- Header -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
                     <div class="flex items-center gap-3 mb-2">
                         <a href="{{ route('equipos.show', $equipo) }}" 
-                           class="text-gray-600 hover:text-gray-900">
+                           class="text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:text-white">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                             </svg>
                         </a>
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-900">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
                                 Editar Proyecto
                             </h2>
-                            <p class="text-gray-600 mt-1">
+                            <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">
                                 Equipo: {{ $equipo->nombre }} | Evento: {{ $equipo->evento->nombre }}
                             </p>
                         </div>
@@ -25,7 +25,7 @@
             </div>
 
             <!-- Formulario -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     
                     <form method="POST" action="{{ route('proyectos.update', $equipo) }}" class="space-y-6" id="editProjectForm">
@@ -34,7 +34,7 @@
 
                         <!-- Nombre del Proyecto -->
                         <div>
-                            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                 Nombre del Proyecto <span class="text-red-500">*</span>
                             </label>
                             <input id="nombre" 
@@ -46,18 +46,18 @@
                                    placeholder="EduAI - Tutor Virtual"
                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
                             <div class="flex items-center justify-end mt-1">
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-500">
                                     <span id="nombreCount">{{ strlen(old('nombre', $proyecto->nombre)) }}</span>/30
                                 </p>
                             </div>
                             @error('nombre')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Descripción -->
                         <div>
-                            <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                 Descripción del Proyecto <span class="text-red-500">*</span>
                             </label>
                             <textarea id="descripcion" 
@@ -68,22 +68,22 @@
                                       placeholder="Describe tu proyecto: ¿Qué problema resuelve? ¿Qué tecnologías usa? ¿Qué lo hace innovador?"
                                       class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion', $proyecto->descripcion) }}</textarea>
                             <div class="flex items-center justify-between mt-1">
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-500">
                                     Solo letras y números permitidos
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-500">
                                     <span id="descripcionCount">{{ strlen(old('descripcion', $proyecto->descripcion)) }}</span>/1000
                                 </p>
                             </div>
                             @error('descripcion')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Tecnologías -->
                         <div>
-                            <label for="tecnologias" class="block text-sm font-medium text-gray-700 mb-2">
-                                Tecnologías Utilizadas <span class="text-gray-400 text-xs">(Opcional)</span>
+                            <label for="tecnologias" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
+                                Tecnologías Utilizadas <span class="text-gray-400 dark:text-gray-500 text-xs">(Opcional)</span>
                             </label>
                             <input id="tecnologias" 
                                    type="text" 
@@ -92,19 +92,19 @@
                                    placeholder="React, Node.js, MongoDB, Python, TensorFlow..."
                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('tecnologias') border-red-500 @enderror">
                             @error('tecnologias')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Links -->
                         <div class="border-t pt-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                                 Enlaces del Proyecto
                             </h3>
 
                             <!-- Repositorio -->
                             <div class="mb-4">
-                                <label for="link_repositorio" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="link_repositorio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -119,16 +119,16 @@
                                        placeholder="https://github.com/usuario/proyecto"
                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('link_repositorio') border-red-500 @enderror">
                                 @error('link_repositorio')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
-                                <p class="mt-1 text-xs text-gray-500">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
                                     Debe comenzar con http:// o https://
                                 </p>
                             </div>
 
                             <!-- Demo -->
                             <div class="mb-4">
-                                <label for="link_demo" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="link_demo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
@@ -143,16 +143,16 @@
                                        placeholder="https://mi-proyecto-demo.com"
                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('link_demo') border-red-500 @enderror">
                                 @error('link_demo')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
-                                <p class="mt-1 text-xs text-gray-500">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
                                     Debe comenzar con http:// o https://
                                 </p>
                             </div>
 
                             <!-- Presentación -->
                             <div>
-                                <label for="link_presentacion" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="link_presentacion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                     <div class="flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
@@ -167,25 +167,25 @@
                                        placeholder="https://docs.google.com/presentation/..."
                                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('link_presentacion') border-red-500 @enderror">
                                 @error('link_presentacion')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
-                                <p class="mt-1 text-xs text-gray-500">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
                                     Debe comenzar con http:// o https://
                                 </p>
                             </div>
                         </div>
 
                         <!-- Info Box -->
-                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
+                        <div class="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-500 p-4 rounded">
                             <div class="flex">
                                 <svg class="h-5 w-5 text-yellow-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                 </svg>
                                 <div class="ml-3">
-                                    <p class="text-sm text-yellow-700">
+                                    <p class="text-sm text-yellow-700 dark:text-yellow-300">
                                         <span class="font-medium">Importante:</span>
                                     </p>
-                                    <ul class="mt-2 text-sm text-yellow-600 list-disc list-inside space-y-1">
+                                    <ul class="mt-2 text-sm text-yellow-600 dark:text-yellow-400 list-disc list-inside space-y-1">
                                         <li>Los cambios se actualizarán automáticamente en el porcentaje de completitud</li>
                                         <li>Si tu proyecto está entregado, no podrás editarlo</li>
                                         <li>Asegúrate de completar todos los requisitos antes de entregar</li>
@@ -197,11 +197,11 @@
                         <!-- Botones -->
                         <div class="flex items-center justify-end gap-4 pt-4 border-t">
                             <a href="{{ route('equipos.show', $equipo) }}" 
-                               class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition duration-200">
+                               class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 dark:text-gray-600 hover:bg-gray-50 dark:bg-gray-700/50 font-medium transition duration-200">
                                 Cancelar
                             </a>
                             <button type="submit" 
-                                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
+                                    class="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
                                 Guardar Cambios
                             </button>
                         </div>
