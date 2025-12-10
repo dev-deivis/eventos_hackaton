@@ -4,13 +4,13 @@
             
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                    <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                    <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                     </svg>
                     Editar Usuario: {{ $usuario->name }}
                 </h1>
-                <p class="text-gray-600 mt-1">Modifica la información y roles del usuario</p>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Modifica la información y roles del usuario</p>
             </div>
 
             <!-- Formulario -->
