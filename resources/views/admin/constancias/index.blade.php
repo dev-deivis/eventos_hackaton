@@ -6,7 +6,7 @@
             <div class="mb-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Generador de Constancias</h1>
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Generador de Constancias</h1>
                         <p class="text-gray-600 dark:text-gray-400 mt-1">Crear y gestionar certificados digitales verificables</p>
                     </div>
                     <div class="flex gap-3">
@@ -40,25 +40,25 @@
             </div>
 
             <!-- Buscador y Filtros -->
-            <form method="GET" action="{{ route('admin.constancias.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+            <form method="GET" action="{{ route('admin.constancias.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 border border-gray-100 dark:border-gray-700">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Búsqueda -->
                     <div class="lg:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                            <x-icons.search class="w-4 h-4 text-gray-500" />
+                            <x-icons.search class="w-4 h-4 text-gray-500 dark:text-gray-400" />
                             Buscar
                         </label>
                         <input type="text" 
                                name="buscar"
                                value="{{ request('buscar') }}"
                                placeholder="Nombre, evento o código..."
-                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
                     <!-- Filtro por Tipo -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo</label>
-                        <select name="tipo" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <select name="tipo" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Todos</option>
                             <option value="participacion" {{ request('tipo') == 'participacion' ? 'selected' : '' }}>📜 Participación</option>
                             <option value="primer_lugar" {{ request('tipo') == 'primer_lugar' ? 'selected' : '' }}>🥇 1er Lugar</option>
@@ -71,7 +71,7 @@
                     <!-- Filtro por Evento -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Evento</label>
-                        <select name="evento_id" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <select name="evento_id" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">Todos</option>
                             @foreach($eventos as $evento)
                                 <option value="{{ $evento->id }}" {{ request('evento_id') == $evento->id ? 'selected' : '' }}>
@@ -88,7 +88,7 @@
                         </button>
                         @if(request()->hasAny(['buscar', 'tipo', 'evento_id', 'fecha_desde', 'fecha_hasta']))
                             <a href="{{ route('admin.constancias.index') }}" 
-                               class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition"
+                               class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-white rounded-lg font-medium transition"
                                title="Limpiar filtros">
                                 ✕
                             </a>
@@ -98,49 +98,49 @@
 
                 <!-- Filtros de Fecha (Expandibles) -->
                 <details class="mt-4">
-                    <summary class="cursor-pointer text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-2">
+                    <summary class="cursor-pointer text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-2">
                         <x-icons.calendar class="w-4 h-4" />
                         Filtros de fecha
                     </summary>
-                    <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
+                    <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Desde</label>
                             <input type="date" 
                                    name="fecha_desde"
                                    value="{{ request('fecha_desde') }}"
-                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hasta</label>
                             <input type="date" 
                                    name="fecha_hasta"
                                    value="{{ request('fecha_hasta') }}"
-                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
                         </div>
                     </div>
                 </details>
 
                 <!-- Resumen de filtros activos -->
                 @if(request()->hasAny(['buscar', 'tipo', 'evento_id', 'fecha_desde', 'fecha_hasta']))
-                    <div class="mt-4 pt-4 border-t flex items-center gap-2 text-sm">
-                        <span class="text-gray-600">Filtros activos:</span>
+                    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 text-sm">
+                        <span class="text-gray-600 dark:text-gray-400">Filtros activos:</span>
                         @if(request('buscar'))
-                            <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">
+                            <span class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded">
                                 Búsqueda: "{{ request('buscar') }}"
                             </span>
                         @endif
                         @if(request('tipo'))
-                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded">
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded">
                                 Tipo: {{ ucfirst(str_replace('_', ' ', request('tipo'))) }}
                             </span>
                         @endif
                         @if(request('evento_id'))
-                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded">
                                 Evento: {{ $eventos->find(request('evento_id'))->nombre ?? 'Desconocido' }}
                             </span>
                         @endif
                         @if(request('fecha_desde') || request('fecha_hasta'))
-                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded">
                                 Fechas: {{ request('fecha_desde') ?? '...' }} a {{ request('fecha_hasta') ?? '...' }}
                             </span>
                         @endif
@@ -150,8 +150,8 @@
 
             <!-- Grid de Constancias -->
             @if($constancias->isEmpty())
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center border border-gray-100">
-                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center border border-gray-100 dark:border-gray-700">
+                    <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No hay constancias emitidas</h3>
@@ -169,17 +169,17 @@
                     @foreach($constancias as $constancia)
                         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition">
                             <!-- Header con badge -->
-                            <div class="p-4 border-b border-gray-100">
+                            <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                                 <div class="flex items-start justify-between">
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-2">
-                                            <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L11 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c-.25.78.409 1.569 1.239 1.569.49 0 .945-.177 1.301-.464l1.792-1.446-1.41-4.39-2.104.841z"/>
                                             </svg>
-                                            <h3 class="font-bold text-gray-900">{{ $constancia->participante->user->name }}</h3>
+                                            <h3 class="font-bold text-gray-900 dark:text-white">{{ $constancia->participante->user->name }}</h3>
                                         </div>
                                         <span class="inline-block px-2 py-1 text-xs font-semibold rounded 
-                                            {{ $constancia->tipo_constancia === 'ganador' ? 'bg-pink-100 text-pink-700' : 'bg-purple-100 text-purple-700' }}">
+                                            {{ $constancia->tipo_constancia === 'ganador' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' }}">
                                             {{ ucfirst($constancia->tipo_constancia) }}
                                         </span>
                                     </div>
@@ -189,8 +189,8 @@
                             <!-- Contenido -->
                             <div class="p-4 space-y-3">
                                 <div>
-                                    <p class="text-xs text-gray-500">Evento:</p>
-                                    <p class="font-medium text-gray-900">{{ $constancia->evento->nombre }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Evento:</p>
+                                    <p class="font-medium text-gray-900 dark:text-white">{{ $constancia->evento->nombre }}</p>
                                 </div>
 
                                 @if($constancia->participante->equipos()->where('evento_id', $constancia->evento_id)->exists())
