@@ -5,13 +5,13 @@
             <!-- Header -->
             <div class="mb-8 flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                        <svg class="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
                         </svg>
                         Notificaciones
                     </h1>
-                    <p class="text-gray-600 mt-1">Todas tus notificaciones en un solo lugar</p>
+                    <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">Todas tus notificaciones en un solo lugar</p>
                 </div>
                 
                 @if($notificaciones->where('leida', false)->count() > 0)
@@ -19,7 +19,7 @@
                           onsubmit="return confirm('¿Marcar todas las notificaciones como leídas?')">
                         @csrf
                         <button type="submit" 
-                                class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition font-medium">
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-lg transition font-medium">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                             </svg>
@@ -31,52 +31,52 @@
 
             <!-- Estadísticas Rápidas -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center gap-3">
-                        <div class="p-3 bg-blue-100 rounded-lg">
-                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
                                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-2xl font-bold text-gray-900">{{ $notificaciones->total() }}</p>
-                            <p class="text-sm text-gray-600">Total notificaciones</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $notificaciones->total() }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Total notificaciones</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center gap-3">
-                        <div class="p-3 bg-red-100 rounded-lg">
-                            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="p-3 bg-red-100 dark:bg-red-900 rounded-lg">
+                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-2xl font-bold text-gray-900">{{ $notificaciones->where('leida', false)->count() }}</p>
-                            <p class="text-sm text-gray-600">No leídas</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $notificaciones->where('leida', false)->count() }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">No leídas</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center gap-3">
-                        <div class="p-3 bg-green-100 rounded-lg">
-                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-2xl font-bold text-gray-900">{{ $notificaciones->where('leida', true)->count() }}</p>
-                            <p class="text-sm text-gray-600">Leídas</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $notificaciones->where('leida', true)->count() }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Leídas</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Lista de Notificaciones -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden">
                 @forelse($notificaciones as $notificacion)
                     @php
                         $colorClasses = [
@@ -104,7 +104,7 @@
                     @endphp
                     
                     <a href="{{ route('notificaciones.marcar-leida', $notificacion->id) }}" 
-                       class="block border-l-4 {{ $colors['border'] }} {{ $notificacion->leida ? 'bg-white' : $colors['bg'] }} p-5 hover:shadow-md transition {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
+                       class="block border-l-4 {{ $colors['border'] }} {{ $notificacion->leida ? 'bg-white dark:bg-gray-800' : $colors['bg'] }} p-5 hover:shadow-md transition {{ !$loop->last ? 'border-b border-gray-200 dark:border-gray-600' : '' }}">
                         <div class="flex items-start gap-4">
                             <!-- Icono -->
                             <div class="flex-shrink-0">
@@ -130,13 +130,13 @@
                             <!-- Contenido -->
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-start justify-between mb-1">
-                                    <p class="text-base font-bold text-gray-900">{{ $notificacion->titulo }}</p>
+                                    <p class="text-base font-bold text-gray-900 dark:text-white">{{ $notificacion->titulo }}</p>
                                     @if(!$notificacion->leida)
                                         <span class="flex-shrink-0 w-3 h-3 bg-red-500 rounded-full"></span>
                                     @endif
                                 </div>
-                                <p class="text-sm text-gray-700 mb-2">{{ $notificacion->mensaje }}</p>
-                                <div class="flex items-center gap-4 text-xs text-gray-500">
+                                <p class="text-sm text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">{{ $notificacion->mensaje }}</p>
+                                <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-500">
                                     <span class="flex items-center gap-1">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
@@ -144,7 +144,7 @@
                                         {{ $notificacion->created_at->diffForHumans() }}
                                     </span>
                                     @if($notificacion->leida)
-                                        <span class="flex items-center gap-1 text-green-600">
+                                        <span class="flex items-center gap-1 text-green-600 dark:text-green-400">
                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                             </svg>
@@ -156,7 +156,7 @@
                             
                             <!-- Flecha -->
                             <div class="flex-shrink-0">
-                                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                                 </svg>
                             </div>
@@ -164,11 +164,11 @@
                     </a>
                 @empty
                     <div class="p-12 text-center">
-                        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                         </svg>
-                        <p class="text-lg text-gray-500 font-medium">No tienes notificaciones</p>
-                        <p class="text-sm text-gray-400 mt-1">Te avisaremos cuando haya algo nuevo</p>
+                        <p class="text-lg text-gray-500 dark:text-gray-500 font-medium">No tienes notificaciones</p>
+                        <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">Te avisaremos cuando haya algo nuevo</p>
                     </div>
                 @endforelse
             </div>

@@ -1,13 +1,13 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-white">
                     
                     <!-- Header -->
                     <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Completa tu perfil</h2>
-                        <p class="text-gray-600">
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Completa tu perfil</h2>
+                        <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500">
                             Para participar en eventos, necesitamos algunos datos adicionales.
                         </p>
                     </div>
@@ -18,7 +18,7 @@
 
                         <!-- Carrera -->
                         <div>
-                            <label for="carrera_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="carrera_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                 Carrera <span class="text-red-500">*</span>
                             </label>
                             <select id="carrera_id" 
@@ -33,13 +33,13 @@
                                 @endforeach
                             </select>
                             @error('carrera_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Número de Control -->
                         <div>
-                            <label for="no_control" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="no_control" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                 Número de Control <span class="text-red-500">*</span>
                             </label>
                             <input id="no_control" 
@@ -50,13 +50,13 @@
                                    placeholder="21310001"
                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('no_control') border-red-500 @enderror">
                             @error('no_control')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Semestre -->
                         <div>
-                            <label for="semestre" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="semestre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
                                 Semestre Actual <span class="text-red-500">*</span>
                             </label>
                             <select id="semestre" 
@@ -71,14 +71,14 @@
                                 @endfor
                             </select>
                             @error('semestre')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Teléfono -->
                         <div>
-                            <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">
-                                Teléfono <span class="text-gray-400 text-xs">(Opcional)</span>
+                            <label for="telefono" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
+                                Teléfono <span class="text-gray-400 dark:text-gray-500 text-xs">(Opcional)</span>
                             </label>
                             <input id="telefono" 
                                    type="tel" 
@@ -87,30 +87,30 @@
                                    placeholder="951 123 4567"
                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('telefono') border-red-500 @enderror">
                             @error('telefono')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Biografía -->
                         <div>
-                            <label for="biografia" class="block text-sm font-medium text-gray-700 mb-2">
-                                Cuéntanos sobre ti <span class="text-gray-400 text-xs">(Opcional)</span>
+                            <label for="biografia" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
+                                Cuéntanos sobre ti <span class="text-gray-400 dark:text-gray-500 text-xs">(Opcional)</span>
                             </label>
                             <textarea id="biografia" 
                                       name="biografia" 
                                       rows="4"
                                       placeholder="Ejemplo: Apasionado por el desarrollo web, me gusta trabajar en equipo y resolver problemas complejos..."
                                       class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('biografia') border-red-500 @enderror">{{ old('biografia') }}</textarea>
-                            <p class="mt-1 text-sm text-gray-500">Máximo 500 caracteres</p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-500">Máximo 500 caracteres</p>
                             @error('biografia')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Submit Button -->
                         <div class="flex justify-end pt-4">
                             <button type="submit" 
-                                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
+                                    class="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg transition duration-200 shadow-lg hover:shadow-xl">
                                 Completar Perfil
                             </button>
                         </div>

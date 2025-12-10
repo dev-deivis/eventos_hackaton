@@ -20,7 +20,7 @@
                             <span class="inline-block px-3 py-1 {{ $tipoColor }} rounded-full text-sm font-semibold mb-4">
                                 {{ ucfirst($evento->tipo) }}
                             </span>
-                        <div class="flex items-center gap-4 text-sm text-gray-600">
+                        <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                             <span class="flex items-center gap-1">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
@@ -63,7 +63,7 @@
                         @if(auth()->check() && auth()->user()->isAdmin())
                             <!-- Botón Editar Evento -->
                             <a href="{{ route('eventos.edit', $evento) }}" 
-                               class="px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg font-medium flex items-center gap-2 transition">
+                               class="px-4 py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 rounded-lg font-medium flex items-center gap-2 transition">
                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                </svg>
@@ -73,7 +73,7 @@
                             <!-- Botón Cambiar Estado con Dropdown -->
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open" 
-                                        class="px-4 py-2 bg-pink-100 text-pink-700 hover:bg-pink-200 rounded-lg font-medium flex items-center gap-2 transition">
+                                        class="px-4 py-2 bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 hover:bg-pink-200 rounded-lg font-medium flex items-center gap-2 transition">
                                     Cambiar Estado
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -82,13 +82,13 @@
                                 
                                 <div x-show="open" 
                                      @click.away="open = false"
-                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+                                     class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 dark:border-gray-700 z-10">
                                     <div class="py-1">
                                         <form action="{{ route('eventos.cambiar-estado', $evento) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="draft">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 dark:text-gray-600 dark:text-gray-300 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                                 </svg>
@@ -99,7 +99,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="abierto">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-green-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 text-green-700 dark:text-green-300 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                                 </svg>
@@ -110,7 +110,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="en_progreso">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-blue-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 text-blue-700 dark:text-blue-300 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
                                                 </svg>
@@ -121,7 +121,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="cerrado">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-red-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 text-red-700 dark:text-red-300 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
                                                 </svg>
@@ -132,7 +132,7 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="estado" value="completado">
-                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700 text-purple-700 flex items-center gap-2">
+                                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 text-purple-700 dark:text-purple-300 flex items-center gap-2">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                                 </svg>
@@ -158,7 +158,7 @@
                                     @if($evento->estaAbierto())
                                         <form action="{{ route('eventos.register', $evento) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold">
+                                            <button type="submit" class="px-6 py-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-lg font-semibold">
                                                 Registrarse al Evento
                                             </button>
                                         </form>
@@ -178,7 +178,7 @@
                     <!-- Descripción del Evento -->
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Descripción del Evento</h2>
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $evento->descripcion }}</p>
+                        <p class="text-gray-700 dark:text-gray-300 dark:text-gray-600 dark:text-gray-300 leading-relaxed">{{ $evento->descripcion }}</p>
                     </div>
 
                     <!-- Premios REALES con SVG -->
@@ -204,7 +204,7 @@
                                         @elseif($premio->orden == 2)
                                             <!-- Medalla de Plata -->
                                             <div class="flex-shrink-0">
-                                                <svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-10 h-10 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M12 2L9 9H2l6 4.5L5.5 22 12 17l6.5 5-2.5-8.5L22 9h-7l-3-7z"/>
                                                 </svg>
                                             </div>
@@ -225,8 +225,8 @@
                                         @endif
                                         
                                         <div class="flex-1">
-                                            <span class="font-bold text-gray-900">{{ $premio->lugar }}:</span>
-                                            <span class="text-gray-700 dark:text-gray-300 ml-2">{{ $premio->descripcion }}</span>
+                                            <span class="font-bold text-gray-900 dark:text-white">{{ $premio->lugar }}:</span>
+                                            <span class="text-gray-700 dark:text-gray-300 dark:text-gray-600 dark:text-gray-300 ml-2">{{ $premio->descripcion }}</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -237,12 +237,12 @@
                     <!-- Requisitos -->
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
                             </svg>
                             Requisitos
                         </h3>
-                        <ul class="space-y-2 text-gray-700">
+                        <ul class="space-y-2 text-gray-700 dark:text-gray-300 dark:text-gray-600">
                             <li class="flex items-start gap-2">
                                 <svg class="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -274,7 +274,7 @@
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-between">
                             <span class="flex items-center gap-2">
-                                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
                                 </svg>
                                 Equipos Participantes ({{ $evento->equipos->count() }})
@@ -282,14 +282,14 @@
                         </h3>
 
                         @forelse($evento->equipos as $equipo)
-                            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-indigo-300 transition">
+                            <div class="border border-gray-200 dark:border-gray-600 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-indigo-300 dark:hover:border-indigo-500 transition">
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="flex-1">
-                                        <h4 class="font-bold text-gray-900">{{ $equipo->nombre }}</h4>
-                                        <p class="text-sm text-gray-600">{{ $equipo->descripcion }}</p>
+                                        <h4 class="font-bold text-gray-900 dark:text-white">{{ $equipo->nombre }}</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $equipo->descripcion }}</p>
                                     </div>
                                     <a href="{{ route('equipos.show', $equipo) }}" 
-                                       class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 rounded-lg text-sm font-medium">
+                                       class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:bg-gray-600 rounded-lg text-sm font-medium">
                                         Ver Equipo
                                     </a>
                                 </div>
@@ -297,16 +297,16 @@
                                 <!-- Miembros Actuales -->
                                 <div class="flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-medium text-gray-700">Miembros: {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Miembros: {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-8 text-gray-500">
+                            <div class="text-center py-8 text-gray-500 dark:text-gray-500">
                                 <p>Aún no hay equipos registrados</p>
                                 @auth
                                     @if($estaInscrito)
-                                        <a href="{{ route('equipos.create', $evento) }}" class="text-indigo-600 hover:underline mt-2 inline-block">
+                                        <a href="{{ route('equipos.create', $evento) }}" class="text-indigo-600 dark:text-indigo-400 hover:underline mt-2 inline-block">
                                             Sé el primero en crear un equipo
                                         </a>
                                     @endif
@@ -323,32 +323,32 @@
                     <!-- Cronograma -->
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
                             Cronograma
                         </h3>
                         <div class="space-y-3">
                             <div class="flex items-start gap-3">
-                                <div class="w-2 h-2 bg-indigo-600 rounded-full mt-2"></div>
+                                <div class="w-2 h-2 bg-indigo-600 dark:bg-indigo-500 rounded-full mt-2"></div>
                                 <div class="flex-1">
-                                    <p class="font-medium text-gray-900">Registro</p>
-                                    <p class="text-sm text-gray-600">Hasta {{ $evento->fecha_limite_registro->format('d M Y') }}</p>
+                                    <p class="font-medium text-gray-900 dark:text-white">Registro</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">Hasta {{ $evento->fecha_limite_registro->format('d M Y') }}</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3">
-                                <div class="w-2 h-2 bg-indigo-600 rounded-full mt-2"></div>
+                                <div class="w-2 h-2 bg-indigo-600 dark:bg-indigo-500 rounded-full mt-2"></div>
                                 <div class="flex-1">
-                                    <p class="font-medium text-gray-900">Evento</p>
-                                    <p class="text-sm text-gray-600">{{ $evento->fecha_inicio->format('d M') }} - {{ $evento->fecha_fin->format('d M Y') }}</p>
+                                    <p class="font-medium text-gray-900 dark:text-white">Evento</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $evento->fecha_inicio->format('d M') }} - {{ $evento->fecha_fin->format('d M Y') }}</p>
                                 </div>
                             </div>
                             @if($evento->fecha_evaluacion)
                                 <div class="flex items-start gap-3">
                                     <div class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
                                     <div class="flex-1">
-                                        <p class="font-medium text-gray-900">Evaluación</p>
-                                        <p class="text-sm text-gray-600">{{ $evento->fecha_evaluacion->format('d M Y') }}</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">Evaluación</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $evento->fecha_evaluacion->format('d M Y') }}</p>
                                     </div>
                                 </div>
                             @endif
@@ -356,8 +356,8 @@
                                 <div class="flex items-start gap-3">
                                     <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
                                     <div class="flex-1">
-                                        <p class="font-medium text-gray-900">Premiación</p>
-                                        <p class="text-sm text-gray-600">{{ $evento->fecha_premiacion->format('d M Y') }}</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">Premiación</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $evento->fecha_premiacion->format('d M Y') }}</p>
                                     </div>
                                 </div>
                             @endif
@@ -372,7 +372,7 @@
                                 @auth
                                     @if($estaInscrito)
                                         <a href="{{ route('equipos.create', $evento) }}" 
-                                           class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium">
+                                           class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-lg font-medium">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
                                             </svg>
@@ -380,7 +380,7 @@
                                         </a>
 
                                         <a href="{{ route('equipos.index', $evento) }}" 
-                                           class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-700 rounded-lg font-medium">
+                                           class="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 dark:border-gray-700 rounded-lg font-medium">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
                                             </svg>
@@ -393,29 +393,29 @@
                     @endif
 
                     <!-- Información del Evento -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 dark:bg-gray-700 rounded-xl p-6">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                             </svg>
                             Información del Evento
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Participantes</span>
-                                <span class="font-bold text-gray-900">{{ $evento->totalParticipantes() }}</span>
+                                <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Participantes</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ $evento->totalParticipantes() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Equipos</span>
-                                <span class="font-bold text-gray-900">{{ $evento->totalEquipos() }}</span>
+                                <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Equipos</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ $evento->totalEquipos() }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Tamaño de Equipo</span>
-                                <span class="font-bold text-gray-900">{{ $evento->min_miembros_equipo }}-{{ $evento->max_miembros_equipo }} Miembros</span>
+                                <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Tamaño de Equipo</span>
+                                <span class="font-bold text-gray-900 dark:text-white">{{ $evento->min_miembros_equipo }}-{{ $evento->max_miembros_equipo }} Miembros</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-600">Tipo</span>
-                                <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                                <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Tipo</span>
+                                <span class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-medium">
                                     {{ $evento->tipoTexto }}
                                 </span>
                             </div>
