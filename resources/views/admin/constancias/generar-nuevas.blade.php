@@ -57,106 +57,109 @@
             </div>
 
             <div id="content-individual" class="tab-content">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Generar Constancia Individual</h2>
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Generar Constancia Individual</h2>
 
-                    <form action="{{ route('admin.constancias.generar-individual') }}" method="POST" class="space-y-3">
-                        @csrf
+                        <form action="{{ route('admin.constancias.generar-individual') }}" method="POST" class="space-y-3">
+                            @csrf
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Evento *</label>
-                            <select name="evento_id" id="evento_individual" required
-                                onchange="cargarParticipantes(this.value, 'individual')"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Selecciona un evento</option>
-                                @foreach ($eventos as $evento)
-                                    <option value="{{ $evento->id }}">{{ $evento->nombre }}
-                                        ({{ $evento->fecha_inicio->format('d/m/Y') }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Evento *</label>
+                                <select name="evento_id" id="evento_individual" required
+                                    onchange="cargarParticipantes(this.value, 'individual')"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Selecciona un evento</option>
+                                    @foreach ($eventos as $evento)
+                                        <option value="{{ $evento->id }}">{{ $evento->nombre }}
+                                            ({{ $evento->fecha_inicio->format('d/m/Y') }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Tipo de Constancia *</label>
-                            <select name="tipo" required
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Selecciona el tipo</option>
-                                <option value="participacion">📜 Participación</option>
-                                <option value="primer_lugar">🥇 Primer Lugar</option>
-                                <option value="segundo_lugar">🥈 Segundo Lugar</option>
-                                <option value="tercer_lugar">🥉 Tercer Lugar</option>
-                                <option value="mencion_honorifica">⭐ Mención Honorífica</option>
-                            </select>
-                        </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Tipo de Constancia *</label>
+                                <select name="tipo" required
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Selecciona el tipo</option>
+                                    <option value="participacion">📜 Participación</option>
+                                    <option value="primer_lugar">🥇 Primer Lugar</option>
+                                    <option value="segundo_lugar">🥈 Segundo Lugar</option>
+                                    <option value="tercer_lugar">🥉 Tercer Lugar</option>
+                                    <option value="mencion_honorifica">⭐ Mención Honorífica</option>
+                                </select>
+                            </div>
 
-                        <div id="participante-container-individual" style="display: none;">
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Participante *</label>
-                            <select name="participante_id" id="participante_individual" required
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Selecciona un participante</option>
-                            </select>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Solo se muestran participantes activos del evento</p>
-                        </div>
+                            <div id="participante-container-individual" style="display: none;">
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Participante *</label>
+                                <select name="participante_id" id="participante_individual" required
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Selecciona un participante</option>
+                                </select>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Solo se muestran participantes activos del evento</p>
+                            </div>
 
-                        <div class="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
-                            <a href="{{ route('admin.constancias.index') }}"
-                                class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition">
-                                Cancelar
-                            </a>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg">
-                                Generar Constancia
-                            </button>
-                        </div>
-                    </form>
+                            <div class="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                <a href="{{ route('admin.constancias.index') }}"
+                                    class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition">
+                                    Cancelar
+                                </a>
+                                <button type="submit"
+                                    class="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg">
+                                    Generar Constancia
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
             <div id="content-lote" class="tab-content hidden">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Generar Constancias en Lote</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Generar Constancias en Lote</h2>
 
-                    <form action="{{ route('admin.constancias.generar-lote') }}" method="POST" class="space-y-3">
-                        @csrf
+                        <form action="{{ route('admin.constancias.generar-lote') }}" method="POST" class="space-y-3">
+                            @csrf
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Evento *</label>
-                            <select name="evento_id" id="evento_lote" required onchange="cargarDatosLote(this.value)"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Selecciona un evento</option>
-                                @foreach ($eventos as $evento)
-                                    <option value="{{ $evento->id }}">{{ $evento->nombre }}
-                                        ({{ $evento->fecha_inicio->format('d/m/Y') }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Evento *</label>
+                                <select name="evento_id" id="evento_lote" required onchange="cargarDatosLote(this.value)"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Selecciona un evento</option>
+                                    @foreach ($eventos as $evento)
+                                        <option value="{{ $evento->id }}">{{ $evento->nombre }}
+                                            ({{ $evento->fecha_inicio->format('d/m/Y') }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Tipo de Constancia *</label>
-                            <select name="tipo" required
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Selecciona el tipo</option>
-                                <option value="participacion">📜 Participación (Todos)</option>
-                                <option value="primer_lugar">🥇 Primer Lugar</option>
-                                <option value="segundo_lugar">🥈 Segundo Lugar</option>
-                                <option value="tercer_lugar">🥉 Tercer Lugar</option>
-                                <option value="mencion_honorifica">⭐ Mención Honorífica</option>
-                            </select>
-                        </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Tipo de Constancia *</label>
+                                <select name="tipo" required
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Selecciona el tipo</option>
+                                    <option value="participacion">📜 Participación (Todos)</option>
+                                    <option value="primer_lugar">🥇 Primer Lugar</option>
+                                    <option value="segundo_lugar">🥈 Segundo Lugar</option>
+                                    <option value="tercer_lugar">🥉 Tercer Lugar</option>
+                                    <option value="mencion_honorifica">⭐ Mención Honorífica</option>
+                                </select>
+                            </div>
 
-                        <div id="equipo-container-lote" style="display: none;">
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                Filtrar por Equipo (Opcional)
-                            </label>
-                            <select name="equipo_id" id="equipo_lote"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Todos los equipos</option>
-                            </select>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Deja en blanco para generar para todos los
-                                participantes</p>
-                        </div>
+                            <div id="equipo-container-lote" style="display: none;">
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                                    Filtrar por Equipo (Opcional)
+                                </label>
+                                <select name="equipo_id" id="equipo_lote"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Todos los equipos</option>
+                                </select>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Deja en blanco para generar para todos los
+                                    participantes</p>
+                            </div>
 
                         <div id="stats-container" class="hidden bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-2.5">
                             <h3 class="font-semibold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-1.5 text-xs">
@@ -202,79 +205,77 @@
                                 Generar Constancias en Lote
                             </button>
                         </div>
-                                Cancelar
-                            </a>
-                            <button type="submit"
-                                class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg">
-                                Generar Constancias en Lote
-                            </button>
-                        </div>
                     </form>
+                </div>
+            </div>
+        </div>
                 </div>
             </div>
 
             <div id="content-ganadores" class="tab-content hidden">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏆 Declarar Ganadores Automático</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">🏆 Declarar Ganadores Automático</h2>
 
-                    <div class="mb-3 bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700 rounded-lg p-2.5">
-                        <div class="flex gap-2">
-                            <svg class="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
+                        <div class="mb-3 bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700 rounded-lg p-2.5">
+                            <div class="flex gap-2">
+                                <svg class="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                <div>
+                                    <p class="text-xs text-purple-900 dark:text-purple-300 font-medium mb-0.5">¿Cómo funciona?</p>
+                                    <p class="text-xs text-purple-700 dark:text-purple-400 leading-tight">
+                                        El sistema automáticamente seleccionará los 3 equipos con mayor calificación promedio y generará constancias de 1er, 2do y 3er lugar.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="{{ route('admin.constancias.generar-ganadores-automatico') }}" method="POST"
+                            class="space-y-3">
+                            @csrf
+
                             <div>
-                                <p class="text-xs text-purple-900 dark:text-purple-300 font-medium mb-0.5">¿Cómo funciona?</p>
-                                <p class="text-xs text-purple-700 dark:text-purple-400 leading-tight">
-                                    El sistema automáticamente seleccionará los 3 equipos con mayor calificación promedio y generará constancias de 1er, 2do y 3er lugar.
-                                </p>
+                                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Evento *</label>
+                                <select name="evento_id" id="evento_ganadores" required
+                                    onchange="cargarGanadores(this.value)"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Selecciona un evento</option>
+                                    @foreach ($eventos as $evento)
+                                        <option value="{{ $evento->id }}">{{ $evento->nombre }}
+                                            ({{ $evento->fecha_inicio->format('d/m/Y') }})
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
+
+                            <div id="ganadores-preview" class="hidden space-y-2">
+                                <h3 class="font-semibold text-gray-900 dark:text-white text-xs">Vista Previa de Ganadores:</h3>
+
+                                <div id="ganadores-list"></div>
+
+                                <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-2">
+                                    <p class="text-xs text-green-800 dark:text-green-300">
+                                        <strong>Total:</strong> Se generarán <span
+                                            id="total-constancias-ganadores">0</span> constancias
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                <a href="{{ route('admin.constancias.index') }}"
+                                    class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition">
+                                    Cancelar
+                                </a>
+                                <button type="submit" id="btn-generar-ganadores" disabled
+                                    class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                                    <x-icons.trophy class="w-4 h-4" />
+                                    Generar Constancias de Ganadores
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-                    <form action="{{ route('admin.constancias.generar-ganadores-automatico') }}" method="POST"
-                        class="space-y-3">
-                        @csrf
-
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Evento *</label>
-                            <select name="evento_id" id="evento_ganadores" required
-                                onchange="cargarGanadores(this.value)"
-                                class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                                <option value="">Selecciona un evento</option>
-                                @foreach ($eventos as $evento)
-                                    <option value="{{ $evento->id }}">{{ $evento->nombre }}
-                                        ({{ $evento->fecha_inicio->format('d/m/Y') }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div id="ganadores-preview" class="hidden space-y-2">
-                            <h3 class="font-semibold text-gray-900 dark:text-white text-xs">Vista Previa de Ganadores:</h3>
-
-                            <div id="ganadores-list"></div>
-
-                            <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-2">
-                                <p class="text-xs text-green-800 dark:text-green-300">
-                                    <strong>Total:</strong> Se generarán <span
-                                        id="total-constancias-ganadores">0</span> constancias
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
-                            <a href="{{ route('admin.constancias.index') }}"
-                                class="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition">
-                                Cancelar
-                            </a>
-                            <button type="submit" id="btn-generar-ganadores" disabled
-                                class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-bold transition shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-                                <x-icons.trophy class="w-4 h-4" />
-                                Generar Constancias de Ganadores
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
 
