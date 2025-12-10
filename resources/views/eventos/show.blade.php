@@ -282,14 +282,14 @@
                         </h3>
 
                         @forelse($evento->equipos as $equipo)
-                            <div class="bg-indigo-600 dark:bg-indigo-700 border border-indigo-500 dark:border-indigo-600 rounded-lg p-4 mb-3 hover:border-indigo-400 dark:hover:border-indigo-500 transition">
+                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-indigo-300 dark:hover:border-indigo-500 transition">
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="flex-1">
-                                        <h4 class="font-bold text-white">{{ $equipo->nombre }}</h4>
-                                        <p class="text-sm text-white/90">{{ $equipo->descripcion }}</p>
+                                        <h4 class="font-bold text-gray-900 dark:text-white">{{ $equipo->nombre }}</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $equipo->descripcion }}</p>
                                     </div>
                                     <a href="{{ route('equipos.show', $equipo) }}" 
-                                       class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-medium text-white">
+                                       class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 rounded-lg text-sm font-medium text-white">
                                         Ver Equipo
                                     </a>
                                 </div>
@@ -297,7 +297,7 @@
                                 <!-- Miembros Actuales -->
                                 <div class="flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-medium text-white">Miembros: {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">Miembros: {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
                                     </div>
                                 </div>
                             </div>
