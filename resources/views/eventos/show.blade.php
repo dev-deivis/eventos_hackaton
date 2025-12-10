@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -192,7 +192,7 @@
                             </h3>
                             <div class="space-y-3">
                                 @foreach($evento->premios as $premio)
-                                    <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                                    <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
                                         <!-- Ícono SVG según el orden -->
                                         @if($premio->orden == 1)
                                             <!-- Medalla de Oro -->
@@ -226,7 +226,7 @@
                                         
                                         <div class="flex-1">
                                             <span class="font-bold text-gray-900 dark:text-white">{{ $premio->lugar }}:</span>
-                                            <span class="text-gray-700 dark:text-gray-300 dark:text-gray-600 dark:text-gray-300 ml-2">{{ $premio->descripcion }}</span>
+                                            <span class="text-gray-700 dark:text-gray-300 ml-2">{{ $premio->descripcion }}</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -282,14 +282,14 @@
                         </h3>
 
                         @forelse($evento->equipos as $equipo)
-                            <div class="border border-gray-200 dark:border-gray-600 dark:border-gray-700 rounded-lg p-4 mb-3 hover:border-indigo-300 dark:hover:border-indigo-500 transition">
+                            <div class="bg-indigo-600 dark:bg-indigo-700 border border-indigo-500 dark:border-indigo-600 rounded-lg p-4 mb-3 hover:border-indigo-400 dark:hover:border-indigo-500 transition">
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="flex-1">
-                                        <h4 class="font-bold text-gray-900 dark:text-white">{{ $equipo->nombre }}</h4>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $equipo->descripcion }}</p>
+                                        <h4 class="font-bold text-white">{{ $equipo->nombre }}</h4>
+                                        <p class="text-sm text-white/90">{{ $equipo->descripcion }}</p>
                                     </div>
                                     <a href="{{ route('equipos.show', $equipo) }}" 
-                                       class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:bg-gray-600 rounded-lg text-sm font-medium">
+                                       class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-medium text-white">
                                         Ver Equipo
                                     </a>
                                 </div>
@@ -297,7 +297,7 @@
                                 <!-- Miembros Actuales -->
                                 <div class="flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Miembros: {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
+                                        <span class="font-medium text-white">Miembros: {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
                                     </div>
                                 </div>
                             </div>
