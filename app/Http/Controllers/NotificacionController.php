@@ -24,11 +24,13 @@ class NotificacionController extends Controller
      */
     public function obtenerNoLeidas()
     {
+        // OPTIMIZACIÓN: Limitar a solo 5 notificaciones más recientes
+        // Esto reduce el payload y evita problemas de sesión
         $notificaciones = auth()->user()
             ->notificaciones()
             ->noLeidas()
             ->recientes()
-            ->take(10)
+            ->take(5) // Reducido de 10 a 5
             ->get()
             ->map(function ($notificacion) {
                 return [
