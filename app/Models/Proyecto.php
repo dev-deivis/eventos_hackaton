@@ -211,8 +211,8 @@ class Proyecto extends Model
             'estado' => self::ESTADO_LISTO_EVALUAR,
         ]);
         
-        // Notificar a los jueces que el proyecto está listo
-        \App\Services\NotificationService::proyectoListoParaEvaluar($this);
+        // Notificar al equipo que su proyecto fue aprobado
+        \App\Helpers\NotificacionHelper::proyectoAprobado($this->equipo);
     }
 
     /**

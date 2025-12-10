@@ -25,7 +25,7 @@
         </div>
         
         <div class="content">
-            <p>¡Hola <strong>{{ $participante->name }}</strong>!</p>
+            <p>¡Hola <strong>{{ $participante->user->name }}</strong>!</p>
             
             <div class="success-box">
                 <h2 style="margin-top: 0; color: #059669;">¡Tu solicitud ha sido aceptada!</h2>
@@ -44,7 +44,7 @@
                 
                 <div class="info-row">
                     <span class="label">👥 Líder:</span>
-                    <span class="value">{{ $equipo->lider->name }}</span>
+                    <span class="value">{{ $equipo->lider->user->name }}</span>
                 </div>
                 
                 <div class="info-row">

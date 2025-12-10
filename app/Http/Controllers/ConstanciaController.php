@@ -180,7 +180,7 @@ class ConstanciaController extends Controller
             ]);
 
             // Notificar al participante sobre la constancia generada
-            NotificationService::constanciaGenerada($constancia);
+            \App\Helpers\NotificacionHelper::constanciaGenerada($constancia);
 
             return redirect()->route('admin.constancias.index')
                 ->with('success', 'Constancia generada exitosamente.');
@@ -233,7 +233,7 @@ class ConstanciaController extends Controller
                 ]);
                 
                 // Notificar al participante
-                NotificationService::constanciaGenerada($constancia);
+                \App\Helpers\NotificacionHelper::constanciaGenerada($constancia);
                 
                 $constanciasGeneradas++;
             } catch (\Exception $e) {
@@ -460,7 +460,7 @@ class ConstanciaController extends Controller
                     ]);
                     
                     // Notificar al participante
-                    NotificationService::constanciaGenerada($constancia);
+                    \App\Helpers\NotificacionHelper::constanciaGenerada($constancia);
                     
                     $constanciasGeneradas++;
                 }
