@@ -8,7 +8,7 @@
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                         Crear Equipo
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500">
+                    <p class="text-gray-600 dark:text-gray-400">
                         Crea tu equipo para {{ $evento->nombre }}
                     </p>
                 </div>
@@ -23,7 +23,7 @@
 
                         <!-- Nombre del Equipo -->
                         <div>
-                            <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
+                            <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Nombre del Equipo <span class="text-red-500">*</span>
                             </label>
                             <input id="nombre" 
@@ -33,12 +33,12 @@
                                    required
                                    maxlength="30"
                                    placeholder="Los Innovadores"
-                                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('nombre') border-red-500 @enderror">
+                                   class="block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder:text-gray-400 dark:placeholder:text-gray-500 @error('nombre') border-red-500 @enderror">
                             <div class="flex items-center justify-between mt-1">
-                                <p class="text-xs text-gray-500 dark:text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     Elige un nombre único que identifique a tu equipo
                                 </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <span id="nombreCount">0</span>/30
                                 </p>
                             </div>
@@ -49,7 +49,7 @@
 
                         <!-- Descripción -->
                         <div>
-                            <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
+                            <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Descripción <span class="text-gray-400 dark:text-gray-500 text-xs">(Opcional)</span>
                             </label>
                             <textarea id="descripcion" 
@@ -57,12 +57,12 @@
                                       rows="3"
                                       maxlength="70"
                                       placeholder="Describe brevemente tu equipo y tu proyecto..."
-                                      class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                                      class="block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
                             <div class="flex items-center justify-between mt-1">
-                                <p class="text-xs text-gray-500 dark:text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     Opcional: describe brevemente tu equipo
                                 </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     <span id="descripcionCount">0</span>/70
                                 </p>
                             </div>
@@ -73,13 +73,13 @@
 
                         <!-- Tu Perfil en el Equipo -->
                         <div>
-                            <label for="perfil_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">
+                            <label for="perfil_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Tu Rol en el Equipo <span class="text-red-500">*</span>
                             </label>
                             <select id="perfil_id" 
                                     name="perfil_id" 
                                     required
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('perfil_id') border-red-500 @enderror">
+                                    class="block w-full px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent @error('perfil_id') border-red-500 @enderror">
                                 <option value="">Selecciona tu rol</option>
                                 @foreach($perfiles as $perfil)
                                     <option value="{{ $perfil->id }}" {{ old('perfil_id') == $perfil->id ? 'selected' : '' }}>
@@ -93,7 +93,7 @@
                             @error('perfil_id')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-500">
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                 Selecciona el rol que desempeñarás en el equipo
                             </p>
                         </div>
@@ -120,7 +120,7 @@
                         <!-- Botones -->
                         <div class="flex items-center justify-end gap-4 pt-4">
                             <a href="{{ route('eventos.show', $evento) }}" 
-                               class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 dark:text-gray-600 hover:bg-gray-50 dark:bg-gray-700/50 font-medium transition duration-200">
+                               class="px-6 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium transition duration-200">
                                 Cancelar
                             </a>
                             <button type="submit" 
