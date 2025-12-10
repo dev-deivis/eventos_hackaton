@@ -4,13 +4,13 @@
 
             <!-- Mensajes de éxito/error -->
             @if (session('success'))
-                <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+                <div class="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 text-green-800 dark:text-green-300 px-4 py-3 rounded-lg">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if (session('error'))
-                <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                <div class="mb-6 bg-red-50 dark:bg-red-900/30 border border-red-200 text-red-800 dark:text-red-300 px-4 py-3 rounded-lg">
                     {{ session('error') }}
                 </div>
             @endif
@@ -21,8 +21,8 @@
                     class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl shadow-lg p-6 mb-6">
                     <div class="flex items-start justify-between">
                         <div class="flex items-start gap-4">
-                            <div class="p-3 bg-green-100 rounded-full">
-                                <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="p-3 bg-green-100 dark:bg-green-900 rounded-full">
+                                <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                         clip-rule="evenodd" />
@@ -32,24 +32,24 @@
                                 <h3 class="text-xl font-bold text-green-900 mb-1">
                                     ¡Proyecto Evaluado!
                                 </h3>
-                                <p class="text-green-700 text-sm mb-3">
+                                <p class="text-green-700 dark:text-green-300 text-sm mb-3">
                                     Este proyecto ha sido evaluado por los jueces y ya no puede ser modificado.
                                 </p>
 
                                 {{-- Mostrar calificación SOLO a miembros del equipo --}}
                                 @if ($esMiembro && $calificacion)
                                     <div class="flex items-center gap-4">
-                                        <div class="bg-white rounded-lg px-6 py-3 shadow-sm border border-green-200">
-                                            <div class="text-sm text-gray-600 mb-1">Calificación Final</div>
-                                            <div class="text-3xl font-bold text-green-600">
+                                        <div class="bg-white dark:bg-gray-800 rounded-lg px-6 py-3 shadow-sm border border-green-200">
+                                            <div class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-1">Calificación Final</div>
+                                            <div class="text-3xl font-bold text-green-600 dark:text-green-400">
                                                 {{ number_format($calificacion, 2) }}
-                                                <span class="text-lg text-gray-500">/100</span>
+                                                <span class="text-lg text-gray-500 dark:text-gray-500">/100</span>
                                             </div>
                                         </div>
 
                                         {{-- Desglose de evaluaciones --}}
                                         @if ($equipo->evaluaciones->count() > 0)
-                                            <div class="text-sm text-green-700">
+                                            <div class="text-sm text-green-700 dark:text-green-300">
                                                 <div class="font-semibold mb-1">Evaluado por:</div>
                                                 <ul class="list-disc list-inside">
                                                     @foreach ($equipo->evaluaciones as $eval)
@@ -65,7 +65,7 @@
                         </div>
 
                         {{-- Icono de bloqueo --}}
-                        <div class="text-green-600">
+                        <div class="text-green-600 dark:text-green-400">
                             <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -148,7 +148,7 @@
                             
                             {{-- Calificación destacada --}}
                             @if($calificacion)
-                                <div class="inline-block bg-white/80 backdrop-blur rounded-xl px-8 py-4 mb-6 shadow-lg">
+                                <div class="inline-block bg-white dark:bg-gray-800/80 backdrop-blur rounded-xl px-8 py-4 mb-6 shadow-lg">
                                     <div class="text-sm {{ $premio['text'] }} font-medium mb-1">Calificación Final</div>
                                     <div class="text-5xl font-black {{ $premio['text'] }}">
                                         {{ number_format($calificacion, 2) }}
@@ -169,7 +169,7 @@
                                 </a>
                                 
                                 <a href="{{ route('equipos.show', $equipo) }}#proyecto" 
-                                   class="inline-flex items-center gap-2 px-8 py-4 bg-white/90 backdrop-blur {{ $premio['text'] }} rounded-xl font-bold shadow-xl transform hover:scale-105 transition hover:bg-white">
+                                   class="inline-flex items-center gap-2 px-8 py-4 bg-white dark:bg-gray-800/90 backdrop-blur {{ $premio['text'] }} rounded-xl font-bold shadow-xl transform hover:scale-105 transition hover:bg-white">
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
                                         <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
@@ -213,16 +213,16 @@
             @endif
 
             <!-- Header -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
                         <div class="flex items-center gap-3 mb-2">
-                            <h1 class="text-3xl font-bold text-gray-900">{{ $equipo->nombre }}</h1>
+                            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $equipo->nombre }}</h1>
 
                             <!-- Botón Editar Equipo (Solo Líder y si puede editar) -->
                             @if ($esLider && $puedeEditar)
                                 <button onclick="toggleModalEditarEquipo()"
-                                    class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition"
+                                    class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition"
                                     title="Editar equipo">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path
@@ -234,7 +234,7 @@
                                     Editar Equipo
                                 </button>
                             @elseif($esLider && !$puedeEditar)
-                                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed"
+                                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed"
                                     title="No se puede editar porque el proyecto fue evaluado">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
@@ -245,16 +245,16 @@
                                 </div>
                             @endif
                         </div>
-                        <p class="text-gray-600 mb-2">
-                            <a href="{{ route('eventos.show', $equipo->evento) }}" class="hover:text-indigo-600">
+                        <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-2">
+                            <a href="{{ route('eventos.show', $equipo->evento) }}" class="hover:text-indigo-600 dark:text-indigo-400">
                                 {{ $equipo->evento->nombre }}
                             </a>
                         </p>
-                        <p class="text-sm text-gray-500">Líder: {{ $equipo->lider->user->name }} •
+                        <p class="text-sm text-gray-500 dark:text-gray-500">Líder: {{ $equipo->lider->user->name }} •
                             {{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }} miembros</p>
 
                         @if ($equipo->descripcion)
-                            <p class="text-gray-600 mt-3">{{ $equipo->descripcion }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-3">{{ $equipo->descripcion }}</p>
                         @endif
 
                         <!-- Enlaces del Proyecto (Solo para miembros, jueces y admin) -->
@@ -308,7 +308,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 flex items-center gap-2">
+                                        class="px-4 py-2 border border-red-300 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-50 dark:bg-red-900/30 flex items-center gap-2">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm11 4a1 1 0 10-2 0v6a1 1 0 102 0V7zm-3 0a1 1 0 10-2 0v6a1 1 0 102 0V7zm-3 0a1 1 0 10-2 0v6a1 1 0 102 0V7z"
@@ -319,7 +319,7 @@
                                 </form>
                             @else
                                 <div
-                                    class="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed flex items-center gap-2">
+                                    class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-500 rounded-lg cursor-not-allowed flex items-center gap-2">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -331,7 +331,7 @@
                         @elseif(!$esMiembro && !$fueEvaluado && $equipo->puedeAceptarMiembros() && $equipo->evento->estaAbierto())
                             <!-- Solicitar unirse (solo si NO fue evaluado) -->
                             <button onclick="toggleModalUnirse()"
-                                class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
+                                class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 flex items-center gap-2">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
@@ -341,7 +341,7 @@
                         @elseif($fueEvaluado && !$esMiembro)
                             <!-- Mensaje para externos cuando está evaluado -->
                             <div
-                                class="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed flex items-center gap-2">
+                                class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-500 rounded-lg cursor-not-allowed flex items-center gap-2">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -362,11 +362,11 @@
                 @endphp
 
                 <div
-                    class="bg-white rounded-xl shadow-sm p-6 mb-6 border-l-4 border-{{ $proyecto->estadoColor }}-500">
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 border-l-4 border-{{ $proyecto->estadoColor }}-500">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-2">
-                                <h2 class="text-2xl font-bold text-gray-900">{{ $proyecto->nombre }}</h2>
+                                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $proyecto->nombre }}</h2>
                                 <span
                                     class="px-4 py-1.5 bg-{{ $proyecto->estadoColor }}-100 text-{{ $proyecto->estadoColor }}-700 rounded-full text-sm font-bold">
                                     {{ $proyecto->estadoTexto }}
@@ -387,7 +387,7 @@
                                         Editar Proyecto
                                     </a>
                                 @elseif($esLider && !$puedeEditar)
-                                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed"
+                                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed"
                                         title="No se puede editar porque el proyecto fue evaluado">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
@@ -398,32 +398,32 @@
                                     </div>
                                 @endif
                             </div>
-                            <p class="text-gray-600">{{ $proyecto->descripcion }}</p>
+                            <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $proyecto->descripcion }}</p>
                         </div>
                     </div>
 
                     <!-- Barra de Progreso Principal -->
                     <div class="mb-6">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-bold text-gray-700">Completitud del Proyecto</span>
+                            <span class="text-sm font-bold text-gray-700 dark:text-gray-300 dark:text-gray-600">Completitud del Proyecto</span>
                             <span
                                 class="text-3xl font-bold text-{{ $proyecto->porcentaje_completado == 100 ? 'green' : 'indigo' }}-600">
                                 {{ $proyecto->porcentaje_completado }}%
                             </span>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-4 overflow-hidden">
                             <div class="h-4 rounded-full transition-all duration-500 
                                 {{ $proyecto->porcentaje_completado == 100 ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-indigo-500 to-purple-600' }}"
                                 style="width: {{ $proyecto->porcentaje_completado }}%"></div>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
                             {{ $proyecto->porcentaje_completado == 100 ? '¡Proyecto completo!' : 'Sigue trabajando para completar el proyecto' }}
                         </p>
                     </div>
 
                     <!-- Checklist de Requisitos -->
-                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                        <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4">
+                        <h3 class="font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                                 <path fill-rule="evenodd"
@@ -436,14 +436,14 @@
                             <!-- Nombre -->
                             <div class="flex items-center gap-2">
                                 @if ($proyecto->nombre && strlen($proyecto->nombre) >= 5)
-                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 @else
-                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -456,14 +456,14 @@
                             <!-- Descripción -->
                             <div class="flex items-center gap-2">
                                 @if ($proyecto->descripcion && strlen($proyecto->descripcion) >= 50)
-                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 @else
-                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -477,14 +477,14 @@
                             @if ($proyecto->evento->requiere_repositorio)
                                 <div class="flex items-center gap-2">
                                     @if ($proyecto->link_repositorio)
-                                        <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                        <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     @else
-                                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -499,14 +499,14 @@
                             @if ($proyecto->evento->requiere_demo)
                                 <div class="flex items-center gap-2">
                                     @if ($proyecto->link_demo)
-                                        <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                        <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     @else
-                                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -521,14 +521,14 @@
                             @if ($proyecto->evento->requiere_presentacion)
                                 <div class="flex items-center gap-2">
                                     @if ($proyecto->link_presentacion)
-                                        <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                        <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     @else
-                                        <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
                                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -550,14 +550,14 @@
                             @endphp
                             <div class="flex items-center gap-2 md:col-span-2">
                                 @if ($tareasOk)
-                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 @else
-                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -577,14 +577,14 @@
                             @endphp
                             <div class="flex items-center gap-2">
                                 @if ($tiene5Miembros)
-                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 @else
-                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -605,14 +605,14 @@
                             @endphp
                             <div class="flex items-center gap-2">
                                 @if ($tieneAsesor)
-                                    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 @else
-                                    <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="currentColor"
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="currentColor"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -626,8 +626,8 @@
 
                     <!-- Botón de Entrega Final o Estado -->
                     @if ($proyecto->estado === 'entregado')
-                        <div class="bg-purple-50 border-2 border-purple-500 rounded-xl p-4 text-center">
-                            <div class="flex items-center justify-center gap-2 text-purple-700 font-bold mb-2">
+                        <div class="bg-purple-50 dark:bg-purple-900/30 border-2 border-purple-500 rounded-xl p-4 text-center">
+                            <div class="flex items-center justify-center gap-2 text-purple-700 dark:text-purple-300 font-bold mb-2">
                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -635,29 +635,29 @@
                                 </svg>
                                 Proyecto Entregado
                             </div>
-                            <p class="text-sm text-purple-600">
+                            <p class="text-sm text-purple-600 dark:text-purple-400">
                                 Entregado el {{ $proyecto->fecha_entrega->format('d/m/Y H:i') }}
                             </p>
-                            <p class="text-sm text-purple-600 mt-1">
+                            <p class="text-sm text-purple-600 dark:text-purple-400 mt-1">
                                 Esperando aprobación del administrador para evaluación
                             </p>
                         </div>
                     @elseif($proyecto->estado === 'listo_para_evaluar')
-                        <div class="bg-green-50 border-2 border-green-500 rounded-xl p-4 text-center">
-                            <div class="flex items-center justify-center gap-2 text-green-700 font-bold mb-2">
+                        <div class="bg-green-50 dark:bg-green-900/30 border-2 border-green-500 rounded-xl p-4 text-center">
+                            <div class="flex items-center justify-center gap-2 text-green-700 dark:text-green-300 font-bold mb-2">
                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
                                 Proyecto Aprobado - Listo para Evaluar
                             </div>
-                            <p class="text-sm text-green-600">
+                            <p class="text-sm text-green-600 dark:text-green-400">
                                 Tu proyecto fue aprobado y está listo para ser evaluado por los jueces
                             </p>
                         </div>
                     @elseif($proyecto->estado === 'evaluado')
-                        <div class="bg-indigo-50 border-2 border-indigo-500 rounded-xl p-4 text-center">
-                            <div class="flex items-center justify-center gap-2 text-indigo-700 font-bold mb-2">
+                        <div class="bg-indigo-50 dark:bg-indigo-900/30 border-2 border-indigo-500 rounded-xl p-4 text-center">
+                            <div class="flex items-center justify-center gap-2 text-indigo-700 dark:text-indigo-300 font-bold mb-2">
                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -665,7 +665,7 @@
                                 </svg>
                                 Proyecto Evaluado
                             </div>
-                            <p class="text-sm text-indigo-600">
+                            <p class="text-sm text-indigo-600 dark:text-indigo-400">
                                 Tu proyecto ya fue evaluado. Pronto conocerán los resultados
                             </p>
                         </div>
@@ -685,12 +685,12 @@
                                 Realizar Entrega Final
                             </button>
                         </form>
-                        <p class="text-center text-sm text-gray-600 mt-2">
+                        <p class="text-center text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-2">
                             Al entregar, tu proyecto será revisado por el administrador antes de ser evaluado
                         </p>
                     @else
-                        <div class="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-4">
-                            <p class="text-yellow-800 font-bold mb-2 flex items-center gap-2">
+                        <div class="bg-yellow-50 dark:bg-yellow-900/30 border-2 border-yellow-400 rounded-xl p-4">
+                            <p class="text-yellow-800 dark:text-yellow-300 font-bold mb-2 flex items-center gap-2">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
@@ -698,12 +698,12 @@
                                 </svg>
                                 Faltan requisitos para entregar:
                             </p>
-                            <ul class="text-sm text-yellow-700 space-y-1 ml-7">
+                            <ul class="text-sm text-yellow-700 dark:text-yellow-300 space-y-1 ml-7">
                                 @foreach ($proyecto->requisitosFaltantes() as $faltante)
                                     <li>• {{ $faltante }}</li>
                                 @endforeach
                             </ul>
-                            <p class="text-xs text-yellow-600 mt-3">
+                            <p class="text-xs text-yellow-600 dark:text-yellow-400 mt-3">
                                 Completa todos los requisitos para poder realizar la entrega final
                             </p>
                         </div>
@@ -717,7 +717,7 @@
                 <div class="lg:col-span-2 space-y-6">
 
                     <!-- Miembros del Equipo -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold flex items-center gap-2">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -727,32 +727,32 @@
                                 Miembros del Equipo
                             </h3>
                             <span
-                                class="text-sm text-gray-500">{{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
+                                class="text-sm text-gray-500 dark:text-gray-500">{{ $equipo->totalMiembros() }}/{{ $equipo->max_miembros }}</span>
                         </div>
 
                         <div class="space-y-3">
                             @foreach ($equipo->miembrosActivos()->get() as $miembro)
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                                     <div class="flex items-center gap-3">
                                         <div
-                                            class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+                                            class="w-10 h-10 bg-indigo-600 dark:bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
                                             {{ substr($miembro->user->name, 0, 1) }}
                                         </div>
                                         <div>
                                             <div class="flex items-center gap-2">
                                                 <span
-                                                    class="font-semibold text-gray-900">{{ $miembro->user->name }}</span>
+                                                    class="font-semibold text-gray-900 dark:text-white">{{ $miembro->user->name }}</span>
                                                 @if ($equipo->lider_id == $miembro->id)
                                                     <span
-                                                        class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">LÍDER</span>
+                                                        class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 rounded text-xs font-medium">LÍDER</span>
                                                 @endif
                                             </div>
-                                            <div class="text-sm text-gray-600">{{ $miembro->carrera->nombre }}</div>
-                                            <div class="text-sm text-indigo-600 font-medium">
+                                            <div class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">{{ $miembro->carrera->nombre }}</div>
+                                            <div class="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
                                                 {{ $miembro->pivot->perfil->nombre ?? 'Sin perfil' }}</div>
                                         </div>
                                     </div>
-                                    <span class="text-xs text-gray-500">Se unió:
+                                    <span class="text-xs text-gray-500 dark:text-gray-500">Se unió:
                                         {{ $miembro->pivot->created_at->format('d M Y') }}</span>
                                 </div>
                             @endforeach
@@ -761,14 +761,14 @@
                         <!-- Roles Disponibles -->
                         @if ($equipo->puedeAceptarMiembros())
                             <div class="mt-4 pt-4 border-t">
-                                <h4 class="text-sm font-semibold text-gray-700 mb-2">Roles Disponibles</h4>
-                                <div class="text-sm text-gray-600">
+                                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Roles Disponibles</h4>
+                                <div class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
                                     Quedan {{ $equipo->max_miembros - $equipo->totalMiembros() }} espacios disponibles
                                 </div>
                             </div>
                         @else
                             <div class="mt-4 pt-4 border-t">
-                                <p class="text-sm text-gray-500">Equipo completo</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-500">Equipo completo</p>
                             </div>
                         @endif
                     </div>
@@ -780,7 +780,7 @@
                             $proyectoEvaluado = in_array($equipo->proyecto->estado, ['evaluado', 'finalizado']);
                         @endphp
                         
-                        <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-lg font-bold flex items-center gap-2">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -794,7 +794,7 @@
                                 @if ($esLider)
                                     @if(!$proyectoEvaluado)
                                         <button onclick="toggleModalCrearTarea()"
-                                            class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1 font-medium">
+                                            class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 dark:text-indigo-300 flex items-center gap-1 font-medium">
                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd"
                                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -803,7 +803,7 @@
                                             Nueva Tarea
                                         </button>
                                     @else
-                                        <span class="text-sm text-gray-500 flex items-center gap-1">
+                                        <span class="text-sm text-gray-500 dark:text-gray-500 flex items-center gap-1">
                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                                             </svg>
@@ -829,7 +829,7 @@
                             @if ($tareas->count() > 0)
                                     @foreach ($tareas as $tarea)
                                         <div data-tarea-id="{{ $tarea->id }}"
-                                            class="border rounded-lg p-4 @if ($tarea->estaCompletada()) bg-green-50 border-green-200 @else bg-white @endif">
+                                            class="border rounded-lg p-4 @if ($tarea->estaCompletada()) bg-green-50 dark:bg-green-900/30 border-green-200 @else bg-white dark:bg-gray-800 @endif">
                                             <div class="flex items-start justify-between">
                                                 <div class="flex items-start gap-3 flex-1">
                                                     <!-- Checkbox para marcar como completada -->
@@ -848,7 +848,7 @@
                                                                 class="mt-1 w-6 h-6 rounded flex items-center justify-center border-2 transition-all hover:scale-110
                                                                     @if ($tarea->estaCompletada()) bg-green-500 border-green-500 text-white 
                                                                     @else 
-                                                                        bg-white border-gray-300 hover:border-indigo-500 @endif">
+                                                                        bg-white dark:bg-gray-800 border-gray-300 hover:border-indigo-500 @endif">
                                                                 @if ($tarea->estaCompletada())
                                                                     <svg class="w-4 h-4" fill="currentColor"
                                                                         viewBox="0 0 20 20">
@@ -864,7 +864,7 @@
                                                             class="mt-1 w-6 h-6 rounded flex items-center justify-center border-2
                                                             @if ($tarea->estaCompletada()) bg-green-500 border-green-500 text-white 
                                                             @else 
-                                                                bg-white border-gray-300 @endif">
+                                                                bg-white dark:bg-gray-800 border-gray-300 @endif">
                                                             @if ($tarea->estaCompletada())
                                                                 <svg class="w-4 h-4" fill="currentColor"
                                                                     viewBox="0 0 20 20">
@@ -880,17 +880,17 @@
                                                         <div class="flex items-start justify-between">
                                                             <div class="flex-1">
                                                                 <h4
-                                                                    class="font-semibold text-gray-900 @if ($tarea->estaCompletada()) line-through @endif">
+                                                                    class="font-semibold text-gray-900 dark:text-white @if ($tarea->estaCompletada()) line-through @endif">
                                                                     {{ $tarea->nombre }}
                                                                 </h4>
                                                                 @if ($tarea->descripcion)
-                                                                    <p class="text-sm text-gray-600 mt-1">
+                                                                    <p class="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">
                                                                         {{ $tarea->descripcion }}</p>
                                                                 @endif
 
                                                                 <!-- Asignados -->
                                                                 <div class="flex items-center gap-2 mt-2">
-                                                                    <svg class="w-4 h-4 text-gray-400"
+                                                                    <svg class="w-4 h-4 text-gray-400 dark:text-gray-500"
                                                                         fill="currentColor" viewBox="0 0 20 20">
                                                                         <path
                                                                             d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
@@ -899,13 +899,13 @@
                                                                         <div class="flex gap-1">
                                                                             @foreach ($tarea->participantes as $asignado)
                                                                                 <span
-                                                                                    class="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">
+                                                                                    class="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded text-xs">
                                                                                     {{ explode(' ', $asignado->user->name)[0] }}
                                                                                 </span>
                                                                             @endforeach
                                                                         </div>
                                                                     @else
-                                                                        <span class="text-xs text-gray-400">Sin
+                                                                        <span class="text-xs text-gray-400 dark:text-gray-500">Sin
                                                                             asignar</span>
                                                                     @endif
                                                                 </div>
@@ -913,7 +913,7 @@
 
                                                             <!-- Valor de la tarea -->
                                                             <div class="text-right ml-4">
-                                                                <span class="text-sm font-semibold text-indigo-600">
+                                                                <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
                                                                     {{ $tarea->valorPorcentual() }}%
                                                                 </span>
                                                             </div>
@@ -926,7 +926,7 @@
                                                     <div class="flex gap-2 ml-4">
                                                         <button
                                                             onclick="abrirModalEditarTarea({{ json_encode($tarea) }})"
-                                                            class="text-indigo-600 hover:text-indigo-700">
+                                                            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 dark:text-indigo-300">
                                                             <svg class="w-5 h-5" fill="currentColor"
                                                                 viewBox="0 0 20 20">
                                                                 <path
@@ -942,7 +942,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
-                                                                class="text-red-600 hover:text-red-700">
+                                                                class="text-red-600 dark:text-red-400 hover:text-red-700 dark:text-red-300">
                                                                 <svg class="w-5 h-5" fill="currentColor"
                                                                     viewBox="0 0 20 20">
                                                                     <path fill-rule="evenodd"
@@ -958,18 +958,18 @@
                                     @endforeach
                             @else
                                 <!-- Sin tareas -->
-                                <div id="estadoSinTareas" class="text-center py-8 bg-gray-50 rounded-lg">
-                                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none"
+                                <div id="estadoSinTareas" class="text-center py-8 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" fill="none"
                                         stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                     </svg>
-                                    <p class="text-gray-600 font-medium">No hay tareas registradas</p>
+                                    <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500 font-medium">No hay tareas registradas</p>
                                     @if ($esLider)
-                                        <p class="text-sm text-gray-500 mt-1">Crea la primera tarea para organizar el
+                                        <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">Crea la primera tarea para organizar el
                                             trabajo del equipo</p>
                                         <button onclick="toggleModalCrearTarea()"
-                                            class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 inline-flex items-center gap-2">
+                                            class="mt-4 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 inline-flex items-center gap-2">
                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd"
                                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -984,23 +984,23 @@
                         </div>
                     @elseif($esMiembro)
                         <!-- Si no hay proyecto y es miembro, mostrar botón para crear -->
-                        <div class="bg-white rounded-xl shadow-sm p-6">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4">Proyecto</h3>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Proyecto</h3>
                             <div class="text-center py-8">
                                 <div
-                                    class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                                         <path fill-rule="evenodd"
                                             d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <p class="text-gray-600 mb-4">Aún no han registrado su proyecto</p>
-                                <p class="text-sm text-gray-500 mb-4">Cualquier miembro del equipo puede registrarlo
+                                <p class="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Aún no han registrado su proyecto</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">Cualquier miembro del equipo puede registrarlo
                                 </p>
                                 <a href="{{ route('proyectos.create', $equipo) }}"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium">
+                                    class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 font-medium">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -1019,7 +1019,7 @@
 
                     <!-- Estadísticas del Proyecto -->
                     @if ($equipo->proyecto)
-                        <div class="bg-white rounded-xl shadow-sm p-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
                             <h3 class="font-bold mb-3">Progreso del Proyecto</h3>
 
                             @php
@@ -1034,18 +1034,18 @@
                             <div class="space-y-3">
                                 <div>
                                     <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-600">Progreso General</span>
-                                        <span class="font-semibold text-indigo-600">{{ $progreso }}%</span>
+                                        <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Progreso General</span>
+                                        <span class="font-semibold text-indigo-600 dark:text-indigo-400">{{ $progreso }}%</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-3">
-                                        <div class="bg-indigo-600 h-3 rounded-full transition-all duration-500"
+                                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
+                                        <div class="bg-indigo-600 dark:bg-indigo-500 h-3 rounded-full transition-all duration-500"
                                             style="width: {{ $progreso }}%"></div>
                                     </div>
                                 </div>
 
                                 <div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600">Tareas Completadas</span>
+                                        <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Tareas Completadas</span>
                                         <span
                                             class="font-semibold">{{ $tareasCompletadas }}/{{ $totalTareas }}</span>
                                     </div>
@@ -1053,7 +1053,7 @@
 
                                 <div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600">Tareas Pendientes</span>
+                                        <span class="text-gray-600 dark:text-gray-400 dark:text-gray-500">Tareas Pendientes</span>
                                         <span
                                             class="font-semibold text-orange-600">{{ $totalTareas - $tareasCompletadas }}</span>
                                     </div>
@@ -1064,7 +1064,7 @@
 
                     <!-- Chat del Equipo (SOLO PARA MIEMBROS) -->
                     @if ($esMiembro)
-                        <div class="bg-white rounded-xl shadow-sm">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
                             <div class="p-4 border-b">
                                 <h3 class="font-bold flex items-center gap-2">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -1097,15 +1097,15 @@
                                         <!-- Mensaje del usuario actual (derecha, azul) -->
                                         <div class="flex gap-2 justify-end">
                                             <div class="flex-1 flex flex-col items-end">
-                                                <div class="text-xs font-semibold text-right text-indigo-600">Tú</div>
-                                                <div class="bg-indigo-600 text-white px-4 py-2 rounded-lg max-w-xs break-words">
+                                                <div class="text-xs font-semibold text-right text-indigo-600 dark:text-indigo-400">Tú</div>
+                                                <div class="bg-indigo-600 dark:bg-indigo-500 text-white px-4 py-2 rounded-lg max-w-xs break-words">
                                                     {{ $mensaje->mensaje }}
                                                 </div>
-                                                <div class="text-xs text-gray-400 mt-1">
+                                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                                     {{ $mensaje->created_at->format('g:i A') }}
                                                 </div>
                                             </div>
-                                            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                                            <div class="w-8 h-8 bg-indigo-600 dark:bg-indigo-500 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
                                                 {{ substr($mensaje->participante->user->name, 0, 1) }}
                                             </div>
                                         </div>
@@ -1119,17 +1119,17 @@
                                                 <div class="text-xs font-semibold">
                                                     {{ explode(' ', $mensaje->participante->user->name)[0] }}
                                                 </div>
-                                                <div class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg max-w-xs break-words">
+                                                <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg max-w-xs break-words">
                                                     {{ $mensaje->mensaje }}
                                                 </div>
-                                                <div class="text-xs text-gray-400 mt-1">
+                                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                                     {{ $mensaje->created_at->format('g:i A') }}
                                                 </div>
                                             </div>
                                         </div>
                                     @endif
                                 @empty
-                                    <div class="text-center text-gray-400 py-8">
+                                    <div class="text-center text-gray-400 dark:text-gray-500 py-8">
                                         <p class="text-sm">No hay mensajes aún</p>
                                         <p class="text-xs">Sé el primero en enviar un mensaje</p>
                                     </div>
@@ -1143,7 +1143,7 @@
                                     <input type="text" name="mensaje" placeholder="Escribe un mensaje..." required
                                         class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                                     <button type="submit"
-                                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                        class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path
                                                 d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
@@ -1154,16 +1154,16 @@
                         </div>
                     @else
                         <!-- Mensaje para no miembros -->
-                        <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                             <h3 class="font-bold mb-3 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                         clip-rule="evenodd" />
                                 </svg>
                                 Chat del Equipo
                             </h3>
-                            <div class="text-center py-8 text-gray-400">
+                            <div class="text-center py-8 text-gray-400 dark:text-gray-500">
                                 <svg class="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1181,11 +1181,11 @@
                         @endphp
 
                         @if ($pendientes->count() > 0)
-                            <div class="bg-white rounded-xl shadow-sm p-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
                                 <h3 class="font-bold mb-3">Invitaciones Pendientes</h3>
                                 <div id="listaSolicitudes" class="space-y-3">
                                     @foreach ($pendientes as $solicitante)
-                                        <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-100" data-solicitud-id="{{ $solicitante->id }}">
+                                        <div class="p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg border border-yellow-100" data-solicitud-id="{{ $solicitante->id }}">
                                             <div class="flex items-center gap-2 mb-2">
                                                 <div
                                                     class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
@@ -1194,11 +1194,11 @@
                                                 <div class="flex-1">
                                                     <div class="font-semibold text-sm">{{ $solicitante->user->name }}
                                                     </div>
-                                                    <div class="text-xs text-gray-600">
+                                                    <div class="text-xs text-gray-600 dark:text-gray-400 dark:text-gray-500">
                                                         {{ $solicitante->pivot->perfil->nombre ?? 'N/A' }}</div>
                                                 </div>
                                                 <span
-                                                    class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">Pendiente</span>
+                                                    class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 rounded text-xs">Pendiente</span>
                                             </div>
                                             <div class="flex gap-2 mt-2">
                                                 <form method="POST"
@@ -1235,14 +1235,14 @@
 
     <!-- Modal Solicitar Unirse -->
     <div id="modalUnirse" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Solicitar Unirse al Equipo</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Solicitar Unirse al Equipo</h3>
 
             <form id="formSolicitarUnirse" method="POST" action="{{ route('equipos.solicitar', $equipo) }}">
                 @csrf
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona tu rol en el equipo</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Selecciona tu rol en el equipo</label>
                     @php
                         // Obtener roles ya ocupados en el equipo
                         $rolesOcupados = DB::table('equipo_participante')
@@ -1267,33 +1267,33 @@
                                 <option value="{{ $perfil->id }}">{{ $perfil->nombre }}</option>
                             @endforeach
                         </select>
-                        <p class="mt-2 text-xs text-gray-500">
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-500">
                             Solo se muestran roles disponibles. Roles ocupados: 
                             @foreach($todosPerfiles->whereIn('id', $rolesOcupados) as $ocupado)
-                                <span class="text-red-600">{{ $ocupado->nombre }}</span>{{ !$loop->last ? ', ' : '' }}
+                                <span class="text-red-600 dark:text-red-400">{{ $ocupado->nombre }}</span>{{ !$loop->last ? ', ' : '' }}
                             @endforeach
                         </p>
                     @else
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                            <p class="text-sm text-yellow-800">⚠️ Todos los roles están ocupados en este equipo.</p>
+                        <div class="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 rounded-lg p-3">
+                            <p class="text-sm text-yellow-800 dark:text-yellow-300">⚠️ Todos los roles están ocupados en este equipo.</p>
                         </div>
                     @endif
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">¿Por qué quieres unirte?</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">¿Por qué quieres unirte?</label>
                     <textarea rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                         placeholder="Opcional: Cuéntale al líder por qué eres un buen candidato..."></textarea>
                 </div>
 
                 <div class="flex gap-3">
                     <button type="button" onclick="toggleModalUnirse()"
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 dark:text-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700/50">
                         Cancelar
                     </button>
                     <button type="submit" 
                         @if($perfilesDisponibles->count() === 0) disabled @endif
-                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                        class="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
                         Enviar Solicitud
                     </button>
                 </div>
@@ -1304,14 +1304,14 @@
     <!-- Modal Crear Tarea -->
     <div id="modalCrearTarea"
         class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Crear Nueva Tarea</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Crear Nueva Tarea</h3>
 
             <form id="formCrearTarea" method="POST" action="{{ route('equipos.tareas.store', $equipo) }}">
                 @csrf
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Tarea *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Nombre de la Tarea *</label>
                     <input type="text" 
                            id="crear_tarea_nombre"
                            name="nombre" 
@@ -1320,15 +1320,15 @@
                            placeholder="Ej: Diseñar interfaz de usuario"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
                     <div class="flex items-center justify-between mt-1">
-                        <p class="text-xs text-gray-500">Solo letras y números</p>
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-500">Solo letras y números</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500">
                             <span id="crearTareaNombreCount">0</span>/40
                         </p>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Descripción</label>
                     <textarea id="crear_tarea_descripcion"
                               name="descripcion" 
                               rows="3" 
@@ -1336,44 +1336,44 @@
                               placeholder="Detalles de la tarea..."
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
                     <div class="flex items-center justify-between mt-1">
-                        <p class="text-xs text-gray-500">Letras, números y signos de puntuación</p>
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-500">Letras, números y signos de puntuación</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500">
                             <span id="crearTareaDescripcionCount">0</span>/50
                         </p>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Asignar a (máximo 2 personas)</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Asignar a (máximo 2 personas)</label>
                     <div class="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3">
                         @foreach ($equipo->participantes as $miembro)
-                            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:bg-gray-700/50 p-2 rounded">
                                 <input type="checkbox" name="participantes[]" value="{{ $miembro->id }}"
-                                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                    class="rounded border-gray-300 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500">
                                 <div class="flex items-center gap-2">
                                     <div
-                                        class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                        class="w-6 h-6 bg-indigo-600 dark:bg-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                                         {{ substr($miembro->user->name, 0, 1) }}
                                     </div>
                                     <span class="text-sm">{{ $miembro->user->name }}</span>
                                     @if ($equipo->lider_id == $miembro->id)
                                         <span
-                                            class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs">Líder</span>
+                                            class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 rounded text-xs">Líder</span>
                                     @endif
                                 </div>
                             </label>
                         @endforeach
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Puedes seleccionar hasta 2 participantes</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Puedes seleccionar hasta 2 participantes</p>
                 </div>
 
                 <div class="flex gap-3">
                     <button type="button" onclick="toggleModalCrearTarea()"
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 dark:text-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700/50">
                         Cancelar
                     </button>
                     <button type="submit"
-                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        class="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600">
                         Crear Tarea
                     </button>
                 </div>
@@ -1384,41 +1384,41 @@
     <!-- Modal Editar Tarea -->
     <div id="modalEditarTarea"
         class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Editar Tarea</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Editar Tarea</h3>
 
             <form id="formEditarTarea" method="POST" action="">
                 @csrf
                 @method('PUT')
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Tarea *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Nombre de la Tarea *</label>
                     <input type="text" id="edit_nombre" name="nombre" required maxlength="200"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Descripción</label>
                     <textarea id="edit_descripcion" name="descripcion" rows="3" maxlength="1000"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Asignar a (máximo 2 personas)</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Asignar a (máximo 2 personas)</label>
                     <div class="space-y-2 max-h-40 overflow-y-auto border rounded-lg p-3">
                         @foreach ($equipo->participantes as $miembro)
-                            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:bg-gray-700/50 p-2 rounded">
                                 <input type="checkbox" name="participantes[]" value="{{ $miembro->id }}"
-                                    class="edit-participante rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                    class="edit-participante rounded border-gray-300 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500">
                                 <div class="flex items-center gap-2">
                                     <div
-                                        class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                        class="w-6 h-6 bg-indigo-600 dark:bg-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                                         {{ substr($miembro->user->name, 0, 1) }}
                                     </div>
                                     <span class="text-sm">{{ $miembro->user->name }}</span>
                                     @if ($equipo->lider_id == $miembro->id)
                                         <span
-                                            class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs">Líder</span>
+                                            class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 rounded text-xs">Líder</span>
                                     @endif
                                 </div>
                             </label>
@@ -1428,11 +1428,11 @@
 
                 <div class="flex gap-3">
                     <button type="button" onclick="toggleModalEditarTarea()"
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 dark:text-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700/50">
                         Cancelar
                     </button>
                     <button type="submit"
-                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        class="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600">
                         Guardar Cambios
                     </button>
                 </div>
@@ -1443,15 +1443,15 @@
     <!-- Modal Editar Equipo -->
     <div id="modalEditarEquipo"
         class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full mx-4">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Editar Información del Equipo</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-lg w-full mx-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Editar Información del Equipo</h3>
 
             <form method="POST" action="{{ route('equipos.update', $equipo) }}" id="formEditarEquipo">
                 @csrf
                 @method('PUT')
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Equipo *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Nombre del Equipo *</label>
                     <input type="text" 
                            id="edit_equipo_nombre"
                            name="nombre" 
@@ -1460,14 +1460,14 @@
                            maxlength="30"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
                     <div class="flex items-center justify-end mt-1">
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-500">
                             <span id="editEquipoNombreCount">{{ strlen($equipo->nombre) }}</span>/30
                         </p>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción del Equipo</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">Descripción del Equipo</label>
                     <textarea id="edit_equipo_descripcion"
                               name="descripcion" 
                               rows="3" 
@@ -1475,7 +1475,7 @@
                               placeholder="Describe tu equipo y sus objetivos..."
                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none">{{ $equipo->descripcion }}</textarea>
                     <div class="flex items-center justify-end mt-1">
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-gray-500 dark:text-gray-500">
                             <span id="editEquipoDescripcionCount">{{ strlen($equipo->descripcion ?? '') }}</span>/70
                         </p>
                     </div>
@@ -1483,11 +1483,11 @@
 
                 <div class="flex gap-3">
                     <button type="button" onclick="toggleModalEditarEquipo()"
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 dark:text-gray-300 dark:text-gray-600 rounded-lg hover:bg-gray-50 dark:bg-gray-700/50">
                         Cancelar
                     </button>
                     <button type="submit"
-                        class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        class="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600">
                         Guardar Cambios
                     </button>
                 </div>
