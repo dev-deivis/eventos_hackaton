@@ -1,59 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Plataforma de Gestión de Eventos y Hackathones
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web para organizar hackathones de principio a fin: registro de participantes, formación de equipos, entrega de proyectos, evaluación por jueces y emisión de constancias. Construida con **Laravel 12** y **PostgreSQL**.
 
-## About Laravel
+## Funcionalidades
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Participantes**
+- Registro e inicio de sesión con perfil obligatorio (carrera, habilidades) antes de formar equipos.
+- Inscripción a eventos y cancelación del registro.
+- Creación de equipos, solicitudes de ingreso (aceptar / rechazar), chat de equipo y abandono de equipo.
+- Tablero de tareas por equipo con asignación a varios integrantes.
+- Registro del proyecto con tecnologías utilizadas.
+- Notificaciones dentro de la plataforma y por correo.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Jueces**
+- Panel propio para evaluar los proyectos de los equipos asignados.
+- Evaluación por criterios con calificaciones y rankings.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Administradores**
+- CRUD de eventos, cambio de estado y dashboard por evento.
+- Gestión de usuarios, premios y validación de proyectos.
+- Generación de constancias en PDF.
+- Reportes con exportación a Excel y PDF.
 
-## Learning Laravel
+**Roles:** `admin`, `juez` y `participante`, protegidos con middleware.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Capa | Tecnología |
+|------|-----------|
+| Backend | PHP 8.3, Laravel 12, Laravel Breeze (autenticación) |
+| Base de datos | PostgreSQL (producción), SQLite (desarrollo local) |
+| Frontend | Blade, Tailwind CSS, Alpine.js, Vite (con modo oscuro) |
+| PDF / Excel | barryvdh/laravel-dompdf, maatwebsite/excel |
+| Correos | Brevo (API) con SMTP configurable |
+| Colas, sesiones y caché | Driver `database` |
+| Despliegue | Configuración incluida para Railway (`nixpacks.toml`, `Procfile`) y Render (`render.yaml`) |
 
-## Laravel Sponsors
+## Requisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.3 o superior (con las extensiones habituales de Laravel)
+- Composer
+- Node.js y npm
 
-### Premium Partners
+## Instalación
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone https://github.com/dev-deivis/eventos_hackaton.git
+cd eventos_hackaton
 
-## Contributing
+composer install
+cp .env.example .env
+php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Configura la base de datos en .env y luego:
+php artisan migrate --seed
 
-## Code of Conduct
+npm install
+npm run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Atajos definidos en `composer.json`:
 
-## Security Vulnerabilities
+```bash
+composer run setup   # instala dependencias, genera la llave, migra y compila assets
+composer run dev     # servidor, cola, logs y Vite en paralelo
+composer test        # ejecuta las pruebas
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Variables de entorno
 
-## License
+Copia `.env.example` a `.env` y completa los valores. **Nunca subas tu `.env` al repositorio.**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Variable | Descripción |
+|----------|-------------|
+| `APP_URL` | URL pública de la aplicación |
+| `DB_CONNECTION` | `sqlite` (local) o `pgsql` (producción) |
+| `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Credenciales de PostgreSQL |
+| `MAIL_MAILER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS` | Configuración SMTP |
+| `BREVO_API_KEY` | Llave de la API de Brevo para correos transaccionales |
+| `QUEUE_CONNECTION`, `SESSION_DRIVER`, `CACHE_STORE` | `database` por defecto |
+
+## Estructura
+
+```
+app/Http/Controllers   Controladores por módulo (eventos, equipos, proyectos, juez, admin...)
+app/Http/Middleware    Roles y perfil completo
+app/Models             Modelos Eloquent
+app/Mail               Correos transaccionales
+database/migrations    Esquema de la base de datos
+database/seeders       Roles, carreras, usuarios y datos de ejemplo
+resources/views        Vistas Blade organizadas por módulo
+routes/web.php         Rutas de la aplicación
+```
+
+## Autor
+
+Alonso David Almaraz Vásquez — [github.com/dev-deivis](https://github.com/dev-deivis)
